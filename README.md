@@ -2,4 +2,9 @@ zhaw-facepath
 =============
 
 ZHAW SEPS Project Repository - FacePath
-test
+
+Authors:
+Fabio Germann
+Christian Vecsei
+Dominik Straub
+Mauro Guadagnini
