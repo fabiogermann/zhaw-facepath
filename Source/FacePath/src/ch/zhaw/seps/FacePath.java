@@ -3,6 +3,7 @@
  */
 package ch.zhaw.seps;
 
+
 /**
  * @author fabiog
  *
@@ -10,6 +11,9 @@ package ch.zhaw.seps;
 
 public class FacePath {
 	
-	
+	public static void main(String[] args) {
+		
+		
+	}
 
 }
