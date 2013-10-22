@@ -14,6 +14,7 @@ import java.awt.event.WindowListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.zhaw.seps.fb.FacebookProfile;
 import ch.zhaw.seps.view.GraphView;
 import ch.zhaw.seps.view.LoginView;
 import ch.zhaw.seps.view.LogoutView;
@@ -38,6 +39,9 @@ public class FacePath extends Frame implements ActionListener, WindowListener {
 	}
 
 	private static Map<String, Panel> viewList = new HashMap<String, Panel>();
+	private FacebookProfile source;
+	private FacebookProfile target;
+	
 
 	public static void showView(String view) {
 		if (view.equals("login")) {
