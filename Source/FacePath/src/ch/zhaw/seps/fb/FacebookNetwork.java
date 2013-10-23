@@ -31,8 +31,12 @@ public class FacebookNetwork {
     private HashMap<String,FacebookProfile> targetDatacollection;
     
     public FacebookNetwork() {
+    	// the easy way
     	this.graph = new SingleGraph("FacebookNetwork");
     	this.graphCollection = new HashMap<String, FacebookProfile>();
+    	//the hard way
+    	this.rootStack = new Stack<TreeNode<FacebookProfile>>();
+    	this.targetStack = new Stack<TreeNode<FacebookProfile>>();
     }
     
     private void addVertice(String userName, FacebookProfile user){
@@ -42,6 +46,22 @@ public class FacebookNetwork {
     
     private void addEdge(String name, String source, String target){
     	this.graph.addEdge(name, source, target);
+    }
+    
+    public void setRoot() {
+    	// TODO Auto-generated method stub
+    }
+    
+    public void setTarget() {
+    	// TODO Auto-generated method stub
+    }
+    
+    public void getRoot() {
+    	// TODO Auto-generated method stub
+    }
+    
+    public void getTarget() {
+    	// TODO Auto-generated method stub
     }
     
     public void insertItem() {

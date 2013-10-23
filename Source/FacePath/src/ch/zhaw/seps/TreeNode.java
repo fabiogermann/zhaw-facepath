@@ -5,8 +5,14 @@ import java.util.List;
 public class TreeNode<T> {
 	public static class Node<T> {
         private T data;
+        private String key;
         private TreeNode<T> parent;
         private List<TreeNode<T>> children;
+        
+        public void TreeNode( String key, T data) {
+        	this.data = data;
+        	this.key = key;
+        }
         
         public void addChild(TreeNode<T> node) {
     		// TODO Auto-generated method stub
