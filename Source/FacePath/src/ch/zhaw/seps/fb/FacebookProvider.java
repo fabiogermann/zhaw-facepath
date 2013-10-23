@@ -16,7 +16,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 
@@ -33,6 +32,7 @@ public class FacebookProvider {
 			e.printStackTrace();
 		}
 	}
+	
 	private void connectToApi(String token) {
 		apiConnection = new DefaultFacebookClient(token);
 	}

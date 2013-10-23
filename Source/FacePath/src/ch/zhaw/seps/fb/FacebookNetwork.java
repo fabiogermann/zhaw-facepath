@@ -13,6 +13,7 @@ public class FacebookNetwork {
 	
 	// THE EASY WAY
 	private Graph graph;
+	private HashMap<String,FacebookProfile> graphCollection;
 	
 	// THE HARD WAY
 	// Datastructure for the simulation of the facebook network
@@ -30,15 +31,17 @@ public class FacebookNetwork {
     private HashMap<String,FacebookProfile> targetDatacollection;
     
     public FacebookNetwork() {
-    	graph = new SingleGraph("FacebookNetwork");
+    	this.graph = new SingleGraph("FacebookNetwork");
+    	this.graphCollection = new HashMap<String, FacebookProfile>();
     }
     
-    private void addVertice(){
-    	// TODO Auto-generated method stub
+    private void addVertice(String userName, FacebookProfile user){
+    	this.graph.addNode(userName);
+    	this.graphCollection.put(userName, user);
     }
     
-    private void addEdge(){
-    	// TODO Auto-generated method stub
+    private void addEdge(String name, String source, String target){
+    	this.graph.addEdge(name, source, target);
     }
     
     public void insertItem() {
