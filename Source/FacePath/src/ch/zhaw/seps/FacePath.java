@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.zhaw.seps.fb.FacebookProfile;
+import ch.zhaw.seps.fb.FacebookProvider;
+import ch.zhaw.seps.fb.FacebookSearch;
 import ch.zhaw.seps.view.GraphView;
 import ch.zhaw.seps.view.LoginView;
 import ch.zhaw.seps.view.LogoutView;
@@ -39,10 +41,25 @@ public class FacePath extends Frame implements ActionListener, WindowListener {
 	}
 
 	private static Map<String, Panel> viewList = new HashMap<String, Panel>();
-	private FacebookProfile source;
-	private FacebookProfile target;
+	private FacebookProvider myFB = null;
+	private FacebookSearch myFS = null;
 	
-
+	public void setFP(FacebookProvider fp) {
+		this.myFB = fp;
+	}
+	
+	public void setFS(FacebookSearch fs) {
+		this.myFS = fs;
+	}
+	
+	public FacebookProvider getFP() {
+		return myFB;
+	}
+	
+	public FacebookSearch getFS() {
+		return myFS;
+	}
+	
 	public static void showView(String view) {
 		if (view.equals("login")) {
 			FacePath.viewList.get("loginView").setVisible(true);
@@ -76,22 +93,22 @@ public class FacePath extends Frame implements ActionListener, WindowListener {
 		this.setLayout(new BorderLayout());
 
 		// loginView
-		LoginView loginView = new LoginView();
+		LoginView loginView = new LoginView(this);
 		FacePath.viewList.put("loginView", loginView);
 		this.add(loginView, BorderLayout.CENTER);
 
 		// logoutView
-		LogoutView logoutView = new LogoutView();
+		LogoutView logoutView = new LogoutView(this);
 		FacePath.viewList.put("logoutView", logoutView);
 		this.add(logoutView, BorderLayout.WEST);
 
 		// searchView
-		SearchView searchView = new SearchView();
+		SearchView searchView = new SearchView(this);
 		FacePath.viewList.put("searchView", searchView);
 		this.add(searchView, BorderLayout.CENTER);
 
 		// GraphView
-		GraphView graphView = new GraphView();
+		GraphView graphView = new GraphView(this);
 		FacePath.viewList.put("graphView", graphView);
 		this.add(graphView, BorderLayout.CENTER);
 

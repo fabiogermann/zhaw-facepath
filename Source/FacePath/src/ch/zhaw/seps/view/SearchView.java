@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import ch.zhaw.seps.FacePath;
+import ch.zhaw.seps.fb.FacebookProvider;
 
 public class SearchView extends Panel implements ActionListener {
 
@@ -27,11 +28,14 @@ public class SearchView extends Panel implements ActionListener {
 	private Button resultBtn;
 
 	private Panel resultForm;
+	
+	private FacePath fp;
 
-	public SearchView() {
+	public SearchView(FacePath myFB) {
 		this.setLayout(null);
 		setLocation(150, 0);
 		this.setSize(874, 768);
+		this.fp = myFB;
 
 		searchForm = (Panel) FacePath.addComponentToPanel(new Panel(null), this, 0, 30, 830, 500);
 

@@ -73,7 +73,8 @@ public class FacebookProvider<T> {
 
 		response = httpclient.execute(httpost);
 		entity = response.getEntity();
-		System.out.println("Double check we've got right page " + EntityUtils.toString(entity));
+		//DEBUG
+		//System.out.println("Double check we've got right page " + EntityUtils.toString(entity));
 
 		System.out.println("Login form get: " + response.getStatusLine());
 		if (entity != null) {

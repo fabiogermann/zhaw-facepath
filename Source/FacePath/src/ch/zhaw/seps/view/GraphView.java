@@ -7,16 +7,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import ch.zhaw.seps.FacePath;
+import ch.zhaw.seps.fb.FacebookProvider;
+import ch.zhaw.seps.fb.FacebookSearch;
 
 public class GraphView extends Panel implements ActionListener {
 
 	private Button helpBtn;
 	private Button newSearchBtn;
+	private FacePath fp;
+	private FacebookSearch fs;
 
-	public GraphView() {
+	public GraphView(FacePath myFB) {
 		this.setLayout(null);
 		setLocation(150, 0);
 		this.setSize(874, 768);
+		this.fp = myFB;
 
 		Panel resultForm = (Panel) FacePath.addComponentToPanel(new Panel(null), this, 0, 30, 830, 700);
 
@@ -30,6 +35,12 @@ public class GraphView extends Panel implements ActionListener {
 		helpBtn.addActionListener(this);
 		newSearchBtn = (Button) FacePath.addComponentToPanel(new Button("Neue Suche"), resultForm, 630, 640, 180, 50);
 		newSearchBtn.addActionListener(this);
+		// irgend sowas sollen wir machen um den graphen anzuzeigen
+		//
+		//if(fs != null){
+		//	this.fs = fp.getFS();
+		//	fs.displayGraph();
+		//}
 	}
 
 	@Override

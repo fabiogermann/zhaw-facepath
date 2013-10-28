@@ -48,6 +48,10 @@ public class FacebookNetwork {
     	this.graph.addEdge(name, source, target);
     }
     
+    public Graph getGraph() {
+    	return this.graph;
+    }
+    
     public void setRoot() {
     	// TODO Auto-generated method stub
     }

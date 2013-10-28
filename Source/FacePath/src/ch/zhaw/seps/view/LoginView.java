@@ -26,12 +26,14 @@ public class LoginView extends Panel implements ActionListener {
 	private Checkbox guest;
 	private Button helpBtn;
 	private Button loginBtn;
+	private FacePath fp;
 
-	public LoginView() {
+	public LoginView(FacePath myFB) {
 		this.setLayout(null);
 		setLocation(0, 0);
 		this.setSize(1024, 768);
-
+		this.fp = myFB;
+		
 		Panel topPanel = (Panel) FacePath.addComponentToPanel(new Panel(null), this, 150, 40, 800, 240);
 
 		ImageIcon facepathLogo = new ImageIcon("resources" + System.getProperty("file.separator") + "facepath-logo.png");
@@ -63,8 +65,10 @@ public class LoginView extends Panel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == loginBtn) {
-			FacebookProvider fp = new FacebookProvider("CAACEdEose0cBAAuJLdsUi2ac9yOAsInPyxsCkCnLySNS2QXElPAAZB3OZByY8k9MhBsmRkSVZBbWZBF9GvugUjZAIG3kGdE8Qeikk0SyMb4ognPdGMOP6BCody8sdVxaFOUrb4NHSA5ywlTTRCFCoZCx3dTuDT26UmLXDB9yRuDg4j89ciiHrbJB25N144nqYZD", "fabio.germann", "pass");
-			FacebookSearch fs = new FacebookSearch(fp);
+			FacebookProvider fbProvider = new FacebookProvider("CAACEdEose0cBAOAEmvruQICHTZA0PHZBR9uSTuesU1OfKxQ5tKtDZAKUB7XbZBArENavZAxpyZCKleNMnVJeCLcOD3OsAtepaVi7vEgxN2ZBr69hpVpRajIWXeQI7fu3XdIGPLHSSGGQQsZCGdtdcMqYyDH6iKay0e1n7ytoioW8uVGXi4fZAOp3gudPTF8caQXwZD", "fabio.germann", "pass");
+			fp.setFP(fbProvider);
+			FacebookSearch fbSearch = new FacebookSearch(fbProvider);
+			fp.setFS(fbSearch);
 			FacePath.showView("search");
 		}
 	}

@@ -3,6 +3,8 @@ package ch.zhaw.seps.fb;
 import java.util.Iterator;
 import java.util.List;
 
+import org.graphstream.ui.swingViewer.Viewer;
+
 import com.restfb.types.User;
 
 public class FacebookSearch {
@@ -31,6 +33,9 @@ public class FacebookSearch {
 		    System.out.println(me.getUserUIDString()+"-to-"+item.getUserUIDString());
 		}
 		
+	}
+	public Viewer displayGraph() {
+		return this.fbNetwork.getGraph().display();
 	}
 
 }
