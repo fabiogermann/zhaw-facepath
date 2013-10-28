@@ -12,6 +12,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 import ch.zhaw.seps.FacePath;
+import ch.zhaw.seps.fb.FacebookProvider;
+import ch.zhaw.seps.fb.FacebookSearch;
 
 /**
  * @author dominikstraub
@@ -61,6 +63,8 @@ public class LoginView extends Panel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == loginBtn) {
+			FacebookProvider fp = new FacebookProvider("CAACEdEose0cBAAuJLdsUi2ac9yOAsInPyxsCkCnLySNS2QXElPAAZB3OZByY8k9MhBsmRkSVZBbWZBF9GvugUjZAIG3kGdE8Qeikk0SyMb4ognPdGMOP6BCody8sdVxaFOUrb4NHSA5ywlTTRCFCoZCx3dTuDT26UmLXDB9yRuDg4j89ciiHrbJB25N144nqYZD", "fabio.germann", "pass");
+			FacebookSearch fs = new FacebookSearch(fp);
 			FacePath.showView("search");
 		}
 	}

@@ -3,7 +3,9 @@ package ch.zhaw.seps.fb;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -16,10 +18,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+
+import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.restfb.types.User;
 
-public class FacebookProvider {
+public class FacebookProvider<T> {
 	
 	private FacebookClient apiConnection;
 	private DefaultHttpClient httpConnection;
@@ -88,5 +93,40 @@ public class FacebookProvider {
 
 	private void closeHTTP() {
 		httpConnection.getConnectionManager().shutdown();
+	}
+	
+	public List<FacebookProfile> getMyFriends() {
+		Connection<User> myFriends = apiConnection.fetchConnection("me/friends", User.class);
+		List<User> friendsList = myFriends.getData();
+		List<FacebookProfile> result = new ArrayList<FacebookProfile>();
+		
+		for(Iterator<User> i = friendsList.iterator(); i.hasNext(); ) {
+		    User item = i.next();
+		    
+		    User auser = apiConnection.fetchObject(item.getId(), User.class);
+		    
+		    FacebookProfile fbp = new FacebookProfile(auser.getUsername());
+			fbp.setName(auser.getFirstName(), auser.getLastName());
+			result.add(fbp);
+			
+		    //DEBUG
+		    System.out.println("FacebookProvider-getMyFriends-> "+item.getId()+" "+auser.getUsername()+" added");
+		}
+		return result;
+	}
+	
+	public FacebookProfile getMyProfile() {
+		User auser = apiConnection.fetchObject("me", User.class);
+		FacebookProfile fbp = new FacebookProfile(auser.getUsername());
+		fbp.setName(auser.getFirstName(), auser.getLastName());
+		System.out.println("FacebookProvider-getMyProfile-> "+auser.getUsername());
+		return fbp;
+	}
+	
+	public List<FacebookProfile> getFriendsOf(FacebookProfile profile) {
+		return null;
+		// TODO
+		// here we hate to parse the information from the http page
+		
 	}
 }

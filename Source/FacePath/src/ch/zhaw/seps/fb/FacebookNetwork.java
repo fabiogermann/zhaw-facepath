@@ -39,12 +39,12 @@ public class FacebookNetwork {
     	this.targetStack = new Stack<TreeNode<FacebookProfile>>();
     }
     
-    private void addVertice(String userName, FacebookProfile user){
+    public void addVertice(String userName, FacebookProfile user){
     	this.graph.addNode(userName);
     	this.graphCollection.put(userName, user);
     }
     
-    private void addEdge(String name, String source, String target){
+    public void addEdge(String name, String source, String target){
     	this.graph.addEdge(name, source, target);
     }
     
