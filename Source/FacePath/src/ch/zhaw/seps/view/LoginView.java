@@ -21,6 +21,9 @@ import ch.zhaw.seps.fb.FacebookSearch;
 
 public class LoginView extends Panel implements ActionListener {
 
+	// only for dev purpose
+	private TextField api_key;
+
 	private TextField email;
 	private TextField password;
 	private Checkbox guest;
@@ -33,7 +36,7 @@ public class LoginView extends Panel implements ActionListener {
 		setLocation(0, 0);
 		this.setSize(1024, 768);
 		this.fp = myFB;
-		
+
 		Panel topPanel = (Panel) FacePath.addComponentToPanel(new Panel(null), this, 150, 40, 800, 240);
 
 		ImageIcon facepathLogo = new ImageIcon("resources" + System.getProperty("file.separator") + "facepath-logo.png");
@@ -48,6 +51,9 @@ public class LoginView extends Panel implements ActionListener {
 		FacePath.addComponentToPanel(new Label(info), topPanel, 280, 30, 450, 180);
 
 		Panel loginForm = (Panel) FacePath.addComponentToPanel(new Panel(null), this, 70, 320, 830, 250);
+
+		// only for dev purpose
+		api_key = (TextField) FacePath.addComponentToPanel(new TextField(50), loginForm, 80, 200, 400, 30);
 
 		FacePath.addComponentToPanel(new Label("Bitte geben Sie Ihren Facebook Login ein."), loginForm, 80, 40, 400, 30);
 		FacePath.addComponentToPanel(new Label("E-Mail:"), loginForm, 80, 80, 80, 30);
@@ -65,7 +71,7 @@ public class LoginView extends Panel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == loginBtn) {
-			FacebookProvider fbProvider = new FacebookProvider("CAACEdEose0cBAOAEmvruQICHTZA0PHZBR9uSTuesU1OfKxQ5tKtDZAKUB7XbZBArENavZAxpyZCKleNMnVJeCLcOD3OsAtepaVi7vEgxN2ZBr69hpVpRajIWXeQI7fu3XdIGPLHSSGGQQsZCGdtdcMqYyDH6iKay0e1n7ytoioW8uVGXi4fZAOp3gudPTF8caQXwZD", "fabio.germann", "pass");
+			FacebookProvider fbProvider = new FacebookProvider(api_key.getText(), email.getText(), password.getText());
 			fp.setFP(fbProvider);
 			FacebookSearch fbSearch = new FacebookSearch(fbProvider);
 			fp.setFS(fbSearch);
