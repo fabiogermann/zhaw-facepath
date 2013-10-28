@@ -39,7 +39,7 @@ public class GraphView extends Panel implements ActionListener {
 		//
 		//if(fs != null){
 		//	this.fs = fp.getFS();
-		//	fs.displayGraph();
+		//	fs.displayGraph(); //returns the graph object
 		//}
 		
 		// A LA
