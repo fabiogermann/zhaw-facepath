@@ -41,6 +41,18 @@ public class GraphView extends Panel implements ActionListener {
 		//	this.fs = fp.getFS();
 		//	fs.displayGraph();
 		//}
+		
+		// A LA
+		//
+		//import org.graphstream.ui.swingViewer.View;
+		//import org.graphstream.ui.swingViewer.Viewer;
+		// ....
+		//Graph graph = new MultiGraph("embedded");
+		//Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		// ...
+		//View view = viewer.addDefaultView(false);   // false indicates "no JFrame".
+		// ...
+		//myJFrame.add(view);
 	}
 
 	@Override
