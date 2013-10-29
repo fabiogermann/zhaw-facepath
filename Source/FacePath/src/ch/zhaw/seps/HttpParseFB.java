@@ -2,7 +2,10 @@ package ch.zhaw.seps;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,12 +19,20 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import ch.zhaw.seps.fb.FacebookProfile;
+
+import com.restfb.types.User;
 
 public class HttpParseFB {
 
-	static final String USEREMAIL = "foo@bar.com";
-	static final String PASSWORD = "password";
+	static final String USEREMAIL = "fabio.germann";
+	static final String PASSWORD = "pass";
 	static final String TESTBUDDY = "marius.zingg";
+	
 	/**
 	 * @param args
 	 * @throws IOException 
@@ -77,11 +88,31 @@ public class HttpParseFB {
 		    }
 		}
 		
-		HttpGet httpget2 = new HttpGet("https://graph.facebook.com/" + TESTBUDDY);
+		HttpGet httpget2 = new HttpGet("https://www.facebook.com/sadyhawk/friends");
 		HttpResponse response2 = httpclient.execute(httpget2);
 		HttpEntity entity2 = response2.getEntity();
 		
-		System.out.println(EntityUtils.toString(entity2));
+		
+		String str = EntityUtils.toString(entity2);
+		String regex = "(https://www.facebook.com/)([0-9a-zA-Z.]*)(\\?fref=pb)";
+		
+		//Elements doc = Jsoup.parse(str, "UTF-8").getElementsByTag("a");
+		//Elements links = doc; //.select("a");
+		
+		List<String> allMatches = new ArrayList<String>();
+		Matcher m = Pattern.compile(regex).matcher(str);
+		while (m.find()) {
+		   allMatches.add(m.group());
+		}
+		
+		
+		for(int i = 0; i < allMatches.size(); i++) {
+			System.out.println(allMatches.get(i).toString());
+		
+		}
+	
+
+    
 		httpclient.getConnectionManager().shutdown();
 	}
 }

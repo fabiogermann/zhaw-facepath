@@ -15,7 +15,7 @@ public class RestApiFB {
 	public static void main(String[] args) throws ClientProtocolException, IOException {
 		// See documentation at http://restfb.com/#initialization
 		
-		final String FABIO_ACCESS_TOKEN = "CAACEdEose0cBAEHxe6ZB6NWxSI1KbZCyF2nq76zqrD5OygkZBFH9ksN5nm4Y77sD4qBCSBj2FjDyVKrgVZANpW8Nwyd2s9ZBC6kUUFcvxhJ3Jo0ECumxCrOLZCa8ro26KiONgKZCAigfgmEMuAURZANahhuiAmhmjGXhhAPllLPRVmABUG7YCYDul3RrWg7vHiEZD";
+		final String FABIO_ACCESS_TOKEN = "CAACEdEose0cBAASSK2qhPP1t76wMHfqIgFn3LPWMabldngoTnCdvH5RXZA3x0ttCnWZBYjy0MCC4Hyerng24DAo7CZAhOLJIp0xaQmO7ZCkis2xsVgFdgnM2A9oZBKyg5SzIrR3BRv7gfD64CZC3FrPlNPUrYY6WWyLUiZBUPGa2ZB2BLWLjnu3RjbLsrMpGRYwZD";
 	
 		FacebookClient facebookClient = new DefaultFacebookClient(FABIO_ACCESS_TOKEN);
 		
