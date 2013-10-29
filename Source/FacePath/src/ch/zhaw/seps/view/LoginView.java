@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 
 import ch.zhaw.seps.FacePath;
 import ch.zhaw.seps.fb.FacebookProvider;
@@ -25,7 +26,7 @@ public class LoginView extends Panel implements ActionListener {
 	private TextField api_key;
 
 	private TextField email;
-	private TextField password;
+	private JPasswordField password;
 	private Checkbox guest;
 	private Button helpBtn;
 	private Button loginBtn;
@@ -59,7 +60,7 @@ public class LoginView extends Panel implements ActionListener {
 		FacePath.addComponentToPanel(new Label("E-Mail:"), loginForm, 80, 80, 80, 30);
 		email = (TextField) FacePath.addComponentToPanel(new TextField(50), loginForm, 280, 80, 470, 30);
 		FacePath.addComponentToPanel(new Label("Passwort:"), loginForm, 80, 120, 110, 30);
-		password = (TextField) FacePath.addComponentToPanel(new TextField(50), loginForm, 280, 120, 470, 30);
+		password = (JPasswordField) FacePath.addComponentToPanel(new JPasswordField(50), loginForm, 280, 120, 470, 30);
 		guest = (Checkbox) FacePath.addComponentToPanel(new Checkbox(
 		        "Als Gast einloggen (Kein Facebook-Login benötigt)"), loginForm, 80, 160, 600, 30);
 		helpBtn = (Button) FacePath.addComponentToPanel(new Button("Hilfe"), loginForm, 520, 200, 130, 50);
@@ -71,7 +72,8 @@ public class LoginView extends Panel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == loginBtn) {
-			FacebookProvider fbProvider = new FacebookProvider(api_key.getText(), email.getText(), password.getText());
+			FacebookProvider fbProvider = new FacebookProvider(api_key.getText(), email.getText(), new String(
+			        password.getPassword()));
 			fp.setFP(fbProvider);
 			FacebookSearch fbSearch = new FacebookSearch(fbProvider);
 			fp.setFS(fbSearch);
