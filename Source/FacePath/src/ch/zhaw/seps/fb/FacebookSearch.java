@@ -38,4 +38,16 @@ public class FacebookSearch {
 		return this.fbNetwork.getGraph().display();
 	}
 
+	public void setPersonOfInterest() {
+		//TODO
+	}
+	
+	public void searchIterate() {
+		//TODO
+	}
+	
+	public boolean pathFound() {
+		return false;
+		//TODO
+	}
 }

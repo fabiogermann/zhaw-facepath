@@ -130,6 +130,7 @@ public class FacebookProvider<T> {
 	
 	public FacebookProfile getMyProfile() {
 		FacebookProfile newuser = getUserFromAPI("me");
+		//DEBUG
 		System.out.println("FacebookProvider-getMyProfile-> "+newuser.getUserID());
 		return newuser;
 	}
@@ -164,8 +165,5 @@ public class FacebookProvider<T> {
 		}
 		
 		return result;
-		// TODO
-		// here we hate to parse the information from the http page
-		
 	}
 }
