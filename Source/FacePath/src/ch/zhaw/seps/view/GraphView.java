@@ -6,8 +6,12 @@ import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.ui.swingViewer.View;
+import org.graphstream.ui.swingViewer.Viewer;
+
 import ch.zhaw.seps.FacePath;
-import ch.zhaw.seps.fb.FacebookProvider;
 import ch.zhaw.seps.fb.FacebookSearch;
 
 public class GraphView extends Panel implements ActionListener {
@@ -37,28 +41,26 @@ public class GraphView extends Panel implements ActionListener {
 		newSearchBtn.addActionListener(this);
 		// irgend sowas sollen wir machen um den graphen anzuzeigen
 		//
-		//if(fs != null){
-		//	this.fs = fp.getFS();
-		//	fs.displayGraph(); //returns the graph object
-		//}
-		
+		if (fs != null) {
+			this.fs = fp.getFS();
+			fs.displayGraph(); // returns the graph object
+		}
+
 		// A LA
-		//
-		//import org.graphstream.ui.swingViewer.View;
-		//import org.graphstream.ui.swingViewer.Viewer;
 		// ....
-		//Graph graph = new MultiGraph("embedded");
-		//Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		Graph graph = new MultiGraph("embedded");
+		Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		// ...
-		//View view = viewer.addDefaultView(false);   // false indicates "no JFrame".
+		View view = viewer.addDefaultView(false); // false indicates
+		                                          // "no JFrame".
 		// ...
-		//myJFrame.add(view);
+		FacePath.addComponentToPanel(view, resultForm, 20, 20, 800, 400);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == newSearchBtn) {
-			FacePath.showView("search");
+			this.fp.showView("search");
 		}
 	}
 }

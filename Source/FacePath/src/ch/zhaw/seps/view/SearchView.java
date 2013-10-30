@@ -74,7 +74,7 @@ public class SearchView extends Panel implements ActionListener {
 			resultForm.setVisible(true);
 		}
 		if (e.getSource() == resultBtn) {
-			FacePath.showView("result");
+			this.fp.showView("result");
 		}
 	}
 }

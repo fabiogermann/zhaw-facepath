@@ -38,7 +38,7 @@ public class LogoutView extends Panel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == logoutBtn) {
-			FacePath.showView("login");
+			this.fp.showView("login");
 		}
 	}
 }
