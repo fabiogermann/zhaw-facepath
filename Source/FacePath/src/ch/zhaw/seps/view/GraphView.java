@@ -41,17 +41,17 @@ public class GraphView extends Panel implements ActionListener {
 		newSearchBtn.addActionListener(this);
 		// irgend sowas sollen wir machen um den graphen anzuzeigen
 		//
-		if (fs != null) {
+		if (fs == null) {
 			this.fs = fp.getFS();
-			fs.displayGraph(); // returns the graph object
+		//	fs.getGraph(); // returns the graph object
 		}
 
 		// A LA
 		// ....
-		Graph graph = new MultiGraph("embedded");
-		Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+		//Graph graph = new MultiGraph("embedded");
+		//Viewer viewer = new Viewer((Graph) fs.getGraph().display(), Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		// ...
-		View view = viewer.addDefaultView(false); // false indicates
+		View view = fs.getGraph().display().addDefaultView(false); // false indicates
 		                                          // "no JFrame".
 		// ...
 		FacePath.addComponentToPanel(view, resultForm, 20, 20, 800, 400);

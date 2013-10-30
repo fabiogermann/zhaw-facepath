@@ -3,6 +3,7 @@ package ch.zhaw.seps.fb;
 import java.util.Iterator;
 import java.util.List;
 
+import org.graphstream.graph.Graph;
 import org.graphstream.ui.swingViewer.Viewer;
 
 import com.restfb.types.User;
@@ -34,8 +35,8 @@ public class FacebookSearch {
 		}
 	}
 	
-	public Viewer displayGraph() {
-		return this.fbNetwork.getGraph().display();
+	public Graph getGraph() {
+		return this.fbNetwork.getGraph();
 	}
 
 	public void setPersonOfInterestSource() {
