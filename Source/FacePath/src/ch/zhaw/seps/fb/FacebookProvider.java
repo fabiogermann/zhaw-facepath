@@ -62,18 +62,28 @@ public class FacebookProvider<T> {
 
 		HttpResponse response = httpclient.execute(httpget);
 		HttpEntity entity = response.getEntity();
-
-		System.out.println("Login form get: " + response.getStatusLine());
+		
+		if (FacePath.DEBUG){
+			System.out.println("Login form get: " + response.getStatusLine());
+		}
+		
 		if (entity != null) {
 		    entity.consumeContent();
 		}
-		System.out.println("Initial set of cookies:");
+		if (FacePath.DEBUG){
+			System.out.println("Initial set of cookies:");
+		}
+		
 		List<Cookie> cookies = httpclient.getCookieStore().getCookies();
 		if (cookies.isEmpty()) {
-		    System.out.println("None");
+			if (FacePath.DEBUG){
+				System.out.println("None");
+			}
 		} else {
 		    for (int i = 0; i < cookies.size(); i++) {
-		        System.out.println("- " + cookies.get(i).toString());
+		    	if (FacePath.DEBUG){
+					System.out.println("- " + cookies.get(i).toString());
+				}
 		    }
 		}
 
@@ -87,21 +97,29 @@ public class FacebookProvider<T> {
 
 		response = httpclient.execute(httpost);
 		entity = response.getEntity();
-		//DEBUG
-		//System.out.println("Double check we've got right page " + EntityUtils.toString(entity));
-
-		System.out.println("Login form get: " + response.getStatusLine());
+		
+		if (FacePath.DEBUG){
+			System.out.println("Login form get: " + response.getStatusLine());
+		}
+		
 		if (entity != null) {
 		    entity.consumeContent();
 		}
 
-		System.out.println("Post logon cookies:");
+		if (FacePath.DEBUG){
+			System.out.println("Post logon cookies:");
+		}
+		
 		cookies = httpclient.getCookieStore().getCookies();
 		if (cookies.isEmpty()) {
-		    System.out.println("None");
+			if (FacePath.DEBUG){
+				System.out.println("None");
+			}
 		} else {
 		    for (int i = 0; i < cookies.size(); i++) {
-		        System.out.println("- " + cookies.get(i).toString());
+		    	if (FacePath.DEBUG){
+					System.out.println("- " + cookies.get(i).toString());
+				}
 		    }
 		}
 	}
