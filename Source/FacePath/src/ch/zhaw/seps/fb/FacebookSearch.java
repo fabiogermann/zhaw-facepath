@@ -38,7 +38,11 @@ public class FacebookSearch {
 		return this.fbNetwork.getGraph().display();
 	}
 
-	public void setPersonOfInterest() {
+	public void setPersonOfInterestSource() {
+		//TODO -> in Facebook
+	}
+	
+	public void setPersonOfInterestDestination() {
 		//TODO
 	}
 	
