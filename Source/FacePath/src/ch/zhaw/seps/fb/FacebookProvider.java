@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -39,17 +40,17 @@ public class FacebookProvider<T> {
 	private static String APP_ID = "676728905679775";
 	private static String APP_SECRET = "72defc37e47548c7ee82f9f18c82ca56";
 	private static String REDIRECT_URL = "https://www.facebook.com/connect/login_success.html";
-	private String loginRequest = "https://www.facebook.com/dialog/oauth?client_id="+APP_ID+"&redirect_uri="+REDIRECT_URL+"&scope=email,read_stream";
+	private String loginRequest = "https://www.facebook.com/dialog/oauth?client_id="+APP_ID+"&redirect_uri="+REDIRECT_URL+"&scope="+SCOPE;
 	private String loginCode;
 	private String loginAuthentication = "https://graph.facebook.com/oauth/access_token?client_id="+APP_ID+"&redirect_uri="+REDIRECT_URL+"&client_secret="+APP_SECRET+"&code=";
 	
 	public FacebookProvider(String token, String email, String password) {
-		this.connectToApi(token);
 		try {
 			this.connectHTTP(email, password);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		this.connectToApi(token);
 	}
 	
 	private void connectToApi(String token) {
@@ -58,10 +59,12 @@ public class FacebookProvider<T> {
 	
 	private void connectHTTP(String email, String password) throws ClientProtocolException, IOException {
 		DefaultHttpClient httpclient = new DefaultHttpClient();
+		this.httpConnection = httpclient;
 		HttpGet httpget = new HttpGet("http://www.facebook.com/login.php");
 
 		HttpResponse response = httpclient.execute(httpget);
 		HttpEntity entity = response.getEntity();
+		
 		
 		if (FacePath.DEBUG){
 			System.out.println("Login form get: " + response.getStatusLine());
@@ -121,6 +124,19 @@ public class FacebookProvider<T> {
 					System.out.println("- " + cookies.get(i).toString());
 				}
 		    }
+		}
+	}
+	
+	private void getAuthToken() throws ClientProtocolException, IOException {
+		HttpGet httpget = new HttpGet(loginRequest);
+		HttpResponse response = this.httpConnection.execute(httpget);
+		
+		if (response.getStatusLine().getStatusCode() == 302) {
+			  String redirectURL = response.getFirstHeader("Location").getValue();
+
+			  // TODO: check if redirected to login or step1-code was returned
+			  HttpGet request2 = new HttpGet(loginAuthentication);
+			  HttpResponse response2 = this.httpConnection.execute(request2);
 		}
 	}
 
