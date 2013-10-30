@@ -115,7 +115,12 @@ public class FacebookProvider<T> {
 		
 		for(Iterator<User> i = friendsList.iterator(); i.hasNext(); ) {
 		    User item = i.next();
-		    FacebookProfile newuser = this.getUserFromAPI(item.getUsername());
+		    FacebookProfile newuser = null;
+		    if(item.getUsername() != null) {
+		    	newuser = this.getUserFromAPI(item.getUsername());
+		    } else {
+		    	newuser = this.getUserFromAPI(item.getId());
+		    }
 			result.add(newuser);
 		    //DEBUG
 		    System.out.println("FacebookProvider-getMyFriends-> "+item.getId()+" "+newuser.getUserUIDString()+" added");
@@ -124,8 +129,8 @@ public class FacebookProvider<T> {
 	}
 	
 	public FacebookProfile getMyProfile() {
-		FacebookProfile newuser = this.getUserFromAPI("me");
-		System.out.println("FacebookProvider-getMyProfile-> "+newuser.getUsername());
+		FacebookProfile newuser = getUserFromAPI("me");
+		System.out.println("FacebookProvider-getMyProfile-> "+newuser.getUserID());
 		return newuser;
 	}
 	
