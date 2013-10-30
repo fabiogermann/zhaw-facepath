@@ -2,6 +2,8 @@ package ch.zhaw.seps;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -30,7 +32,7 @@ import com.restfb.types.User;
 public class HttpParseFB {
 
 	static final String USEREMAIL = "fabio.germann";
-	static final String PASSWORD = "pass";
+	static final String PASSWORD = "Th0r83991nDiGO";
 	static final String TESTBUDDY = "marius.zingg";
 	
 	/**
@@ -99,18 +101,22 @@ public class HttpParseFB {
 		//Elements doc = Jsoup.parse(str, "UTF-8").getElementsByTag("a");
 		//Elements links = doc; //.select("a");
 		
-		List<String> allMatches = new ArrayList<String>();
+		Hashtable<String,String> allMatches = new Hashtable<String,String>();
+		
 		Matcher m = Pattern.compile(regex).matcher(str);
 		while (m.find()) {
-		   allMatches.add(m.group());
+		   if(! allMatches.containsKey(m.group())) {
+			   allMatches.put(m.group(), m.group());
+		   }
 		}
 		
+		Collection<String> col = allMatches.values();
 		
-		for(int i = 0; i < allMatches.size(); i++) {
-			System.out.println(allMatches.get(i).toString());
-		
+		for(Iterator<String> i = col.iterator(); i.hasNext(); ) {
+		    String item = i.next();
+		    item = item.replace("https://www.facebook.com/", "").replace("?fref=pb", "");
+			System.out.println(item);		
 		}
-	
 
     
 		httpclient.getConnectionManager().shutdown();

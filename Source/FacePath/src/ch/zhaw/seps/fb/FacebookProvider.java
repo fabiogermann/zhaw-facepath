@@ -3,8 +3,12 @@ package ch.zhaw.seps.fb;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -96,6 +100,14 @@ public class FacebookProvider<T> {
 		httpConnection.getConnectionManager().shutdown();
 	}
 	
+	private FacebookProfile getUserFromAPI(String userN) {
+		User auser = apiConnection.fetchObject(userN, User.class);
+	    FacebookProfile fbp = new FacebookProfile(auser.getUsername(), auser.getId());
+	    fbp.setName(auser.getFirstName(), auser.getLastName());
+	    fbp.setLink(auser.getLink());
+		return fbp;
+	}
+	
 	public List<FacebookProfile> getMyFriends() {
 		Connection<User> myFriends = apiConnection.fetchConnection("me/friends", User.class);
 		List<User> friendsList = myFriends.getData();
@@ -103,29 +115,50 @@ public class FacebookProvider<T> {
 		
 		for(Iterator<User> i = friendsList.iterator(); i.hasNext(); ) {
 		    User item = i.next();
-		    
-		    User auser = apiConnection.fetchObject(item.getId(), User.class);
-		    
-		    FacebookProfile fbp = new FacebookProfile(auser.getUsername());
-			fbp.setName(auser.getFirstName(), auser.getLastName());
-			result.add(fbp);
-			
+		    FacebookProfile newuser = this.getUserFromAPI(item.getUsername());
+			result.add(newuser);
 		    //DEBUG
-		    System.out.println("FacebookProvider-getMyFriends-> "+item.getId()+" "+auser.getUsername()+" added");
+		    System.out.println("FacebookProvider-getMyFriends-> "+item.getId()+" "+newuser.getUserUIDString()+" added");
 		}
 		return result;
 	}
 	
 	public FacebookProfile getMyProfile() {
-		User auser = apiConnection.fetchObject("me", User.class);
-		FacebookProfile fbp = new FacebookProfile(auser.getUsername());
-		fbp.setName(auser.getFirstName(), auser.getLastName());
-		System.out.println("FacebookProvider-getMyProfile-> "+auser.getUsername());
-		return fbp;
+		FacebookProfile newuser = this.getUserFromAPI("me");
+		System.out.println("FacebookProvider-getMyProfile-> "+newuser.getUsername());
+		return newuser;
 	}
 	
-	public List<FacebookProfile> getFriendsOf(FacebookProfile profile) {
-		return null;
+	public List<FacebookProfile> getFriendsOf(FacebookProfile profile) throws ClientProtocolException, IOException {
+		List<FacebookProfile> result = null;
+		
+		HttpGet httpget = new HttpGet(profile.getLink()+"/friends");
+		HttpResponse response = httpConnection.execute(httpget);
+		HttpEntity entity = response.getEntity();
+		
+		String str = EntityUtils.toString(entity);
+		String regex = "(https://www.facebook.com/)([0-9a-zA-Z.]*)(\\?fref=pb)";
+		
+		Hashtable<String,String> allMatches = new Hashtable<String,String>();
+		
+		Matcher m = Pattern.compile(regex).matcher(str);
+		while (m.find()) {
+		   if(! allMatches.containsKey(m.group())) {
+			   allMatches.put(m.group(), m.group());
+		   }
+		}	
+		
+		Collection<String> col = allMatches.values();
+		
+		for(Iterator<String> i = col.iterator(); i.hasNext(); ) {
+		    String item = i.next();
+		    item = item.replace("https://www.facebook.com/", "").replace("?fref=pb", "");
+			System.out.println(item);
+			FacebookProfile newuser = this.getUserFromAPI(item);
+			result.add(newuser);
+		}
+		
+		return result;
 		// TODO
 		// here we hate to parse the information from the http page
 		

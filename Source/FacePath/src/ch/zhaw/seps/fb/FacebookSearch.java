@@ -32,8 +32,8 @@ public class FacebookSearch {
 		    //DEBUG
 		    System.out.println(me.getUserUIDString()+"-to-"+item.getUserUIDString());
 		}
-		
 	}
+	
 	public Viewer displayGraph() {
 		return this.fbNetwork.getGraph().display();
 	}
