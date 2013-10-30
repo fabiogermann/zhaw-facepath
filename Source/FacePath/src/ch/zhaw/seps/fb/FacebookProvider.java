@@ -23,6 +23,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import ch.zhaw.seps.FacePath;
+
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
@@ -132,7 +134,9 @@ public class FacebookProvider<T> {
 		    }
 			result.add(newuser);
 		    //DEBUG
-		    System.out.println("FacebookProvider-getMyFriends-> "+item.getId()+" "+newuser.getUserUIDString()+" added");
+			if (FacePath.DEBUG){
+				System.out.println("FacebookProvider-getMyFriends-> "+item.getId()+" "+newuser.getUserUIDString()+" added");
+			}
 		}
 		return result;
 	}
@@ -140,7 +144,9 @@ public class FacebookProvider<T> {
 	public FacebookProfile getMyProfile() {
 		FacebookProfile newuser = getUserFromAPI("me");
 		//DEBUG
-		System.out.println("FacebookProvider-getMyProfile-> "+newuser.getUserID());
+		if (FacePath.DEBUG){
+			System.out.println("FacebookProvider-getMyProfile-> "+newuser.getUserID());
+		}
 		return newuser;
 	}
 	

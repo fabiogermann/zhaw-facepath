@@ -28,6 +28,8 @@ import ch.zhaw.seps.view.SearchView;
  */
 
 public class FacePath extends Frame implements ActionListener, WindowListener {
+	
+	public static final boolean DEBUG = false;
 
 	public static void main(String[] args) {
 		new FacePath();

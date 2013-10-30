@@ -6,6 +6,8 @@ import java.util.List;
 import org.graphstream.graph.Graph;
 import org.graphstream.ui.swingViewer.Viewer;
 
+import ch.zhaw.seps.FacePath;
+
 import com.restfb.types.User;
 
 public class FacebookSearch {
@@ -31,7 +33,9 @@ public class FacebookSearch {
 		    fbNetwork.addVertice(item.getUserID(), item);
 		    fbNetwork.addEdge(me.getUserID()+"-to-"+item.getUserID(), me.getUserID(), item.getUserID());
 		    //DEBUG
-		    System.out.println(me.getUserID()+"-to-"+item.getUserID());
+		    if (FacePath.DEBUG){
+		    	System.out.println(me.getUserID()+"-to-"+item.getUserID());
+		    }
 		}
 	}
 	
