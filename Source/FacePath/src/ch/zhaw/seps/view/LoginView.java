@@ -77,7 +77,7 @@ public class LoginView extends Panel implements ActionListener {
 			fp.setFP(fbProvider);
 			FacebookSearch fbSearch = new FacebookSearch(fbProvider);
 			fp.setFS(fbSearch);
-			FacePath.showView("search");
+			this.fp.showView("search");
 		}
 	}
 }

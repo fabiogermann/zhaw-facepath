@@ -40,46 +40,55 @@ public class FacePath extends Frame implements ActionListener, WindowListener {
 		return c;
 	}
 
-	private static Map<String, Panel> viewList = new HashMap<String, Panel>();
+	private Map<String, Panel> viewMap = new HashMap<String, Panel>();
 	private FacebookProvider myFB = null;
 	private FacebookSearch myFS = null;
-	
+
 	public void setFP(FacebookProvider fp) {
 		this.myFB = fp;
 	}
-	
+
 	public void setFS(FacebookSearch fs) {
 		this.myFS = fs;
 	}
-	
+
 	public FacebookProvider getFP() {
 		return myFB;
 	}
-	
+
 	public FacebookSearch getFS() {
 		return myFS;
 	}
-	
-	public static void showView(String view) {
+
+	public void showView(String view) {
+		for (String viewString : this.viewMap.keySet()) {
+			this.remove(this.viewMap.get(viewString));
+		}
+		viewMap.clear();
 		if (view.equals("login")) {
-			FacePath.viewList.get("loginView").setVisible(true);
-			FacePath.viewList.get("logoutView").setVisible(false);
-			FacePath.viewList.get("searchView").setVisible(false);
-			FacePath.viewList.get("graphView").setVisible(false);
+			LoginView loginView = new LoginView(this);
+			this.viewMap.put("loginView", loginView);
+			this.add(loginView, BorderLayout.CENTER);
 		}
 
 		if (view.equals("search")) {
-			FacePath.viewList.get("loginView").setVisible(false);
-			FacePath.viewList.get("logoutView").setVisible(true);
-			FacePath.viewList.get("searchView").setVisible(true);
-			FacePath.viewList.get("graphView").setVisible(false);
+			LogoutView logoutView = new LogoutView(this);
+			this.viewMap.put("logoutView", logoutView);
+			this.add(logoutView, BorderLayout.WEST);
+
+			SearchView searchView = new SearchView(this);
+			this.viewMap.put("searchView", searchView);
+			this.add(searchView, BorderLayout.CENTER);
 		}
 
 		if (view.equals("result")) {
-			FacePath.viewList.get("loginView").setVisible(false);
-			FacePath.viewList.get("logoutView").setVisible(true);
-			FacePath.viewList.get("searchView").setVisible(false);
-			FacePath.viewList.get("graphView").setVisible(true);
+			LogoutView logoutView = new LogoutView(this);
+			this.viewMap.put("logoutView", logoutView);
+			this.add(logoutView, BorderLayout.WEST);
+
+			GraphView graphView = new GraphView(this);
+			this.viewMap.put("graphView", graphView);
+			this.add(graphView, BorderLayout.CENTER);
 		}
 	}
 
@@ -87,32 +96,10 @@ public class FacePath extends Frame implements ActionListener, WindowListener {
 		setTitle("facepath");
 		setLocation(200, 200);
 		setSize(1024, 768);
-
 		this.addWindowListener(this);
-
 		this.setLayout(new BorderLayout());
 
-		// loginView
-		LoginView loginView = new LoginView(this);
-		FacePath.viewList.put("loginView", loginView);
-		this.add(loginView, BorderLayout.CENTER);
-
-		// logoutView
-		LogoutView logoutView = new LogoutView(this);
-		FacePath.viewList.put("logoutView", logoutView);
-		this.add(logoutView, BorderLayout.WEST);
-
-		// searchView
-		SearchView searchView = new SearchView(this);
-		FacePath.viewList.put("searchView", searchView);
-		this.add(searchView, BorderLayout.CENTER);
-
-		// GraphView
-		GraphView graphView = new GraphView(this);
-		FacePath.viewList.put("graphView", graphView);
-		this.add(graphView, BorderLayout.CENTER);
-
-		FacePath.showView("login");
+		this.showView("login");
 
 		setVisible(true);
 	}
