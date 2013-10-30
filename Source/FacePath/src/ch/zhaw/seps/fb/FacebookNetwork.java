@@ -45,8 +45,8 @@ public class FacebookNetwork {
     	this.graphCollection.put(userName, user);
     }
     
-    public void addEdge(String name, String source, String target){
-    	this.graph.addEdge(name, source, target);
+    public void addEdge(String name, String sourceID, String targetID){
+    	this.graph.addEdge(name, sourceID, targetID);
     }
     
     public Graph getGraph() {

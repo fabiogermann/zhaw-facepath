@@ -22,15 +22,15 @@ public class FacebookSearch {
 	
 	private void initializeNetwork(FacebookProfile me, List<FacebookProfile> friends) {
 		// add myself to the graph
-		fbNetwork.addVertice(me.getUserUIDString(), me);
+		fbNetwork.addVertice(me.getUserID(), me);
 		
 		//add my friends to the graph
 		for(Iterator<FacebookProfile> i = friends.iterator(); i.hasNext(); ) {
 		    FacebookProfile item = i.next();
-		    fbNetwork.addVertice(item.getUserUIDString(), item);
-		    fbNetwork.addEdge(me.getUserUIDString()+"-to-"+item.getUserUIDString(), me.getUserUIDString(), item.getUserUIDString());
+		    fbNetwork.addVertice(item.getUserID(), item);
+		    fbNetwork.addEdge(me.getUserID()+"-to-"+item.getUserID(), me.getUserID(), item.getUserID());
 		    //DEBUG
-		    System.out.println(me.getUserUIDString()+"-to-"+item.getUserUIDString());
+		    System.out.println(me.getUserID()+"-to-"+item.getUserID());
 		}
 	}
 	
