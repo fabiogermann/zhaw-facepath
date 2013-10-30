@@ -30,19 +30,18 @@ import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.types.User;
 
-/* 
- https://developers.facebook.com/docs/reference/javascript/FB.login/
- FB.login(function(response) {
-   // handle the response
- }, {scope: 'email,user_likes'});
- * {scope: 'user_aboutme,user_groups,user_likes,user_events,friends_about_me,friends_groups,friends_likes,friends_events'});
- * 
- */
-
 public class FacebookProvider<T> {
 	
 	private FacebookClient apiConnection;
 	private DefaultHttpClient httpConnection;
+	
+	private static String SCOPE = "user_aboutme,user_groups,user_likes,user_events,friends_about_me,friends_groups,friends_likes,friends_events";
+	private static String APP_ID = "676728905679775";
+	private static String APP_SECRET = "72defc37e47548c7ee82f9f18c82ca56";
+	private static String REDIRECT_URL = "https://www.facebook.com/connect/login_success.html";
+	private String loginRequest = "https://www.facebook.com/dialog/oauth?client_id="+APP_ID+"&redirect_uri="+REDIRECT_URL+"&scope=email,read_stream";
+	private String loginCode;
+	private String loginAuthentication = "https://graph.facebook.com/oauth/access_token?client_id="+APP_ID+"&redirect_uri="+REDIRECT_URL+"&client_secret="+APP_SECRET+"&code=";
 	
 	public FacebookProvider(String token, String email, String password) {
 		this.connectToApi(token);
