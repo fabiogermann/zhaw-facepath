@@ -34,6 +34,7 @@ public class FacebookNetwork {
     	// the easy way
     	this.graph = new SingleGraph("FacebookNetwork");
     	this.graphCollection = new HashMap<String, FacebookProfile>();
+    	
     	//the hard way
     	this.rootStack = new Stack<TreeNode<FacebookProfile>>();
     	this.targetStack = new Stack<TreeNode<FacebookProfile>>();

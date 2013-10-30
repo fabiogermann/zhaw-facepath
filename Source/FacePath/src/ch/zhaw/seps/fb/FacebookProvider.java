@@ -28,6 +28,15 @@ import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.types.User;
 
+/* 
+ https://developers.facebook.com/docs/reference/javascript/FB.login/
+ FB.login(function(response) {
+   // handle the response
+ }, {scope: 'email,user_likes'});
+ * {scope: 'user_aboutme,user_groups,user_likes,user_events,friends_about_me,friends_groups,friends_likes,friends_events'});
+ * 
+ */
+
 public class FacebookProvider<T> {
 	
 	private FacebookClient apiConnection;
