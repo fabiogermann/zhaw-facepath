@@ -24,3 +24,5 @@ local.properties
 
 # Locally stored "Eclipse launch configurations"
 *.launch
+/log4j.properties
+/log4j-core-2.0-beta9.jar
