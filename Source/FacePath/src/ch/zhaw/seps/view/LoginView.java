@@ -54,7 +54,7 @@ public class LoginView extends Panel implements ActionListener {
 		Panel loginForm = (Panel) FacePath.addComponentToPanel(new Panel(null), this, 70, 320, 830, 250);
 
 		// only for dev purpose
-		api_key = (TextField) FacePath.addComponentToPanel(new TextField(50), loginForm, 80, 200, 400, 30);
+		//api_key = (TextField) FacePath.addComponentToPanel(new TextField(50), loginForm, 80, 200, 400, 30);
 
 		FacePath.addComponentToPanel(new Label("Bitte geben Sie Ihren Facebook Login ein."), loginForm, 80, 40, 400, 30);
 		FacePath.addComponentToPanel(new Label("E-Mail:"), loginForm, 80, 80, 80, 30);
@@ -72,7 +72,7 @@ public class LoginView extends Panel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == loginBtn) {
-			FacebookProvider fbProvider = new FacebookProvider(api_key.getText(), email.getText(), new String(
+			FacebookProvider fbProvider = new FacebookProvider(email.getText(), new String(
 			        password.getPassword()));
 			fp.setFP(fbProvider);
 			FacebookSearch fbSearch = new FacebookSearch(fbProvider);

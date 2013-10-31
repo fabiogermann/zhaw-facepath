@@ -61,7 +61,7 @@ public class FacebookProvider<T> {
 	private String loginAuthentication = "https://graph.facebook.com/oauth/access_token?client_id="+APP_ID+"&redirect_uri="+REDIRECT_URL+"&client_secret="+APP_SECRET+"&code=";
 	private String authToken;
 	
-	public FacebookProvider(String token, String email, String password) {
+	public FacebookProvider(String email, String password) {
 		try {
 			this.connectHTTP(email, password);
 		} catch (IOException e) {
@@ -72,7 +72,7 @@ public class FacebookProvider<T> {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.connectToApi(token);
+		this.connectToApi(this.authToken);
 	}
 	
 	private void connectToApi(String token) {
@@ -155,37 +155,28 @@ public class FacebookProvider<T> {
 		HttpContext context = new BasicHttpContext();
 		HttpResponse response = this.httpConnection.execute(httpget, context);
 		HttpEntity entity = response.getEntity();
-		this.loginCode = EntityUtils.toString(entity);
 		
 		
 		if (response.getStatusLine().getStatusCode() == 200) {
-			  if (FacePath.DEBUG){
-				  System.out.println(response.getStatusLine().getStatusCode());	
-					System.out.println(this.loginCode);	
-			  }
-			  //TODO we should do this as boolean
-			  String redirectURL = null;//response.getFirstHeader("Location").getValue();
-			  if((redirectURL != null) && redirectURL.contains("https://www.facebook.com/login.php")) {
-				  //open browser and open this redirect url
-				  //show error message and promt the user to try again
-				  if (FacePath.DEBUG){
-						System.out.println("Login triggered...");
-				  }
-			  } else if ((redirectURL != null) && redirectURL.contains("https://www.facebook.com/connect/login_success.html")) {
-				  this.loginCode = redirectURL.substring(51);
-				  if (FacePath.DEBUG){
-						//System.out.println(this.loginCode);
-				  }
-			  }
+			this.loginCode = EntityUtils.toString(entity);
+			if (FacePath.DEBUG){
+				System.out.println(response.getStatusLine().getStatusCode());	
+				System.out.println(this.loginCode);	
+			}
+			  
+			boolean redirectView = false;
+			// TODO implement the check
+			if(redirectView) {
+				//TODO open view and do the magic
+			}
 			  
 			  // TODO: check if redirected to login or step1-code was returned
-			  HttpGet httpget2 = new HttpGet("https://graph.facebook.com/oauth/access_token?client_id=676728905679775&redirect_uri=http://klamath.ch/~fabio/seps/authR.php&client_secret="+this.loginCode);
+			  HttpGet httpget2 = new HttpGet("https://graph.facebook.com/oauth/access_token?client_id=676728905679775&redirect_uri=http://klamath.ch/~fabio/seps/logonR.php&client_secret=72defc37e47548c7ee82f9f18c82ca56&code="+this.loginCode);
 			  HttpResponse response2 = this.httpConnection.execute(httpget2, context);
 			  HttpEntity entity2 = response2.getEntity();
-			  System.out.println(EntityUtils.toString(entity2));
+			  this.authToken = EntityUtils.toString(entity2).substring(13).split("&")[0];
+			  System.out.println(this.authToken);
 		}
-		
-		this.authToken = "a result";
 	}
 
 	private void closeHTTP() {
