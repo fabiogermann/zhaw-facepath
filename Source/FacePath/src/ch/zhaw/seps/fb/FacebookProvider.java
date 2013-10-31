@@ -1,7 +1,12 @@
 package ch.zhaw.seps.fb;
 
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -12,17 +17,28 @@ import java.util.regex.Pattern;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+
 
 import ch.zhaw.seps.FacePath;
 
@@ -39,14 +55,20 @@ public class FacebookProvider<T> {
 	private static String SCOPE = "user_aboutme,user_groups,user_likes,user_events,friends_about_me,friends_groups,friends_likes,friends_events";
 	private static String APP_ID = "676728905679775";
 	private static String APP_SECRET = "72defc37e47548c7ee82f9f18c82ca56";
-	private static String REDIRECT_URL = "https://www.facebook.com/connect/login_success.html";
+	private static String REDIRECT_URL = "http://klamath.ch/~fabio/seps/logonR.php";
 	private String loginRequest = "https://www.facebook.com/dialog/oauth?client_id="+APP_ID+"&redirect_uri="+REDIRECT_URL+"&scope="+SCOPE;
 	private String loginCode;
 	private String loginAuthentication = "https://graph.facebook.com/oauth/access_token?client_id="+APP_ID+"&redirect_uri="+REDIRECT_URL+"&client_secret="+APP_SECRET+"&code=";
+	private String authToken;
 	
 	public FacebookProvider(String token, String email, String password) {
 		try {
 			this.connectHTTP(email, password);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			this.getAuthToken();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -128,16 +150,42 @@ public class FacebookProvider<T> {
 	}
 	
 	private void getAuthToken() throws ClientProtocolException, IOException {
-		HttpGet httpget = new HttpGet(loginRequest);
-		HttpResponse response = this.httpConnection.execute(httpget);
+		//TODO here we have a problem with the string encoding... if i use it directly it works, when I use the one completed above it doesnt
+		HttpGet httpget = new HttpGet("https://www.facebook.com/dialog/oauth?client_id=676728905679775&redirect_uri=http://klamath.ch/~fabio/seps/logonR.php&scope=email,read_stream");	
+		HttpContext context = new BasicHttpContext();
+		HttpResponse response = this.httpConnection.execute(httpget, context);
+		HttpEntity entity = response.getEntity();
+		this.loginCode = EntityUtils.toString(entity);
 		
-		if (response.getStatusLine().getStatusCode() == 302) {
-			  String redirectURL = response.getFirstHeader("Location").getValue();
-
+		
+		if (response.getStatusLine().getStatusCode() == 200) {
+			  if (FacePath.DEBUG){
+				  System.out.println(response.getStatusLine().getStatusCode());	
+					System.out.println(this.loginCode);	
+			  }
+			  //TODO we should do this as boolean
+			  String redirectURL = null;//response.getFirstHeader("Location").getValue();
+			  if((redirectURL != null) && redirectURL.contains("https://www.facebook.com/login.php")) {
+				  //open browser and open this redirect url
+				  //show error message and promt the user to try again
+				  if (FacePath.DEBUG){
+						System.out.println("Login triggered...");
+				  }
+			  } else if ((redirectURL != null) && redirectURL.contains("https://www.facebook.com/connect/login_success.html")) {
+				  this.loginCode = redirectURL.substring(51);
+				  if (FacePath.DEBUG){
+						//System.out.println(this.loginCode);
+				  }
+			  }
+			  
 			  // TODO: check if redirected to login or step1-code was returned
-			  HttpGet request2 = new HttpGet(loginAuthentication);
-			  HttpResponse response2 = this.httpConnection.execute(request2);
+			  HttpGet httpget2 = new HttpGet("https://graph.facebook.com/oauth/access_token?client_id=676728905679775&redirect_uri=http://klamath.ch/~fabio/seps/authR.php&client_secret="+this.loginCode);
+			  HttpResponse response2 = this.httpConnection.execute(httpget2, context);
+			  HttpEntity entity2 = response2.getEntity();
+			  System.out.println(EntityUtils.toString(entity2));
 		}
+		
+		this.authToken = "a result";
 	}
 
 	private void closeHTTP() {
