@@ -29,6 +29,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
+import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -39,12 +40,12 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
-
 import ch.zhaw.seps.FacePath;
 
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.restfb.exception.FacebookException;
 import com.restfb.types.User;
 
 public class FacebookProvider<T> {
@@ -119,6 +120,8 @@ public class FacebookProvider<T> {
 		nvps.add(new BasicNameValuePair("pass", password));
 
 		httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+		
+		
 
 		response = httpclient.execute(httpost);
 		entity = response.getEntity();
@@ -184,11 +187,18 @@ public class FacebookProvider<T> {
 	}
 	
 	private FacebookProfile getUserFromAPI(String userN) {
-		User auser = apiConnection.fetchObject(userN, User.class);
-	    FacebookProfile fbp = new FacebookProfile(auser.getUsername(), auser.getId());
-	    fbp.setName(auser.getFirstName(), auser.getLastName());
-	    fbp.setLink(auser.getLink());
-		return fbp;
+		User auser = null;
+		try {
+			auser = apiConnection.fetchObject(userN, User.class);
+			FacebookProfile fbp = new FacebookProfile(auser.getUsername(), auser.getId());
+		    fbp.setName(auser.getFirstName(), auser.getLastName());
+		    fbp.setLink(auser.getLink());
+			return fbp;
+		} catch(FacebookException e) {
+			//nope
+		}
+		return null;
+	    
 	}
 	
 	public List<FacebookProfile> getMyFriends() {
@@ -223,7 +233,7 @@ public class FacebookProvider<T> {
 	}
 	
 	public List<FacebookProfile> getFriendsOf(FacebookProfile profile) throws ClientProtocolException, IOException {
-		List<FacebookProfile> result = null;
+		List<FacebookProfile> result = new ArrayList<FacebookProfile>();
 		
 		HttpGet httpget = new HttpGet(profile.getLink()+"/friends");
 		HttpResponse response = httpConnection.execute(httpget);
@@ -247,10 +257,17 @@ public class FacebookProvider<T> {
 		    String item = i.next();
 		    item = item.replace("https://www.facebook.com/", "").replace("?fref=pb", "");
 			System.out.println(item);
-			FacebookProfile newuser = this.getUserFromAPI(item);
-			result.add(newuser);
+			FacebookProfile newuser = null;
+			try {
+				newuser = this.getUserFromAPI(item);
+			} finally {
+				//nix
+			}
+			
+			if (newuser != null) {
+				result.add(newuser);
+			}
 		}
-		
 		return result;
 	}
 }

@@ -4,7 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
+import org.graphstream.graph.EdgeRejectedException;
+import org.graphstream.graph.ElementNotFoundException;
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.IdAlreadyInUseException;
 import org.graphstream.graph.implementations.SingleGraph;
 
 import ch.zhaw.seps.TreeNode;
@@ -40,17 +43,28 @@ public class FacebookNetwork {
     	this.targetStack = new Stack<TreeNode<FacebookProfile>>();
     }
     
-    public void addVertice(String userName, FacebookProfile user){
-    	this.graph.addNode(userName);
-    	this.graphCollection.put(userName, user);
+    public void addVertice(String userID, FacebookProfile user){
+    	if(!this.graphCollection.containsKey(userID)) {
+    		this.graph.addNode(userID);
+        	this.graphCollection.put(userID, user);
+    	}
     }
     
     public void addEdge(String name, String sourceID, String targetID){
-    	this.graph.addEdge(name, sourceID, targetID);
+    	try {
+    		this.graph.addEdge(name, sourceID, targetID);
+    	} catch(IdAlreadyInUseException | ElementNotFoundException | EdgeRejectedException err) {
+    		err.printStackTrace();
+    	}
+    	
     }
     
     public Graph getGraph() {
     	return this.graph;
+    }
+    
+    public void addToRootStack(FacebookProfile fp) {
+    	this.rootStack.add(new TreeNode<FacebookProfile>(fp.getUserID(), fp));
     }
     
     public void setRoot() {
@@ -75,6 +89,14 @@ public class FacebookNetwork {
     
     public void getItem() {
 		// TODO Auto-generated method stub
+	}
+
+	public FacebookProfile getRootStack() {
+		if(!this.rootStack.isEmpty()) {
+			return this.rootStack.pop().getData();
+		} else {
+			return null;
+		}
 	}
 
 }

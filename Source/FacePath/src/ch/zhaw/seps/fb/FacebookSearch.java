@@ -1,8 +1,10 @@
 package ch.zhaw.seps.fb;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.http.client.ClientProtocolException;
 import org.graphstream.graph.Graph;
 import org.graphstream.ui.swingViewer.Viewer;
 
@@ -21,6 +23,7 @@ public class FacebookSearch {
 		this.fbNetwork = new FacebookNetwork();
 		this.me = fbProvider.getMyProfile();
 		this.initializeNetwork(me, fbProvider.getMyFriends());
+		this.searchIterate();
 	}
 	
 	private void initializeNetwork(FacebookProfile me, List<FacebookProfile> friends) {
@@ -36,6 +39,7 @@ public class FacebookSearch {
 		    if (FacePath.DEBUG){
 		    	System.out.println(me.getUserID()+"-to-"+item.getUserID());
 		    }
+		    fbNetwork.addToRootStack(item);
 		}
 	}
 	
@@ -52,7 +56,20 @@ public class FacebookSearch {
 	}
 	
 	public void searchIterate() {
-		//TODO
+		while(fbNetwork.getRootStack() != null) {
+			FacebookProfile tmp = fbNetwork.getRootStack();
+			List<FacebookProfile> tlist = null;
+			try {
+				tlist = fbProvider.getFriendsOf(tmp);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			for(FacebookProfile user : tlist) {
+				fbNetwork.addVertice(user.getUserID(), user);
+				fbNetwork.addEdge(tmp.getUserID()+"-to-"+user.getUserID(), tmp.getUserID(), user.getUserID());
+			}
+		}
 	}
 	
 	public boolean pathFound() {
