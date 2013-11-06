@@ -1,193 +1,210 @@
 package ch.zhaw.seps.view;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class LoginView {
+import ch.zhaw.seps.FacePath;
+import ch.zhaw.seps.fb.FacebookProvider;
+import ch.zhaw.seps.fb.FacebookSearch;
 
-	private JFrame frmFacepath;
-	private JTextField textField;
+public class LoginView extends JPanel implements ActionListener {
+
+	private FacePath fp;
+
+	private JTextField emailTextField;
 	private JPasswordField passwordField;
+	private JCheckBox guestCheckBox;
+	private JButton helpButton;
+	private JButton loginButton;
 
 	/**
-	 * Launch the application.
+	 * Create the View.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginView window = new LoginView();
-					window.frmFacepath.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the application.
-	 */
-	public LoginView() {
+	public LoginView(FacePath fp) {
+		this.fp = fp;
 		initialize();
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == loginButton) {
+			FacebookProvider fbProvider = new FacebookProvider(emailTextField.getText(), new String(
+			        passwordField.getPassword()));
+			fp.setFP(fbProvider);
+			FacebookSearch fbSearch = new FacebookSearch(fbProvider);
+			fp.setFS(fbSearch);
+			this.fp.showView("search");
+		}
+	}
+
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialize the contents of the panel.
 	 */
 	private void initialize() {
-		frmFacepath = new JFrame();
-		frmFacepath.getContentPane().setBackground(Color.WHITE);
-		frmFacepath.setTitle("FacePath");
-		frmFacepath.setBounds(100, 100, 450, 300);
-		frmFacepath.setSize(800, 600);
-		frmFacepath.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setBackground(Color.WHITE);
+		this.setSize(1024, 768);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0 };
 		gridBagLayout.rowHeights = new int[] { 0, 0, 0 };
 		gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
-		frmFacepath.getContentPane().setLayout(gridBagLayout);
+		this.setLayout(gridBagLayout);
 
-		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(Color.WHITE);
-		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.insets = new Insets(35, 60, 5, 60);
-		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 0;
-		gbc_panel_1.gridy = 0;
-		frmFacepath.getContentPane().add(panel_1, gbc_panel_1);
-		GridBagLayout gbl_panel_1 = new GridBagLayout();
-		gbl_panel_1.columnWidths = new int[] { 0, 0, 0 };
-		gbl_panel_1.rowHeights = new int[] { 0, 0 };
-		gbl_panel_1.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		gbl_panel_1.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
-		panel_1.setLayout(gbl_panel_1);
+		JPanel infoPanel = new JPanel();
+		infoPanel.setBackground(Color.WHITE);
+		GridBagConstraints gbc_infoPanel = new GridBagConstraints();
+		gbc_infoPanel.insets = new Insets(35, 150, 5, 15);
+		gbc_infoPanel.fill = GridBagConstraints.BOTH;
+		gbc_infoPanel.gridx = 0;
+		gbc_infoPanel.gridy = 0;
+		this.add(infoPanel, gbc_infoPanel);
+		GridBagLayout gbl_infoPanel = new GridBagLayout();
+		gbl_infoPanel.columnWidths = new int[] { 0, 0, 0 };
+		gbl_infoPanel.rowHeights = new int[] { 0, 0 };
+		gbl_infoPanel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_infoPanel.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
+		infoPanel.setLayout(gbl_infoPanel);
 
-		JLabel lblNewLabel_3 = new JLabel("");
-		lblNewLabel_3.setBackground(Color.WHITE);
-		lblNewLabel_3.setIcon(new ImageIcon(LoginView.class
-		        .getResource("/ch/zhaw/seps/view/resources/facepath-logo-small.png")));
-		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
-		gbc_lblNewLabel_3.insets = new Insets(0, 0, 0, 5);
-		gbc_lblNewLabel_3.gridx = 0;
-		gbc_lblNewLabel_3.gridy = 0;
-		panel_1.add(lblNewLabel_3, gbc_lblNewLabel_3);
+		JLabel logoLabel = new JLabel("");
+		logoLabel.setBackground(Color.WHITE);
+		logoLabel.setIcon(new ImageIcon(LoginView.class
+		        .getResource("/ch/zhaw/seps/view/resources/facepath-logo-medium.png")));
+		GridBagConstraints gbc_logoLabel = new GridBagConstraints();
+		gbc_logoLabel.insets = new Insets(0, 0, 0, 5);
+		gbc_logoLabel.gridx = 0;
+		gbc_logoLabel.gridy = 0;
+		infoPanel.add(logoLabel, gbc_logoLabel);
 
-		JTextArea txtrFacepathBietenIhnen = new JTextArea();
-		txtrFacepathBietenIhnen.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
-		txtrFacepathBietenIhnen.setBackground(new Color(255, 255, 255));
-		txtrFacepathBietenIhnen
+		JTextArea infoTextArea = new JTextArea();
+		infoTextArea.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		infoTextArea.setBackground(new Color(255, 255, 255));
+		infoTextArea
 		        .setText("FacePath bietet Ihnen die M\u00F6glichkeit,\ndie Beziehung zwischen beliebigen\nFacebook-Benutzern zu ermitteln.\n\nDie Wege, \u00FCber die die Benutzer verkn\u00FCpft\nsind, lassen sich mit facepath grafisch darstellen.");
-		GridBagConstraints gbc_txtrFacepathBietenIhnen = new GridBagConstraints();
-		gbc_txtrFacepathBietenIhnen.insets = new Insets(50, 0, 0, 0);
-		gbc_txtrFacepathBietenIhnen.fill = GridBagConstraints.BOTH;
-		gbc_txtrFacepathBietenIhnen.gridx = 1;
-		gbc_txtrFacepathBietenIhnen.gridy = 0;
-		panel_1.add(txtrFacepathBietenIhnen, gbc_txtrFacepathBietenIhnen);
+		GridBagConstraints gbc_infoTextArea = new GridBagConstraints();
+		gbc_infoTextArea.insets = new Insets(50, 0, 0, 0);
+		gbc_infoTextArea.fill = GridBagConstraints.BOTH;
+		gbc_infoTextArea.gridx = 1;
+		gbc_infoTextArea.gridy = 0;
+		infoPanel.add(infoTextArea, gbc_infoTextArea);
 
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.WHITE);
-		panel.setBorder(BorderFactory.createTitledBorder("Login"));
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.insets = new Insets(10, 80, 70, 80);
-		gbc_panel.fill = GridBagConstraints.BOTH;
-		gbc_panel.gridx = 0;
-		gbc_panel.gridy = 1;
-		frmFacepath.getContentPane().add(panel, gbc_panel);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] { 0, 0, 0, 0 };
-		gbl_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0 };
-		gbl_panel.columnWeights = new double[] { 0.0, 1.0, 1.0, Double.MIN_VALUE };
-		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		panel.setLayout(gbl_panel);
+		JPanel loginFormPanel = new JPanel();
+		loginFormPanel.setBackground(Color.WHITE);
+		loginFormPanel.setBorder(BorderFactory.createTitledBorder("Login"));
+		GridBagConstraints gbc_loginFormPanel = new GridBagConstraints();
+		gbc_loginFormPanel.insets = new Insets(10, 80, 30, 80);
+		gbc_loginFormPanel.fill = GridBagConstraints.BOTH;
+		gbc_loginFormPanel.gridx = 0;
+		gbc_loginFormPanel.gridy = 1;
+		this.add(loginFormPanel, gbc_loginFormPanel);
+		GridBagLayout gbl_loginFormPanel = new GridBagLayout();
+		gbl_loginFormPanel.columnWidths = new int[] { 0, 0, 0 };
+		gbl_loginFormPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0 };
+		gbl_loginFormPanel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_loginFormPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		loginFormPanel.setLayout(gbl_loginFormPanel);
 
-		JLabel lblNewLabel = new JLabel("Geben Sie Ihren Facebook Login ein");
-		lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel.gridwidth = 3;
-		gbc_lblNewLabel.fill = GridBagConstraints.HORIZONTAL;
-		gbc_lblNewLabel.insets = new Insets(0, 30, 5, 0);
-		gbc_lblNewLabel.gridx = 0;
-		gbc_lblNewLabel.gridy = 0;
-		panel.add(lblNewLabel, gbc_lblNewLabel);
+		JLabel instructionsLabel = new JLabel("Geben Sie Ihren Facebook Login ein");
+		instructionsLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		GridBagConstraints gbc_instructionsLabel = new GridBagConstraints();
+		gbc_instructionsLabel.anchor = GridBagConstraints.WEST;
+		gbc_instructionsLabel.gridwidth = 2;
+		gbc_instructionsLabel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_instructionsLabel.insets = new Insets(10, 30, 5, 3);
+		gbc_instructionsLabel.gridx = 0;
+		gbc_instructionsLabel.gridy = 0;
+		loginFormPanel.add(instructionsLabel, gbc_instructionsLabel);
 
-		JLabel lblNewLabel_1 = new JLabel("E-Mail:");
-		lblNewLabel_1.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
-		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbc_lblNewLabel_1.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel_1.insets = new Insets(0, 30, 5, 5);
-		gbc_lblNewLabel_1.gridx = 0;
-		gbc_lblNewLabel_1.gridy = 1;
-		panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
+		JLabel emailLabel = new JLabel("E-Mail:");
+		emailLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		GridBagConstraints gbc_emailLabel = new GridBagConstraints();
+		gbc_emailLabel.anchor = GridBagConstraints.WEST;
+		gbc_emailLabel.insets = new Insets(0, 30, 5, 5);
+		gbc_emailLabel.gridx = 0;
+		gbc_emailLabel.gridy = 1;
+		loginFormPanel.add(emailLabel, gbc_emailLabel);
 
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.gridwidth = 2;
-		gbc_textField.insets = new Insets(0, 0, 5, 0);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 1;
-		gbc_textField.gridy = 1;
-		panel.add(textField, gbc_textField);
-		textField.setColumns(10);
+		emailTextField = new JTextField();
+		GridBagConstraints gbc_emailTextField = new GridBagConstraints();
+		gbc_emailTextField.insets = new Insets(0, 0, 5, 30);
+		gbc_emailTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_emailTextField.gridx = 1;
+		gbc_emailTextField.gridy = 1;
+		loginFormPanel.add(emailTextField, gbc_emailTextField);
+		emailTextField.setColumns(10);
 
-		JLabel lblNewLabel_2 = new JLabel("Passwort:");
-		lblNewLabel_2.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
-		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
-		gbc_lblNewLabel_2.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel_2.insets = new Insets(0, 30, 5, 5);
-		gbc_lblNewLabel_2.gridx = 0;
-		gbc_lblNewLabel_2.gridy = 2;
-		panel.add(lblNewLabel_2, gbc_lblNewLabel_2);
+		JLabel passwordLabel = new JLabel("Passwort:");
+		passwordLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		GridBagConstraints gbc_passwordLabel = new GridBagConstraints();
+		gbc_passwordLabel.anchor = GridBagConstraints.WEST;
+		gbc_passwordLabel.insets = new Insets(0, 30, 5, 5);
+		gbc_passwordLabel.gridx = 0;
+		gbc_passwordLabel.gridy = 2;
+		loginFormPanel.add(passwordLabel, gbc_passwordLabel);
 
 		passwordField = new JPasswordField();
 		GridBagConstraints gbc_passwordField = new GridBagConstraints();
-		gbc_passwordField.gridwidth = 2;
-		gbc_passwordField.insets = new Insets(0, 0, 5, 5);
+		gbc_passwordField.insets = new Insets(0, 0, 5, 30);
 		gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_passwordField.gridx = 1;
 		gbc_passwordField.gridy = 2;
-		panel.add(passwordField, gbc_passwordField);
+		loginFormPanel.add(passwordField, gbc_passwordField);
 
-		JCheckBox chckbxNewCheckBox = new JCheckBox("Als Gast einloggen (Kein Facebook-Login ben\u00F6tigt)");
-		chckbxNewCheckBox.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
-		GridBagConstraints gbc_chckbxNewCheckBox = new GridBagConstraints();
-		gbc_chckbxNewCheckBox.anchor = GridBagConstraints.WEST;
-		gbc_chckbxNewCheckBox.insets = new Insets(0, 30, 5, 0);
-		gbc_chckbxNewCheckBox.gridx = 0;
-		gbc_chckbxNewCheckBox.gridy = 3;
-		gbc_chckbxNewCheckBox.gridwidth = 3;
-		panel.add(chckbxNewCheckBox, gbc_chckbxNewCheckBox);
+		guestCheckBox = new JCheckBox("Als Gast einloggen (Kein Facebook-Login ben\u00F6tigt)");
+		guestCheckBox.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
+		GridBagConstraints gbc_guestCheckBox = new GridBagConstraints();
+		gbc_guestCheckBox.anchor = GridBagConstraints.WEST;
+		gbc_guestCheckBox.insets = new Insets(0, 30, 5, 30);
+		gbc_guestCheckBox.gridx = 0;
+		gbc_guestCheckBox.gridy = 3;
+		gbc_guestCheckBox.gridwidth = 2;
+		loginFormPanel.add(guestCheckBox, gbc_guestCheckBox);
 
-		JButton btnNewButton_1 = new JButton("Hilfe");
-		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
-		gbc_btnNewButton_1.anchor = GridBagConstraints.EAST;
-		gbc_btnNewButton_1.insets = new Insets(0, 0, 0, 5);
-		gbc_btnNewButton_1.gridx = 1;
-		gbc_btnNewButton_1.gridy = 4;
-		panel.add(btnNewButton_1, gbc_btnNewButton_1);
+		JPanel buttonsPanel = new JPanel();
+		buttonsPanel.setBackground(Color.WHITE);
+		GridBagConstraints gbc_buttonsPanel = new GridBagConstraints();
+		gbc_buttonsPanel.gridwidth = 2;
+		gbc_buttonsPanel.insets = new Insets(0, 30, 0, 30);
+		gbc_buttonsPanel.anchor = GridBagConstraints.EAST;
+		gbc_buttonsPanel.gridx = 0;
+		gbc_buttonsPanel.gridy = 4;
+		loginFormPanel.add(buttonsPanel, gbc_buttonsPanel);
+		GridBagLayout gbl_buttonsPanel = new GridBagLayout();
+		gbl_buttonsPanel.columnWidths = new int[] { 0, 0, 0 };
+		gbl_buttonsPanel.rowHeights = new int[] { 0, 0 };
+		gbl_buttonsPanel.columnWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
+		gbl_buttonsPanel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+		buttonsPanel.setLayout(gbl_buttonsPanel);
 
-		JButton btnNewButton = new JButton("Login");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.gridx = 2;
-		gbc_btnNewButton.gridy = 4;
-		panel.add(btnNewButton, gbc_btnNewButton);
+		helpButton = new JButton("Hilfe");
+		helpButton.addActionListener(this);
+		GridBagConstraints gbc_helpButton = new GridBagConstraints();
+		gbc_helpButton.insets = new Insets(0, 0, 0, 5);
+		gbc_helpButton.gridx = 0;
+		gbc_helpButton.gridy = 0;
+		buttonsPanel.add(helpButton, gbc_helpButton);
+
+		loginButton = new JButton("Login");
+		loginButton.addActionListener(this);
+		GridBagConstraints gbc_loginButton = new GridBagConstraints();
+		gbc_loginButton.gridx = 1;
+		gbc_loginButton.gridy = 0;
+		buttonsPanel.add(loginButton, gbc_loginButton);
+
 	}
 
 }

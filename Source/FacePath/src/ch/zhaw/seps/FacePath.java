@@ -4,9 +4,6 @@
 package ch.zhaw.seps;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Frame;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -14,7 +11,9 @@ import java.awt.event.WindowListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.zhaw.seps.fb.FacebookProfile;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 import ch.zhaw.seps.fb.FacebookProvider;
 import ch.zhaw.seps.fb.FacebookSearch;
 import ch.zhaw.seps.view.GraphView;
@@ -22,27 +21,15 @@ import ch.zhaw.seps.view.LoginView;
 import ch.zhaw.seps.view.LogoutView;
 import ch.zhaw.seps.view.SearchView;
 
-/**
- * @author fabiog
- * @author dominikstraub
- */
+public class FacePath extends JFrame implements ActionListener, WindowListener {
 
-public class FacePath extends Frame implements ActionListener, WindowListener {
-	
 	public static final boolean DEBUG = true;
 
 	public static void main(String[] args) {
 		new FacePath();
 	}
 
-	public static Component addComponentToPanel(Component c, Panel p, int x, int y, int width, int height) {
-		c.setLocation(x, y);
-		c.setSize(width, height);
-		p.add(c);
-		return c;
-	}
-
-	private Map<String, Panel> viewMap = new HashMap<String, Panel>();
+	private Map<String, JPanel> viewMap = new HashMap<String, JPanel>();
 	private FacebookProvider myFB = null;
 	private FacebookSearch myFS = null;
 
@@ -92,18 +79,17 @@ public class FacePath extends Frame implements ActionListener, WindowListener {
 			this.viewMap.put("graphView", graphView);
 			this.add(graphView, BorderLayout.CENTER);
 		}
+		this.validate();
 	}
 
 	public FacePath() {
-		setTitle("facepath");
-		setLocation(200, 200);
+		this.setTitle("FacePath");
 		setSize(1024, 768);
 		this.addWindowListener(this);
 		this.setLayout(new BorderLayout());
-
 		this.showView("login");
-
-		setVisible(true);
+		this.setLocationRelativeTo(null);
+		this.setVisible(true);
 	}
 
 	@Override
