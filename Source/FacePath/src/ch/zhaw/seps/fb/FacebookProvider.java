@@ -12,7 +12,10 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +45,7 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import ch.zhaw.seps.FacePath;
+import ch.zhaw.threadpool.ThreadPool;
 
 import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
@@ -204,40 +208,59 @@ public class FacebookProvider<T> {
 	
 	public Collection<FacebookProfile> getUserFromThreadedAPI(Collection<String> users) {
 		ConcurrentLinkedQueue<FacebookProfile> returnqueue = new ConcurrentLinkedQueue<FacebookProfile>();
+		ExecutorService executor = Executors.newCachedThreadPool();
+		List<Callable<Object>> tasks = new ArrayList<Callable<Object>>();
 		
+		for( String user  : users) {
+			tasks.add(Executors.callable(new GetUserFromAPIThread(authToken, returnqueue, user)));
+		}
 		
+		try {
+			executor.invokeAll(tasks);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		return null;
-		
+		return returnqueue;
 	}
 	
-	public Collection<String> getMyFriendsThreaded(Collection<FacebookProfile> users) {
+	public Collection<String> getFriendsOfThreaded(Collection<FacebookProfile> users) {
 		ConcurrentLinkedQueue<String> returnqueue = new ConcurrentLinkedQueue<String>();
+		ExecutorService executor = Executors.newCachedThreadPool();
+		List<Callable<Object>> tasks = new ArrayList<Callable<Object>>();
 		
+		for( FacebookProfile user  : users) {
+			tasks.add(Executors.callable(new GetFriendsOfThread(httpConnection, returnqueue, user)));
+		}
 		
+		try {
+			executor.invokeAll(tasks);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		return null;
-		
+		return returnqueue;
 	}
+	
 	public List<FacebookProfile> getMyFriends() {
 		Connection<User> myFriends = apiConnection.fetchConnection("me/friends", User.class);
 		List<User> friendsList = myFriends.getData();
+		List<String> todo = new ArrayList<String>();
+		
 		List<FacebookProfile> result = new ArrayList<FacebookProfile>();
 		
-		for(Iterator<User> i = friendsList.iterator(); i.hasNext(); ) {
-		    User item = i.next();
-		    FacebookProfile newuser = null;
-		    if(item.getUsername() != null) {
-		    	newuser = this.getUserFromAPI(item.getUsername());
-		    } else {
-		    	newuser = this.getUserFromAPI(item.getId());
-		    }
-			result.add(newuser);
-		    //DEBUG
-			if (FacePath.DEBUG){
-				System.out.println("FacebookProvider-getMyFriends-> "+item.getId()+" "+newuser.getUserUIDString()+" added");
-			}
+		for(User friend : friendsList) {
+			todo.add(friend.getId());
 		}
+		
+		Collection<FacebookProfile> value = this.getUserFromThreadedAPI(todo);
+		
+		for(FacebookProfile val : value) {
+			result.add(val);
+		}
+
 		return result;
 	}
 	

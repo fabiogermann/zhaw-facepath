@@ -1,6 +1,8 @@
 package ch.zhaw.seps.fb;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
@@ -45,7 +47,7 @@ public class FacebookSearch {
 		    if (FacePath.DEBUG){
 		    	System.out.println(me.getUserID()+"-to-"+item.getUserID());
 		    }
-		    fbNetwork.addToRootStack(item);
+		    this.workStack.add(item);
 		}
 	}
 	
@@ -71,28 +73,26 @@ public class FacebookSearch {
 	}
 	
 	public void searchIterate() {
+
+		List<FacebookProfile> tlist = new ArrayList<FacebookProfile>();
+		Collection<String> buddylist = null;
+		Collection<FacebookProfile> friendlist = null;
 		
+		while(!workStack.empty()) {
+			tlist.add(workStack.pop());
+		}
 		
-		// here we have to use the thread pool and initiare the search
+		buddylist = fbProvider.getFriendsOfThreaded(tlist);
+		friendlist = fbProvider.getUserFromThreadedAPI(buddylist);
 		
-		// create for every fb profile on stack new thread
-		
-		// threads returns collection of strings
-		
-		// calling threaded get user from api which returns a collection of fb profiles
-		
-		while(fbNetwork.getRootStack() != null) {
-			FacebookProfile tmp = fbNetwork.getRootStack();
-			List<FacebookProfile> tlist = null;
-			try {
-				tlist = fbProvider.getFriendsOf(tmp);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			for(FacebookProfile user : tlist) {
-				fbNetwork.addVertice(user.getUserID(), user);
-				fbNetwork.addEdge(tmp.getUserID()+"-to-"+user.getUserID(), tmp.getUserID(), user.getUserID());
+		for(FacebookProfile fp : friendlist) {
+			submitProfileToNetwork(fp);
+			workStack.addAll(friendlist);
+			
+			for(FacebookProfile f2 : tlist) {
+				if(f2.getCandidates().contains(fp.getUserUIDString())) {
+					submitConnectionToNetwork(f2, fp);
+				}
 			}
 		}
 	}
