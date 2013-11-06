@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -201,6 +202,23 @@ public class FacebookProvider<T> {
 	    
 	}
 	
+	public Collection<FacebookProfile> getUserFromThreadedAPI(Collection<String> users) {
+		ConcurrentLinkedQueue<FacebookProfile> returnqueue = new ConcurrentLinkedQueue<FacebookProfile>();
+		
+		
+		
+		return null;
+		
+	}
+	
+	public Collection<String> getMyFriendsThreaded(Collection<FacebookProfile> users) {
+		ConcurrentLinkedQueue<String> returnqueue = new ConcurrentLinkedQueue<String>();
+		
+		
+		
+		return null;
+		
+	}
 	public List<FacebookProfile> getMyFriends() {
 		Connection<User> myFriends = apiConnection.fetchConnection("me/friends", User.class);
 		List<User> friendsList = myFriends.getData();
