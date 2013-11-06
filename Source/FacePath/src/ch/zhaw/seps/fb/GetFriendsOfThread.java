@@ -14,8 +14,13 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 
@@ -25,39 +30,55 @@ public class GetFriendsOfThread implements Runnable {
 	 * @param args
 	 */
 	
-	private DefaultHttpClient http;
+	private PoolingHttpClientConnectionManager com;
+	private HttpContext cont;
 	private ConcurrentLinkedQueue<String> queue = null;
 	private FacebookProfile user;
 	
-	public GetFriendsOfThread(DefaultHttpClient httpc, ConcurrentLinkedQueue<String> returnqueue, FacebookProfile fbuser) {
-		this.http = httpc;
+	public GetFriendsOfThread(PoolingHttpClientConnectionManager conmgr, HttpContext context, ConcurrentLinkedQueue<String> returnqueue, FacebookProfile fbuser) {
+		this.com = conmgr;
 		this.queue = returnqueue;
 		this.user = fbuser;
+		this.cont = context;
 	}
 
 	@Override
 	public void run() {
+		CloseableHttpClient httpClient = HttpClients.custom()
+		        .setConnectionManager(this.com)
+		        .build();
+		
 		HttpGet httpget = new HttpGet(user.getLink()+"/friends");
 		
-		HttpResponse response = null;
-		
-		try {
-			response = http.execute(httpget);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		HttpEntity entity = response.getEntity();
-		
+		CloseableHttpResponse response = null;
+		HttpEntity entity = null;
 		String str = null;
 		
+		try {
+            response = httpClient.execute(
+            httpget, cont);
+            try {
+                entity = response.getEntity();
+                str = EntityUtils.toString(entity);
+            } finally {
+            	EntityUtils.consume(response.getEntity()) ;
+                response.close();
+            }
+        } catch (ClientProtocolException ex) {
+            // Handle protocol errors
+        } catch (IOException ex) {
+            // Handle I/O errors
+        }
+		
+		
+		
+		/*
 		try {
 			str = EntityUtils.toString(entity);
 		} catch (ParseException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 		String regex = "(https://www.facebook.com/)([0-9a-zA-Z.]*)(\\?fref=pb)";
 		
@@ -75,7 +96,7 @@ public class GetFriendsOfThread implements Runnable {
 		for(Iterator<String> i = col.iterator(); i.hasNext(); ) {
 		    String item = i.next();
 		    item = item.replace("https://www.facebook.com/", "").replace("?fref=pb", "");
-			System.out.println(item);
+			System.out.println("Thread GetFriendsOf returned: "+item);
 
 				queue.add(item);
 				user.addCandidate(item);

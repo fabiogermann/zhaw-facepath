@@ -70,7 +70,9 @@ public class FacebookProfile {
 	}
 	
 	public void addCandidate(String f) {
-		this.candidate.add(f);
+		if(f != null) {
+			this.candidate.add(f);
+		}
 	}
 	
 	public List<String> getCandidates() {

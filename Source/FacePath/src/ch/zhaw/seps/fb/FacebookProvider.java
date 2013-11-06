@@ -27,12 +27,16 @@ import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
@@ -56,7 +60,9 @@ import com.restfb.types.User;
 public class FacebookProvider<T> {
 	
 	private FacebookClient apiConnection;
-	private DefaultHttpClient httpConnection;
+	private CloseableHttpClient httpConnection; //depricated
+	private PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+	private HttpContext ctx = new BasicHttpContext();
 	
 	private static String SCOPE = "user_aboutme,user_groups,user_likes,user_events,friends_about_me,friends_groups,friends_likes,friends_events";
 	private static String APP_ID = "676728905679775";
@@ -86,36 +92,36 @@ public class FacebookProvider<T> {
 	}
 	
 	private void connectHTTP(String email, String password) throws ClientProtocolException, IOException {
-		DefaultHttpClient httpclient = new DefaultHttpClient();
-		this.httpConnection = httpclient;
+		CloseableHttpClient httpClient = HttpClients.custom()
+		        .setConnectionManager(this.cm)
+		        .build();
+		
+		// depr
+		CloseableHttpClient httpclient = httpClient;
+		// depr
+		this.httpConnection = httpClient;
+		
+		
 		HttpGet httpget = new HttpGet("http://www.facebook.com/login.php");
 
-		HttpResponse response = httpclient.execute(httpget);
-		HttpEntity entity = response.getEntity();
-		
+		CloseableHttpResponse response = null;
+		HttpEntity entity = null;
+		try {
+            response = httpClient.execute(
+                    httpget, this.ctx);
+            try {
+                entity = response.getEntity();
+            } finally {
+                response.close();
+            }
+        } catch (ClientProtocolException ex) {
+            // Handle protocol errors
+        } catch (IOException ex) {
+            // Handle I/O errors
+        }
 		
 		if (FacePath.DEBUG){
 			System.out.println("Login form get: " + response.getStatusLine());
-		}
-		
-		if (entity != null) {
-		    entity.consumeContent();
-		}
-		if (FacePath.DEBUG){
-			System.out.println("Initial set of cookies:");
-		}
-		
-		List<Cookie> cookies = httpclient.getCookieStore().getCookies();
-		if (cookies.isEmpty()) {
-			if (FacePath.DEBUG){
-				System.out.println("None");
-			}
-		} else {
-		    for (int i = 0; i < cookies.size(); i++) {
-		    	if (FacePath.DEBUG){
-					System.out.println("- " + cookies.get(i).toString());
-				}
-		    }
 		}
 
 		HttpPost httpost = new HttpPost("https://www.facebook.com/login.php");
@@ -126,42 +132,25 @@ public class FacebookProvider<T> {
 
 		httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 		
-		
-
-		response = httpclient.execute(httpost);
+		response = httpclient.execute(httpost, this.ctx);
 		entity = response.getEntity();
 		
 		if (FacePath.DEBUG){
 			System.out.println("Login form get: " + response.getStatusLine());
 		}
-		
-		if (entity != null) {
-		    entity.consumeContent();
-		}
-
-		if (FacePath.DEBUG){
-			System.out.println("Post logon cookies:");
-		}
-		
-		cookies = httpclient.getCookieStore().getCookies();
-		if (cookies.isEmpty()) {
-			if (FacePath.DEBUG){
-				System.out.println("None");
-			}
-		} else {
-		    for (int i = 0; i < cookies.size(); i++) {
-		    	if (FacePath.DEBUG){
-					System.out.println("- " + cookies.get(i).toString());
-				}
-		    }
-		}
 	}
 	
 	private void getAuthToken() throws ClientProtocolException, IOException {
 		//TODO here we have a problem with the string encoding... if i use it directly it works, when I use the one completed above it doesnt
+		
+		CloseableHttpClient httpClient = HttpClients.custom()
+		        .setConnectionManager(this.cm)
+		        .build();
+		
 		HttpGet httpget = new HttpGet("https://www.facebook.com/dialog/oauth?client_id=676728905679775&redirect_uri=http://klamath.ch/~fabio/seps/logonR.php&scope=email,read_stream");	
-		HttpContext context = new BasicHttpContext();
-		HttpResponse response = this.httpConnection.execute(httpget, context);
+		
+		// TODO try/catch like above
+		HttpResponse response = httpClient.execute(httpget, this.ctx);
 		HttpEntity entity = response.getEntity();
 		
 		
@@ -180,7 +169,7 @@ public class FacebookProvider<T> {
 			  
 			  // TODO: check if redirected to login or step1-code was returned
 			  HttpGet httpget2 = new HttpGet("https://graph.facebook.com/oauth/access_token?client_id=676728905679775&redirect_uri=http://klamath.ch/~fabio/seps/logonR.php&client_secret=72defc37e47548c7ee82f9f18c82ca56&code="+this.loginCode);
-			  HttpResponse response2 = this.httpConnection.execute(httpget2, context);
+			  HttpResponse response2 = httpClient.execute(httpget2, this.ctx);
 			  HttpEntity entity2 = response2.getEntity();
 			  this.authToken = EntityUtils.toString(entity2).substring(13).split("&")[0];
 			  System.out.println(this.authToken);
@@ -231,11 +220,14 @@ public class FacebookProvider<T> {
 		List<Callable<Object>> tasks = new ArrayList<Callable<Object>>();
 		
 		for( FacebookProfile user  : users) {
-			tasks.add(Executors.callable(new GetFriendsOfThread(httpConnection, returnqueue, user)));
+			tasks.add(Executors.callable(new GetFriendsOfThread(cm, ctx, returnqueue, user)));
+			//executor.execute(new GetFriendsOfThread(cm, ctx, returnqueue, user));
 		}
 		
 		try {
+			
 			executor.invokeAll(tasks);
+			
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

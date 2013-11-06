@@ -32,6 +32,7 @@ public class FacebookSearch {
 		this.me = fbProvider.getMyProfile();
 		this.initializeNetwork(me, fbProvider.getMyFriends());
 		this.searchIterate();
+		System.out.println();
 	}
 	
 	private void initializeNetwork(FacebookProfile me, List<FacebookProfile> friends) {
@@ -84,17 +85,23 @@ public class FacebookSearch {
 		
 		buddylist = fbProvider.getFriendsOfThreaded(tlist);
 		friendlist = fbProvider.getUserFromThreadedAPI(buddylist);
+		workStack.addAll(friendlist);
 		
-		for(FacebookProfile fp : friendlist) {
-			submitProfileToNetwork(fp);
-			workStack.addAll(friendlist);
-			
-			for(FacebookProfile f2 : tlist) {
+		for(FacebookProfile f2 : tlist) {
+			for(FacebookProfile fp : friendlist) {
+				for(String s : f2.getCandidates()) {
+					if(fp.getUserUIDString().contentEquals(s)) {
+						System.out.println("Foooooooooooooo");
+					}
+				}
+				
 				if(f2.getCandidates().contains(fp.getUserUIDString())) {
+					submitProfileToNetwork(fp);
 					submitConnectionToNetwork(f2, fp);
 				}
 			}
 		}
+		
 	}
 	
 	public boolean pathFound() {
