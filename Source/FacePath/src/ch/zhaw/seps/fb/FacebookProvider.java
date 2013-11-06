@@ -60,7 +60,10 @@ import com.restfb.types.User;
 public class FacebookProvider<T> {
 	
 	private FacebookClient apiConnection;
+	
+	@Deprecated
 	private CloseableHttpClient httpConnection; //depricated
+	
 	private PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
 	private HttpContext ctx = new BasicHttpContext();
 	
@@ -176,10 +179,12 @@ public class FacebookProvider<T> {
 		}
 	}
 
+	@Deprecated
 	private void closeHTTP() {
 		httpConnection.getConnectionManager().shutdown();
 	}
 	
+	@Deprecated
 	private FacebookProfile getUserFromAPI(String userN) {
 		User auser = null;
 		try {
@@ -226,15 +231,14 @@ public class FacebookProvider<T> {
 		
 		try {
 			executor.invokeAll(tasks);
-			
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		//TODO duplicate elimination
 		return returnqueue;
 	}
 	
+	@Deprecated
 	public List<FacebookProfile> getMyFriends() {
 		Connection<User> myFriends = apiConnection.fetchConnection("me/friends", User.class);
 		List<User> friendsList = myFriends.getData();
@@ -255,8 +259,10 @@ public class FacebookProvider<T> {
 		return result;
 	}
 	
+	@Deprecated
 	public FacebookProfile getMyProfile() {
 		FacebookProfile newuser = getUserFromAPI("me");
+		
 		//DEBUG
 		if (FacePath.DEBUG){
 			System.out.println("FacebookProvider-getMyProfile-> "+newuser.getUserID());
@@ -264,6 +270,7 @@ public class FacebookProvider<T> {
 		return newuser;
 	}
 	
+	@Deprecated
 	public List<FacebookProfile> getFriendsOf(FacebookProfile profile) throws ClientProtocolException, IOException {
 		List<FacebookProfile> result = new ArrayList<FacebookProfile>();
 		

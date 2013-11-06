@@ -70,16 +70,6 @@ public class GetFriendsOfThread implements Runnable {
             // Handle I/O errors
         }
 		
-		
-		
-		/*
-		try {
-			str = EntityUtils.toString(entity);
-		} catch (ParseException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
 		String regex = "(https://www.facebook.com/)([0-9a-zA-Z.]*)(\\?fref=pb)";
 		
 		Hashtable<String,String> allMatches = new Hashtable<String,String>();
