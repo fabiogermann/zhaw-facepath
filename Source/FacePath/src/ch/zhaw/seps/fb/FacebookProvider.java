@@ -225,7 +225,6 @@ public class FacebookProvider<T> {
 		}
 		
 		try {
-			
 			executor.invokeAll(tasks);
 			
 		} catch (InterruptedException e) {
