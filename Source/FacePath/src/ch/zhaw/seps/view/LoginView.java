@@ -68,8 +68,9 @@ public class LoginView extends JPanel implements ActionListener {
 		JPanel infoPanel = new JPanel();
 		infoPanel.setBackground(Color.WHITE);
 		GridBagConstraints gbc_infoPanel = new GridBagConstraints();
-		gbc_infoPanel.insets = new Insets(35, 150, 5, 15);
-		gbc_infoPanel.fill = GridBagConstraints.BOTH;
+		gbc_infoPanel.anchor = GridBagConstraints.SOUTH;
+		gbc_infoPanel.insets = new Insets(35, 150, 5, 150);
+		gbc_infoPanel.fill = GridBagConstraints.HORIZONTAL;
 		gbc_infoPanel.gridx = 0;
 		gbc_infoPanel.gridy = 0;
 		this.add(infoPanel, gbc_infoPanel);
@@ -85,19 +86,18 @@ public class LoginView extends JPanel implements ActionListener {
 		logoLabel.setIcon(new ImageIcon(LoginView.class
 		        .getResource("/ch/zhaw/seps/view/resources/facepath-logo-medium.png")));
 		GridBagConstraints gbc_logoLabel = new GridBagConstraints();
-		gbc_logoLabel.insets = new Insets(0, 0, 0, 5);
 		gbc_logoLabel.gridx = 0;
 		gbc_logoLabel.gridy = 0;
 		infoPanel.add(logoLabel, gbc_logoLabel);
 
 		JTextArea infoTextArea = new JTextArea();
+		infoTextArea.setEnabled(false);
+		infoTextArea.setEditable(false);
 		infoTextArea.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
 		infoTextArea.setBackground(new Color(255, 255, 255));
 		infoTextArea
 		        .setText("FacePath bietet Ihnen die M\u00F6glichkeit,\ndie Beziehung zwischen beliebigen\nFacebook-Benutzern zu ermitteln.\n\nDie Wege, \u00FCber die die Benutzer verkn\u00FCpft\nsind, lassen sich mit facepath grafisch darstellen.");
 		GridBagConstraints gbc_infoTextArea = new GridBagConstraints();
-		gbc_infoTextArea.insets = new Insets(50, 0, 0, 0);
-		gbc_infoTextArea.fill = GridBagConstraints.BOTH;
 		gbc_infoTextArea.gridx = 1;
 		gbc_infoTextArea.gridy = 0;
 		infoPanel.add(infoTextArea, gbc_infoTextArea);
@@ -106,8 +106,9 @@ public class LoginView extends JPanel implements ActionListener {
 		loginFormPanel.setBackground(Color.WHITE);
 		loginFormPanel.setBorder(BorderFactory.createTitledBorder("Login"));
 		GridBagConstraints gbc_loginFormPanel = new GridBagConstraints();
-		gbc_loginFormPanel.insets = new Insets(10, 80, 30, 80);
-		gbc_loginFormPanel.fill = GridBagConstraints.BOTH;
+		gbc_loginFormPanel.anchor = GridBagConstraints.NORTH;
+		gbc_loginFormPanel.insets = new Insets(0, 80, 30, 80);
+		gbc_loginFormPanel.fill = GridBagConstraints.HORIZONTAL;
 		gbc_loginFormPanel.gridx = 0;
 		gbc_loginFormPanel.gridy = 1;
 		this.add(loginFormPanel, gbc_loginFormPanel);
@@ -124,7 +125,7 @@ public class LoginView extends JPanel implements ActionListener {
 		gbc_instructionsLabel.anchor = GridBagConstraints.WEST;
 		gbc_instructionsLabel.gridwidth = 2;
 		gbc_instructionsLabel.fill = GridBagConstraints.HORIZONTAL;
-		gbc_instructionsLabel.insets = new Insets(10, 30, 5, 3);
+		gbc_instructionsLabel.insets = new Insets(10, 30, 5, 30);
 		gbc_instructionsLabel.gridx = 0;
 		gbc_instructionsLabel.gridy = 0;
 		loginFormPanel.add(instructionsLabel, gbc_instructionsLabel);
@@ -178,7 +179,7 @@ public class LoginView extends JPanel implements ActionListener {
 		buttonsPanel.setBackground(Color.WHITE);
 		GridBagConstraints gbc_buttonsPanel = new GridBagConstraints();
 		gbc_buttonsPanel.gridwidth = 2;
-		gbc_buttonsPanel.insets = new Insets(0, 30, 0, 30);
+		gbc_buttonsPanel.insets = new Insets(0, 30, 10, 30);
 		gbc_buttonsPanel.anchor = GridBagConstraints.EAST;
 		gbc_buttonsPanel.gridx = 0;
 		gbc_buttonsPanel.gridy = 4;
@@ -193,7 +194,6 @@ public class LoginView extends JPanel implements ActionListener {
 		helpButton = new JButton("Hilfe");
 		helpButton.addActionListener(this);
 		GridBagConstraints gbc_helpButton = new GridBagConstraints();
-		gbc_helpButton.insets = new Insets(0, 0, 0, 5);
 		gbc_helpButton.gridx = 0;
 		gbc_helpButton.gridy = 0;
 		buttonsPanel.add(helpButton, gbc_helpButton);

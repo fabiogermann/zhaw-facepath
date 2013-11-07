@@ -8,8 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.border.TitledBorder;
 
 import org.graphstream.ui.swingViewer.View;
 
@@ -21,6 +22,8 @@ public class GraphView extends JPanel implements ActionListener {
 	private FacePath fp;
 	private FacebookSearch fs;
 
+	private JPanel resultPanel;
+	private JTextArea reportTextArea;
 	private JButton helpButton;
 	private JButton newSearchButton;
 
@@ -35,9 +38,11 @@ public class GraphView extends JPanel implements ActionListener {
 		}
 		View view = fs.getGraph().display().addDefaultView(false);
 		GridBagConstraints gbc_view = new GridBagConstraints();
+		gbc_view.fill = GridBagConstraints.BOTH;
+		gbc_view.insets = new Insets(10, 30, 5, 30);
 		gbc_view.gridx = 0;
 		gbc_view.gridy = 0;
-		this.add(view, gbc_view);
+		resultPanel.add(view, gbc_view);
 	}
 
 	@Override
@@ -55,27 +60,43 @@ public class GraphView extends JPanel implements ActionListener {
 		this.setSize(874, 768);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0 };
-		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 0 };
 		gridBagLayout.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gridBagLayout.rowWeights = new double[] { 1.0, 0.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
 		setLayout(gridBagLayout);
 
-		JLabel reportLabel = new JLabel("Gemeinsamkeiten:");
-		GridBagConstraints gbc_reportLabel = new GridBagConstraints();
-		gbc_reportLabel.anchor = GridBagConstraints.WEST;
-		gbc_reportLabel.insets = new Insets(0, 30, 5, 30);
-		gbc_reportLabel.gridx = 0;
-		gbc_reportLabel.gridy = 1;
-		add(reportLabel, gbc_reportLabel);
+		resultPanel = new JPanel();
+		resultPanel.setBorder(new TitledBorder(null, "Ergebnis", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		resultPanel.setBackground(Color.WHITE);
+		GridBagConstraints gbc_resultPanel = new GridBagConstraints();
+		gbc_resultPanel.insets = new Insets(30, 30, 30, 30);
+		gbc_resultPanel.fill = GridBagConstraints.BOTH;
+		gbc_resultPanel.gridx = 0;
+		gbc_resultPanel.gridy = 0;
+		add(resultPanel, gbc_resultPanel);
+		GridBagLayout gbl_resultPanel = new GridBagLayout();
+		gbl_resultPanel.columnWidths = new int[] { 0, 0 };
+		gbl_resultPanel.rowHeights = new int[] { 0, 0, 0 };
+		gbl_resultPanel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_resultPanel.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
+		resultPanel.setLayout(gbl_resultPanel);
+
+		reportTextArea = new JTextArea("Gemeinsamkeiten:\n...\n...");
+		GridBagConstraints gbc_reportTextArea = new GridBagConstraints();
+		gbc_reportTextArea.fill = GridBagConstraints.HORIZONTAL;
+		gbc_reportTextArea.insets = new Insets(0, 30, 5, 30);
+		gbc_reportTextArea.gridx = 0;
+		gbc_reportTextArea.gridy = 1;
+		resultPanel.add(reportTextArea, gbc_reportTextArea);
 
 		JPanel buttonsPanel = new JPanel();
-		buttonsPanel.setBackground(Color.WHITE);
 		GridBagConstraints gbc_buttonsPanel = new GridBagConstraints();
-		gbc_buttonsPanel.insets = new Insets(0, 30, 30, 30);
+		gbc_buttonsPanel.insets = new Insets(0, 30, 10, 30);
 		gbc_buttonsPanel.anchor = GridBagConstraints.EAST;
 		gbc_buttonsPanel.gridx = 0;
 		gbc_buttonsPanel.gridy = 2;
-		add(buttonsPanel, gbc_buttonsPanel);
+		resultPanel.add(buttonsPanel, gbc_buttonsPanel);
+		buttonsPanel.setBackground(Color.WHITE);
 		GridBagLayout gbl_buttonsPanel = new GridBagLayout();
 		gbl_buttonsPanel.columnWidths = new int[] { 0, 0, 0 };
 		gbl_buttonsPanel.rowHeights = new int[] { 0, 0 };

@@ -68,6 +68,7 @@ public class FacePath extends JFrame implements ActionListener, WindowListener {
 			SearchView searchView = new SearchView(this);
 			this.viewMap.put("searchView", searchView);
 			this.add(searchView, BorderLayout.CENTER);
+
 		}
 
 		if (view.equals("result")) {
