@@ -33,16 +33,16 @@ public class GraphView extends JPanel implements ActionListener {
 	public GraphView(FacePath fp) {
 		this.fp = fp;
 		initialize();
-		if (fs == null) {
-			this.fs = fp.getFS();
-		}
-		View view = fs.getGraph().display().addDefaultView(false);
-		GridBagConstraints gbc_view = new GridBagConstraints();
-		gbc_view.fill = GridBagConstraints.BOTH;
-		gbc_view.insets = new Insets(10, 30, 5, 30);
-		gbc_view.gridx = 0;
-		gbc_view.gridy = 0;
-		resultPanel.add(view, gbc_view);
+//		if (fs == null) {
+//			this.fs = fp.getFS();
+//		}
+//		View view = fs.getGraph().display().addDefaultView(false);
+//		GridBagConstraints gbc_view = new GridBagConstraints();
+//		gbc_view.fill = GridBagConstraints.BOTH;
+//		gbc_view.insets = new Insets(10, 30, 5, 30);
+//		gbc_view.gridx = 0;
+//		gbc_view.gridy = 0;
+//		resultPanel.add(view, gbc_view);
 	}
 
 	@Override
