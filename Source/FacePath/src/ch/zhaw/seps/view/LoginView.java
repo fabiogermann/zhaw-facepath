@@ -43,11 +43,11 @@ public class LoginView extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == loginButton) {
-//			FacebookProvider fbProvider = new FacebookProvider(emailTextField.getText(), new String(
-//			        passwordField.getPassword()));
-//			fp.setFP(fbProvider);
-//			FacebookSearch fbSearch = new FacebookSearch(fbProvider);
-//			fp.setFS(fbSearch);
+			FacebookProvider fbProvider = new FacebookProvider(emailTextField.getText(), new String(
+			        passwordField.getPassword()));
+			fp.setFP(fbProvider);
+			FacebookSearch fbSearch = new FacebookSearch(fbProvider);
+			fp.setFS(fbSearch);
 			this.fp.showView("search");
 		}
 	}
