@@ -52,7 +52,7 @@ public class LogoutView extends JPanel implements ActionListener {
 		JPanel searchPanel = new JPanel();
 		searchPanel.setBackground(Color.WHITE);
 		GridBagConstraints gbc_searchPanel = new GridBagConstraints();
-		gbc_searchPanel.insets = new Insets(30, 20, 30, 0);
+		gbc_searchPanel.insets = new Insets(35, 20, 30, 0);
 		gbc_searchPanel.anchor = GridBagConstraints.NORTH;
 		gbc_searchPanel.fill = GridBagConstraints.HORIZONTAL;
 		gbc_searchPanel.gridx = 0;
