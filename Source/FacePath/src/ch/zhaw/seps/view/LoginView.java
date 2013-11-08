@@ -42,7 +42,7 @@ public class LoginView extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == loginButton) {
+		if (e.getSource() == loginButton || e.getSource() == emailTextField || e.getSource() == passwordField) {
 			FacebookProvider fbProvider = new FacebookProvider(emailTextField.getText(), new String(
 			        passwordField.getPassword()));
 			fp.setFP(fbProvider);
@@ -147,6 +147,7 @@ public class LoginView extends JPanel implements ActionListener {
 		gbc_emailTextField.gridy = 1;
 		loginFormPanel.add(emailTextField, gbc_emailTextField);
 		emailTextField.setColumns(10);
+		emailTextField.addActionListener(this);
 
 		JLabel passwordLabel = new JLabel("Passwort:");
 		passwordLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
@@ -164,6 +165,7 @@ public class LoginView extends JPanel implements ActionListener {
 		gbc_passwordField.gridx = 1;
 		gbc_passwordField.gridy = 2;
 		loginFormPanel.add(passwordField, gbc_passwordField);
+		passwordField.addActionListener(this);
 
 		guestCheckBox = new JCheckBox("Als Gast einloggen (Kein Facebook-Login ben\u00F6tigt)");
 		guestCheckBox.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
