@@ -24,6 +24,9 @@ import ch.zhaw.seps.fb.FacebookSearch;
 
 public class LoginView extends JPanel implements ActionListener {
 
+	private static final String GUEST_EMAIL = "facepath@jesus.ch";
+	private static final String GUEST_PASSWORD = "seps2013";
+
 	private FacePath fp;
 
 	private JTextField emailTextField;
@@ -43,12 +46,25 @@ public class LoginView extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == loginButton || e.getSource() == emailTextField || e.getSource() == passwordField) {
-			FacebookProvider fbProvider = new FacebookProvider(emailTextField.getText(), new String(
-			        passwordField.getPassword()));
+			FacebookProvider fbProvider = null;
+			if (guestCheckBox.isSelected()) {
+				fbProvider = new FacebookProvider(LoginView.GUEST_EMAIL, LoginView.GUEST_PASSWORD);
+			} else {
+				fbProvider = new FacebookProvider(emailTextField.getText(), new String(passwordField.getPassword()));
+			}
 			fp.setFP(fbProvider);
 			FacebookSearch fbSearch = new FacebookSearch(fbProvider);
 			fp.setFS(fbSearch);
 			this.fp.showView("search");
+		}
+		if (e.getSource() == guestCheckBox) {
+			if (guestCheckBox.isSelected()) {
+				emailTextField.setEditable(false);
+				passwordField.setEditable(false);
+			} else {
+				emailTextField.setEditable(true);
+				passwordField.setEditable(true);
+			}
 		}
 	}
 
@@ -176,6 +192,7 @@ public class LoginView extends JPanel implements ActionListener {
 		gbc_guestCheckBox.gridy = 3;
 		gbc_guestCheckBox.gridwidth = 2;
 		loginFormPanel.add(guestCheckBox, gbc_guestCheckBox);
+		guestCheckBox.addActionListener(this);
 
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setBackground(Color.WHITE);
