@@ -33,13 +33,11 @@ import java.util.concurrent.CountDownLatch;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
-import org.apache.http.ParseException;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.impl.nio.DefaultHttpClientIODispatch;
 import org.apache.http.impl.nio.pool.BasicNIOConnPool;
 import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
-import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
 import org.apache.http.nio.protocol.BasicAsyncRequestProducer;
 import org.apache.http.nio.protocol.BasicAsyncResponseConsumer;
@@ -55,7 +53,6 @@ import org.apache.http.protocol.RequestContent;
 import org.apache.http.protocol.RequestExpectContinue;
 import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
-import org.apache.http.util.EntityUtils;
 
 /**
  * Minimal asynchronous HTTP/1.1 client.
@@ -105,21 +102,16 @@ public class NHttpClient {
         HttpAsyncRequester requester = new HttpAsyncRequester(httpproc);
         // Execute HTTP GETs to the following hosts and
         HttpHost[] targets = new HttpHost[] {
-                new HttpHost("www.facebook.com", 80, "http"),
-                //new HttpHost("https://www.facebook.com", 443, "https"),
-                //new HttpHost("www.google.com", 80, "http")
+                new HttpHost("www.apache.org", 80, "http"),
+                new HttpHost("www.verisign.com", 443, "https"),
+                new HttpHost("www.google.com", 80, "http")
         };
-        
-        BasicHttpEntityEnclosingRequest request2 =  new BasicHttpEntityEnclosingRequest("POST", "/login.php");
-        
         final CountDownLatch latch = new CountDownLatch(targets.length);
         for (final HttpHost target: targets) {
             BasicHttpRequest request = new BasicHttpRequest("GET", "/");
             HttpCoreContext coreContext = HttpCoreContext.create();
             requester.execute(
-            		//Thats the request
-                    new BasicAsyncRequestProducer(target, request2),
-                    
+                    new BasicAsyncRequestProducer(target, request),
                     new BasicAsyncResponseConsumer(),
                     pool,
                     coreContext,
@@ -128,12 +120,7 @@ public class NHttpClient {
 
                 public void completed(final HttpResponse response) {
                     latch.countDown();
-                    try {
-						System.out.println(EntityUtils.toString(response.getEntity()));
-					} catch (ParseException | IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+                    System.out.println(target + "->" + response.getStatusLine());
                 }
 
                 public void failed(final Exception ex) {

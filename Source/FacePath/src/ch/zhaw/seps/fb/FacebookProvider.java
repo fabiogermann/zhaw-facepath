@@ -221,7 +221,8 @@ public class FacebookProvider<T> {
 	
 	public Collection<String> getFriendsOfThreaded(Collection<FacebookProfile> users) {
 		ConcurrentLinkedQueue<String> returnqueue = new ConcurrentLinkedQueue<String>();
-		ExecutorService executor = Executors.newCachedThreadPool();
+		
+		ExecutorService executor = Executors.newFixedThreadPool(2);//newCachedThreadPool();
 		List<Callable<Object>> tasks = new ArrayList<Callable<Object>>();
 		
 		for( FacebookProfile user  : users) {

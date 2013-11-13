@@ -31,7 +31,6 @@ public class FacebookSearch {
 		this.fbNetwork = new FacebookNetwork();
 		this.me = fbProvider.getMyProfile();
 		this.initializeNetwork(me, fbProvider.getMyFriends());
-		//this.searchIterate();
 	}
 	
 	private void initializeNetwork(FacebookProfile me, List<FacebookProfile> friends) {

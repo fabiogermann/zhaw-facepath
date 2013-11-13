@@ -40,10 +40,12 @@ public class SearchView extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		// TODO: es sollte gesucht werden nach dem klick auf suchen und der Graph soll kontinuierlich aufgebaut werden. ist die suche komplett soll erst die meldung erscheinen
 		if (e.getSource() == searchButton) {
 			resultFormPanel.setVisible(true);
 		}
 		if (e.getSource() == resultButton) {
+			//fp.getFS().searchIterate();
 			this.fp.showView("result");
 		}
 	}
