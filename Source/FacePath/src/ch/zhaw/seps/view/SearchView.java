@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -15,6 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import ch.zhaw.seps.FacePath;
+import ch.zhaw.seps.fb.FacebookProfile;
 
 public class SearchView extends JPanel implements ActionListener {
 
@@ -40,12 +42,17 @@ public class SearchView extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO: es sollte gesucht werden nach dem klick auf suchen und der Graph soll kontinuierlich aufgebaut werden. ist die suche komplett soll erst die meldung erscheinen
-		if (e.getSource() == searchButton) {
+		// TODO: es sollte gesucht werden nach dem klick auf suchen und der
+		// Graph soll kontinuierlich aufgebaut werden. ist die suche komplett
+		// soll erst die meldung erscheinen
+		if (e.getSource() == searchButton || e.getSource() == startUsernameTextField
+		        || e.getSource() == zielUsernameTextField) {
+			List<FacebookProfile> startUserSearchResult = this.fp.getFP().getUserFromSearch(
+			        startUsernameTextField.getText());
 			resultFormPanel.setVisible(true);
 		}
 		if (e.getSource() == resultButton) {
-			//fp.getFS().searchIterate();
+			// fp.getFS().searchIterate();
 			this.fp.showView("result");
 		}
 	}
@@ -76,7 +83,7 @@ public class SearchView extends JPanel implements ActionListener {
 		GridBagLayout gbl_searchFormPanel = new GridBagLayout();
 		gbl_searchFormPanel.columnWidths = new int[] { 0, 0, 0 };
 		gbl_searchFormPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-		gbl_searchFormPanel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_searchFormPanel.columnWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
 		gbl_searchFormPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		searchFormPanel.setLayout(gbl_searchFormPanel);
 
@@ -105,6 +112,7 @@ public class SearchView extends JPanel implements ActionListener {
 		gbc_startUsernameTextField.gridy = 1;
 		searchFormPanel.add(startUsernameTextField, gbc_startUsernameTextField);
 		startUsernameTextField.setColumns(10);
+		startUsernameTextField.addActionListener(this);
 
 		JLabel zielUsernameLabel = new JLabel("Ziel-Benutzernamen:");
 		GridBagConstraints gbc_zielUsernameLabel = new GridBagConstraints();
@@ -122,6 +130,7 @@ public class SearchView extends JPanel implements ActionListener {
 		gbc_zielUsernameTextField.gridy = 2;
 		searchFormPanel.add(zielUsernameTextField, gbc_zielUsernameTextField);
 		zielUsernameTextField.setColumns(10);
+		zielUsernameTextField.addActionListener(this);
 
 		JLabel searchoptionsLabel = new JLabel("Suchoptionen:");
 		GridBagConstraints gbc_searchoptionsLabel = new GridBagConstraints();
