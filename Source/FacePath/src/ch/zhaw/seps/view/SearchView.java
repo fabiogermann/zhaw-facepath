@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -15,15 +16,18 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 import ch.zhaw.seps.FacePath;
 import ch.zhaw.seps.fb.FacebookProfile;
+import ch.zhaw.seps.fb.FacebookSearch;
 
 public class SearchView extends JPanel implements ActionListener {
 
 	private FacePath fp;
 
-	private JTextField startUsernameTextField;
-	private JTextField zielUsernameTextField;
+	private JTextField sourceUsernameTextField;
+	private JTextField destinationUsernameTextField;
 	private JCheckBox eventsCheckBox;
 	private JCheckBox profilePicsCheckBox;
 	private JCheckBox nationalOnlyCheckBox;
@@ -32,12 +36,17 @@ public class SearchView extends JPanel implements ActionListener {
 	private JButton resultButton;
 	public JPanel resultFormPanel;
 
+	private List<String> sourceUserList; // autocomplete test
+	private List<String> destinationUserList; // autocomplete test
+
 	/**
 	 * Create the View.
 	 */
 	public SearchView(FacePath fp) {
 		this.fp = fp;
-		initialize();
+		this.sourceUserList = new ArrayList<String>();
+		this.destinationUserList = new ArrayList<String>();
+		this.initialize();
 	}
 
 	@Override
@@ -45,15 +54,38 @@ public class SearchView extends JPanel implements ActionListener {
 		// TODO: es sollte gesucht werden nach dem klick auf suchen und der
 		// Graph soll kontinuierlich aufgebaut werden. ist die suche komplett
 		// soll erst die meldung erscheinen
-		if (e.getSource() == searchButton || e.getSource() == startUsernameTextField
-		        || e.getSource() == zielUsernameTextField) {
-			List<FacebookProfile> startUserSearchResult = this.fp.getFP().getUserFromSearch(
-			        startUsernameTextField.getText());
+		if (e.getSource() == searchButton || e.getSource() == sourceUsernameTextField
+		        || e.getSource() == destinationUsernameTextField) {
+
+			this.searchUser(sourceUsernameTextField, sourceUserList, true);
+			this.searchUser(destinationUsernameTextField, destinationUserList, true);
+
 			resultFormPanel.setVisible(true);
 		}
 		if (e.getSource() == resultButton) {
-			// fp.getFS().searchIterate();
+			FacebookSearch fbSearch = new FacebookSearch(this.fp.getFP());
+			this.fp.setFS(fbSearch);
+
+			this.searchUser(sourceUsernameTextField, sourceUserList, false);
+			this.searchUser(destinationUsernameTextField, destinationUserList, false);
+
+			this.fp.getFS().searchIterate();
 			this.fp.showView("result");
+		}
+	}
+
+	public void searchUser(JTextField usernameTextfield, List<String> resultStringList, boolean search) {
+		List<FacebookProfile> userSearchResult = this.fp.getFP().getUserFromSearch(usernameTextfield.getText());
+		if (userSearchResult.size() > 0) {
+			FacebookProfile userProfile = userSearchResult.get(0);
+			if (search) {
+				for (FacebookProfile fbp : userSearchResult) {
+					resultStringList.add(fbp.getUserUIDString());
+				}
+				usernameTextfield.setText(userProfile.getUserUIDString());
+			} else {
+				this.fp.getFS().setPersonOfInterestSource(userProfile);
+			}
 		}
 	}
 
@@ -96,41 +128,45 @@ public class SearchView extends JPanel implements ActionListener {
 		gbc_instructionsLabel.gridy = 0;
 		searchFormPanel.add(instructionsLabel, gbc_instructionsLabel);
 
-		JLabel startUsernameLabel = new JLabel("Start-Benutzernamen:");
-		GridBagConstraints gbc_startUsernameLabel = new GridBagConstraints();
-		gbc_startUsernameLabel.anchor = GridBagConstraints.WEST;
-		gbc_startUsernameLabel.insets = new Insets(0, 30, 5, 5);
-		gbc_startUsernameLabel.gridx = 0;
-		gbc_startUsernameLabel.gridy = 1;
-		searchFormPanel.add(startUsernameLabel, gbc_startUsernameLabel);
+		JLabel sourceUsernameLabel = new JLabel("Start-Benutzernamen:");
+		GridBagConstraints gbc_sourceUsernameLabel = new GridBagConstraints();
+		gbc_sourceUsernameLabel.anchor = GridBagConstraints.WEST;
+		gbc_sourceUsernameLabel.insets = new Insets(0, 30, 5, 5);
+		gbc_sourceUsernameLabel.gridx = 0;
+		gbc_sourceUsernameLabel.gridy = 1;
+		searchFormPanel.add(sourceUsernameLabel, gbc_sourceUsernameLabel);
 
-		startUsernameTextField = new JTextField();
-		GridBagConstraints gbc_startUsernameTextField = new GridBagConstraints();
-		gbc_startUsernameTextField.insets = new Insets(0, 0, 5, 30);
-		gbc_startUsernameTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_startUsernameTextField.gridx = 1;
-		gbc_startUsernameTextField.gridy = 1;
-		searchFormPanel.add(startUsernameTextField, gbc_startUsernameTextField);
-		startUsernameTextField.setColumns(10);
-		startUsernameTextField.addActionListener(this);
+		sourceUsernameTextField = new JTextField();
+		GridBagConstraints gbc_sourceUsernameTextField = new GridBagConstraints();
+		gbc_sourceUsernameTextField.insets = new Insets(0, 0, 5, 30);
+		gbc_sourceUsernameTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_sourceUsernameTextField.gridx = 1;
+		gbc_sourceUsernameTextField.gridy = 1;
+		searchFormPanel.add(sourceUsernameTextField, gbc_sourceUsernameTextField);
+		sourceUsernameTextField.setColumns(10);
+		sourceUsernameTextField.addActionListener(this);
 
-		JLabel zielUsernameLabel = new JLabel("Ziel-Benutzernamen:");
-		GridBagConstraints gbc_zielUsernameLabel = new GridBagConstraints();
-		gbc_zielUsernameLabel.anchor = GridBagConstraints.WEST;
-		gbc_zielUsernameLabel.insets = new Insets(0, 30, 5, 5);
-		gbc_zielUsernameLabel.gridx = 0;
-		gbc_zielUsernameLabel.gridy = 2;
-		searchFormPanel.add(zielUsernameLabel, gbc_zielUsernameLabel);
+		AutoCompleteDecorator.decorate(sourceUsernameTextField, sourceUserList, false);
 
-		zielUsernameTextField = new JTextField();
-		GridBagConstraints gbc_zielUsernameTextField = new GridBagConstraints();
-		gbc_zielUsernameTextField.insets = new Insets(0, 0, 5, 30);
-		gbc_zielUsernameTextField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_zielUsernameTextField.gridx = 1;
-		gbc_zielUsernameTextField.gridy = 2;
-		searchFormPanel.add(zielUsernameTextField, gbc_zielUsernameTextField);
-		zielUsernameTextField.setColumns(10);
-		zielUsernameTextField.addActionListener(this);
+		JLabel destinationUsernameLabel = new JLabel("Ziel-Benutzernamen:");
+		GridBagConstraints gbc_destinationUsernameLabel = new GridBagConstraints();
+		gbc_destinationUsernameLabel.anchor = GridBagConstraints.WEST;
+		gbc_destinationUsernameLabel.insets = new Insets(0, 30, 5, 5);
+		gbc_destinationUsernameLabel.gridx = 0;
+		gbc_destinationUsernameLabel.gridy = 2;
+		searchFormPanel.add(destinationUsernameLabel, gbc_destinationUsernameLabel);
+
+		destinationUsernameTextField = new JTextField();
+		GridBagConstraints gbc_destinationUsernameTextField = new GridBagConstraints();
+		gbc_destinationUsernameTextField.insets = new Insets(0, 0, 5, 30);
+		gbc_destinationUsernameTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_destinationUsernameTextField.gridx = 1;
+		gbc_destinationUsernameTextField.gridy = 2;
+		searchFormPanel.add(destinationUsernameTextField, gbc_destinationUsernameTextField);
+		destinationUsernameTextField.setColumns(10);
+		destinationUsernameTextField.addActionListener(this);
+
+		AutoCompleteDecorator.decorate(destinationUsernameTextField, destinationUserList, false);
 
 		JLabel searchoptionsLabel = new JLabel("Suchoptionen:");
 		GridBagConstraints gbc_searchoptionsLabel = new GridBagConstraints();
@@ -238,5 +274,4 @@ public class SearchView extends JPanel implements ActionListener {
 		resultFormPanel.add(resultButton, gbc_resultButton);
 
 	}
-
 }

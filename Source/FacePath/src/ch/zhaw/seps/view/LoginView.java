@@ -40,7 +40,7 @@ public class LoginView extends JPanel implements ActionListener {
 	 */
 	public LoginView(FacePath fp) {
 		this.fp = fp;
-		initialize();
+		this.initialize();
 	}
 
 	@Override
@@ -53,8 +53,8 @@ public class LoginView extends JPanel implements ActionListener {
 				fbProvider = new FacebookProvider(emailTextField.getText(), new String(passwordField.getPassword()));
 			}
 			fp.setFP(fbProvider);
-			FacebookSearch fbSearch = new FacebookSearch(fbProvider);
-			fp.setFS(fbSearch);
+			// FacebookSearch fbSearch = new FacebookSearch(fbProvider);
+			// fp.setFS(fbSearch);
 			this.fp.showView("search");
 		}
 		if (e.getSource() == guestCheckBox) {
