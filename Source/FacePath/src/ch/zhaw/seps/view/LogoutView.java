@@ -20,6 +20,7 @@ public class LogoutView extends JPanel implements ActionListener {
 	private FacePath fp;
 
 	private JButton logoutButton;
+	private JLabel loginTypLabel;
 
 	/**
 	 * Create the View.
@@ -27,7 +28,13 @@ public class LogoutView extends JPanel implements ActionListener {
 	public LogoutView(FacePath fp) {
 		setBackground(Color.WHITE);
 		this.fp = fp;
-		initialize();
+		this.initialize();
+		String username = this.fp.getFP().getMyProfile().getUserUIDString();
+		if (!username.equals("max.path.31")) {
+			this.loginTypLabel.setText(username);
+		} else {
+			this.loginTypLabel.setText("Gast");
+		}
 	}
 
 	@Override
@@ -79,7 +86,7 @@ public class LogoutView extends JPanel implements ActionListener {
 		logoLabel.setIcon(new ImageIcon(SearchView.class
 		        .getResource("/ch/zhaw/seps/view/resources/facepath-logo-small.png")));
 
-		JLabel loginTypInfoLabel = new JLabel("Login-Typ:");
+		JLabel loginTypInfoLabel = new JLabel("Benutzer:");
 		loginTypInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_loginTypInfoLabel = new GridBagConstraints();
 		gbc_loginTypInfoLabel.fill = GridBagConstraints.HORIZONTAL;
@@ -89,7 +96,7 @@ public class LogoutView extends JPanel implements ActionListener {
 		gbc_loginTypInfoLabel.gridy = 1;
 		searchPanel.add(loginTypInfoLabel, gbc_loginTypInfoLabel);
 
-		JLabel loginTypLabel = new JLabel("Gast");
+		loginTypLabel = new JLabel();
 		loginTypLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		GridBagConstraints gbc_loginTypLabel = new GridBagConstraints();
 		gbc_loginTypLabel.fill = GridBagConstraints.HORIZONTAL;

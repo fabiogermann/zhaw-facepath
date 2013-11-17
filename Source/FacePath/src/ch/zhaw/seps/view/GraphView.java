@@ -32,7 +32,7 @@ public class GraphView extends JPanel implements ActionListener {
 	 */
 	public GraphView(FacePath fp) {
 		this.fp = fp;
-		initialize();
+		this.initialize();
 		if (fs == null) {
 			this.fs = fp.getFS();
 		}

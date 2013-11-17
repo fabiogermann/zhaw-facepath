@@ -1,6 +1,7 @@
 package ch.zhaw.seps.fb;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,7 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -304,11 +304,17 @@ public class FacebookProvider<T> {
 	}
 
 	public List<FacebookProfile> getUserFromSearch(String searchQuery) {
-		List<FacebookProfile> result = new LinkedList<FacebookProfile>();
-
+		List<FacebookProfile> result = new ArrayList<FacebookProfile>();
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(this.cm).build();
 
-		HttpGet httpget = new HttpGet("https://www.facebook.com/search/results.php?q=" + URLEncoder.encode(searchQuery));
+		HttpGet httpget = null;
+		try {
+			httpget = new HttpGet("https://www.facebook.com/search/results.php?q="
+			        + URLEncoder.encode(searchQuery, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		CloseableHttpResponse response = null;
 		HttpEntity entity = null;
@@ -331,7 +337,7 @@ public class FacebookProvider<T> {
 
 		String regex = "(href=\"https://www.facebook.com/)([0-9a-zA-Z.]*)\"";
 
-		List<String> searchProfileList = new LinkedList<String>();
+		List<String> searchProfileList = new ArrayList<String>();
 		Set<String> searchProfileSet = new HashSet<String>();
 
 		Matcher m = Pattern.compile(regex).matcher(str);
@@ -341,14 +347,12 @@ public class FacebookProvider<T> {
 			}
 		}
 
-		for (String searchProfileString : searchProfileList) {
-			searchProfileString = searchProfileString.replace("href=\"https://www.facebook.com/", "").replace("\"", "");
-			// System.out.println("Search result: " + searchProfileString);
-			User searchUser = apiConnection.fetchObject(searchProfileString, User.class);
-			FacebookProfile searchProfile = new FacebookProfile(searchUser.getUsername(), searchUser.getId());
-			result.add(searchProfile);
+		for (String searchProfile : searchProfileList) {
+			searchProfile = searchProfile.replace("href=\"https://www.facebook.com/", "").replace("\"", "");
+			User searchUser = apiConnection.fetchObject(searchProfile, User.class);
+			FacebookProfile fbp = new FacebookProfile(searchUser.getUsername(), searchUser.getId());
+			result.add(fbp);
 		}
-
 		return result;
 	}
 }
