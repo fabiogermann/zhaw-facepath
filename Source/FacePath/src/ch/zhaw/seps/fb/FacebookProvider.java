@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -85,8 +88,6 @@ public class FacebookProvider<T> {
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(this.cm).build();
 
 		// depr
-		CloseableHttpClient httpclient = httpClient;
-		// depr
 		this.httpConnection = httpClient;
 
 		HttpGet httpget = new HttpGet("http://www.facebook.com/login.php");
@@ -118,7 +119,7 @@ public class FacebookProvider<T> {
 
 		httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 
-		response = httpclient.execute(httpost, this.ctx);
+		response = httpClient.execute(httpost, this.ctx);
 		entity = response.getEntity();
 
 		if (FacePath.DEBUG) {
@@ -198,30 +199,36 @@ public class FacebookProvider<T> {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			executor.shutdown();
 		}
 
 		return returnqueue;
 	}
 
-	public Collection<String> getFriendsOfThreaded(Collection<FacebookProfile> users) {
-		ConcurrentLinkedQueue<String> returnqueue = new ConcurrentLinkedQueue<String>();
+	public Collection<FacebookProfile> getFriendsOfThreaded(Collection<FacebookProfile> users, Map<String,FacebookProfile> kP) {
+		ConcurrentLinkedQueue<FacebookProfile> returnqueue = null;
 
-		ExecutorService executor = Executors.newFixedThreadPool(2);// newCachedThreadPool();
+		ExecutorService executor = Executors.newFixedThreadPool(2);
 		List<Callable<Object>> tasks = new ArrayList<Callable<Object>>();
 
 		for (FacebookProfile user : users) {
-			tasks.add(Executors.callable(new GetFriendsOfThread(cm, ctx, returnqueue, user)));
-			// executor.execute(new GetFriendsOfThread(cm, ctx, returnqueue,
-			// user));
+			returnqueue = new ConcurrentLinkedQueue<FacebookProfile>();
+			user.setFriends(returnqueue);
+			tasks.add(Executors.callable(new GetFriendsOfThread(cm, ctx, authToken, returnqueue, user, kP)));
+			if (FacePath.DEBUG){
+		    	System.out.println("FBP-searches-friends-of: "+user.getUserID());
+		    }
 		}
 
 		try {
 			executor.invokeAll(tasks);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		} finally {
+			executor.shutdown();
 		}
-		// TODO duplicate elimination
-		return returnqueue;
+		return users;
 	}
 
 	@Deprecated

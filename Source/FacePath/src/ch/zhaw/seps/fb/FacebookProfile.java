@@ -1,6 +1,7 @@
 package ch.zhaw.seps.fb;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class FacebookProfile {
@@ -9,7 +10,7 @@ public class FacebookProfile {
 	private String userID;
 	private String name;
 	private String familyName;
-	private List<FacebookProfile> friends = new ArrayList<FacebookProfile>();
+	private Collection<FacebookProfile> friends = new ArrayList<FacebookProfile>();
 	private List<String> candidate = new ArrayList<String>();
 	private String profileLink;
 	
@@ -27,21 +28,15 @@ public class FacebookProfile {
 		return this.userID;
 	}
 	
-	// setter / getter pairs
 	
 	public void setName(String n, String fn) {
 		this.name = n;
 		this.familyName =fn;
 	}
 	
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	public String getFirstName() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.name;
 	}
 
 	public void setLink(String l) {
@@ -53,15 +48,14 @@ public class FacebookProfile {
 	}
 
 	public String getLastName() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.familyName;
 	}
 	
-	public void setFriends(List<FacebookProfile> fl) {
-		// TODO Auto-generated method stub
+	public void setFriends(Collection<FacebookProfile> fl) {
+		this.friends.addAll(fl);
 	}
 	
-	public List<FacebookProfile> getFriends() {
+	public Collection<FacebookProfile> getFriends() {
 		return this.friends;
 	}
 	

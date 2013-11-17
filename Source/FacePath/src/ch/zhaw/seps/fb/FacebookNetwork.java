@@ -1,7 +1,9 @@
 package ch.zhaw.seps.fb;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.graphstream.graph.EdgeRejectedException;
@@ -61,6 +63,10 @@ public class FacebookNetwork {
     
     public Graph getGraph() {
     	return this.graph;
+    }
+    
+    public Map<String, FacebookProfile> getKnownProfiles() {
+    	return Collections.unmodifiableMap(this.graphCollection);
     }
     
     public void addToRootStack(FacebookProfile fp) {

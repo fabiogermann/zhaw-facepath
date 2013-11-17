@@ -52,7 +52,7 @@ public class SearchView extends JPanel implements ActionListener {
 			resultFormPanel.setVisible(true);
 		}
 		if (e.getSource() == resultButton) {
-			// fp.getFS().searchIterate();
+			fp.getFS().searchIterate();
 			this.fp.showView("result");
 		}
 	}

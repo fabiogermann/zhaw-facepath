@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.apache.http.client.ClientProtocolException;
@@ -74,15 +75,14 @@ public class FacebookSearch {
 	public void searchIterate() {
 
 		List<FacebookProfile> tlist = new ArrayList<FacebookProfile>();
-		Collection<String> buddylist = null;
+		//Collection<String> buddylist = null;
 		Collection<FacebookProfile> friendlist = null;
 		
 		while(!workStack.empty()) {
 			tlist.add(workStack.pop());
 		}
-		
-		buddylist = fbProvider.getFriendsOfThreaded(tlist);
-		friendlist = fbProvider.getUserFromThreadedAPI(buddylist);
+		friendlist = fbProvider.getFriendsOfThreaded(tlist, this.fbNetwork.getKnownProfiles());
+		//friendlist = fbProvider.getUserFromThreadedAPI(buddylist);
 		workStack.addAll(friendlist);
 		
 		for(FacebookProfile f2 : tlist) {

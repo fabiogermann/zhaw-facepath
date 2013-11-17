@@ -40,7 +40,7 @@ public class GetUserFromAPIThread implements Runnable {
 		
 	    queue.add(fbp);
 	    if (FacePath.DEBUG){
-	    	System.out.println("Thread-GetUserFromAPI added: "+user);
+	    	System.out.println("GUFAPI-created: "+user);
 	    }
 	}
 }
