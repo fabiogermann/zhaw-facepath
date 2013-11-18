@@ -85,18 +85,10 @@ public class FacebookSearch {
 		//friendlist = fbProvider.getUserFromThreadedAPI(buddylist);
 		workStack.addAll(friendlist);
 		
-		for(FacebookProfile f2 : tlist) {
-			for(FacebookProfile fp : friendlist) {
-				for(String s : f2.getCandidates()) {
-					if(fp.getUserUIDString().contentEquals(s)) {
-						System.out.println("Foooooooooooooo");
-					}
-				}
-				
-				if(f2.getCandidates().contains(fp.getUserUIDString())) {
-					submitProfileToNetwork(fp);
-					submitConnectionToNetwork(f2, fp);
-				}
+		for(FacebookProfile f2 : friendlist) {
+			System.out.println(">"+f2.getUserID());
+			for(FacebookProfile fp : f2.getFriends()) {
+						System.out.println("-----"+fp.getUserID());
 			}
 		}
 		
