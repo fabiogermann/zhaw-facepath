@@ -51,11 +51,6 @@ public class FacebookNetwork {
     	if(!this.graphCollection.containsKey(user.getUserID())) {
     		this.graph.addNode(user.getUserID());
         	this.graphCollection.put(user.getUserID(), user);
-        	
-        	if(this.graph.getNode(user.getUserID()) == null) {
-        		System.exit(1);
-        	}
-        	
     	}
     }
     

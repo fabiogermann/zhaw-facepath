@@ -91,7 +91,6 @@ public class FacebookSearch {
 						System.out.println("-----"+fp.getUserID());
 			}
 		}
-		
 	}
 	
 	public boolean pathFound() {
