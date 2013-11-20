@@ -84,17 +84,25 @@ public class FacebookSearch {
 		friendlist = fbProvider.getFriendsOfThreaded(tlist, this.fbNetwork);
 		//friendlist = fbProvider.getUserFromThreadedAPI(buddylist);
 		workStack.addAll(friendlist);
-		
+		this.source = fbProvider.getMyProfile(); // for debug
 		for(FacebookProfile f2 : friendlist) {
 			System.out.println(">"+f2.getUserID());
+			this.target = f2; // for debug
 			for(FacebookProfile fp : f2.getFriends()) {
 						System.out.println("-----"+fp.getUserID());
 			}
 		}
+		if (pathFound()) {
+			System.out.println("gefunden");
+			//stop
+		} else {
+			//continue
+		}
 	}
 	
 	public boolean pathFound() {
-		return false;
-		//TODO
+		
+		this.fbNetwork.findShortestPath(source, target);
+		return this.fbNetwork.pathFound();
 	}
 }

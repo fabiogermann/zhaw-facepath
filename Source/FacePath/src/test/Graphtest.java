@@ -85,9 +85,11 @@ public class Graphtest {
 		System.out.println("search path from "+source.getId()+" to "+dest.getId());
 		
 		ArrayList<String> colors = new ArrayList<>();
-		colors.add("fill-color: rgb(218,165,32);");
-		colors.add("fill-color: rgb(255,0,0);");
-		colors.add("fill-color: rgb(255,0,255);");
+		colors.add("fill-color: goldenrod;");
+		colors.add("fill-color: red;");
+		colors.add("fill-color: green;");
+		colors.add("fill-color: blue;");
+		colors.add("fill-color: fuchsia;");
 		int pathnr = 0;
 		for (List<Node> l : nodes) {
 			Node previousNode=null;
