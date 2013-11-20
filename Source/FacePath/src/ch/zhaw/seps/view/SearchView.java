@@ -69,8 +69,9 @@ public class SearchView extends JPanel implements ActionListener {
 			this.searchUser(sourceUsernameTextField, sourceUserList, false);
 			this.searchUser(destinationUsernameTextField, destinationUserList, false);
 
-			this.fp.getFS().searchIterate();
+			
 			this.fp.showView("result");
+			this.fp.getFS().searchIterate();
 		}
 	}
 

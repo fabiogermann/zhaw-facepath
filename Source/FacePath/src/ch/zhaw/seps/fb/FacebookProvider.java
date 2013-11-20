@@ -206,7 +206,7 @@ public class FacebookProvider<T> {
 		return returnqueue;
 	}
 
-	public Collection<FacebookProfile> getFriendsOfThreaded(Collection<FacebookProfile> users, Map<String,FacebookProfile> kP) {
+	public Collection<FacebookProfile> getFriendsOfThreaded(Collection<FacebookProfile> users, FacebookNetwork fN) {
 		ConcurrentLinkedQueue<FacebookProfile> returnqueue = null;
 
 		ExecutorService executor = Executors.newFixedThreadPool(2);
@@ -215,7 +215,7 @@ public class FacebookProvider<T> {
 		for (FacebookProfile user : users) {
 			returnqueue = new ConcurrentLinkedQueue<FacebookProfile>();
 			user.setFriends(returnqueue);
-			tasks.add(Executors.callable(new GetFriendsOfThread(cm, ctx, authToken, returnqueue, user, kP)));
+			tasks.add(Executors.callable(new GetFriendsOfThread(cm, ctx, authToken, returnqueue, user, fN)));
 			if (FacePath.DEBUG){
 		    	System.out.println("FBP-searches-friends-of: "+user.getUserID());
 		    }

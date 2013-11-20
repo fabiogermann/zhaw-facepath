@@ -36,28 +36,28 @@ public class FacebookSearch {
 	
 	private void initializeNetwork(FacebookProfile me, List<FacebookProfile> friends) {
 		// add myself to the graph
-		fbNetwork.addVertice(me.getUserID(), me);
+		fbNetwork.addVertice(me);
 		
 		//add my friends to the graph
 		for(Iterator<FacebookProfile> i = friends.iterator(); i.hasNext(); ) {
 		    FacebookProfile item = i.next();
-		    fbNetwork.addVertice(item.getUserID(), item);
-		    fbNetwork.addEdge(me.getUserID()+"-to-"+item.getUserID(), me.getUserID(), item.getUserID());
+		    fbNetwork.addVertice(item);
+		    fbNetwork.addEdge(me, item);
 		    //DEBUG
 		    if (FacePath.DEBUG){
-		    	System.out.println(me.getUserID()+"-to-"+item.getUserID());
+		    	System.out.println(me.getUserID()+"--"+item.getUserID());
 		    }
 		    this.workStack.add(item);
 		}
 	}
 	
 	private void submitProfileToNetwork(FacebookProfile fp) {
-		this.fbNetwork.addVertice(fp.getUserID(), fp);
+		this.fbNetwork.addVertice(fp);
 	}
 	
 	private void submitConnectionToNetwork(FacebookProfile from, FacebookProfile to) {
-		this.fbNetwork.addVertice(to.getUserID(), to);
-	    this.fbNetwork.addEdge(from.getUserID()+"-to-"+to.getUserID(), from.getUserID(), to.getUserID());
+		this.fbNetwork.addVertice(to);
+	    this.fbNetwork.addEdge(from, to);
 	}
 	
 	public Graph getGraph() {
@@ -81,7 +81,7 @@ public class FacebookSearch {
 		while(!workStack.empty()) {
 			tlist.add(workStack.pop());
 		}
-		friendlist = fbProvider.getFriendsOfThreaded(tlist, this.fbNetwork.getKnownProfiles());
+		friendlist = fbProvider.getFriendsOfThreaded(tlist, this.fbNetwork);
 		//friendlist = fbProvider.getUserFromThreadedAPI(buddylist);
 		workStack.addAll(friendlist);
 		

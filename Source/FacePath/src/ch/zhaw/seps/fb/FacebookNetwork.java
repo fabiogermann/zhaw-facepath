@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.concurrent.locks.Lock;
 
 import org.graphstream.graph.EdgeRejectedException;
 import org.graphstream.graph.ElementNotFoundException;
@@ -19,6 +20,7 @@ public class FacebookNetwork {
 	// THE EASY WAY
 	private Graph graph;
 	private HashMap<String,FacebookProfile> graphCollection;
+	public Lock lockObject;
 	
 	// THE HARD WAY
 	// Datastructure for the simulation of the facebook network
@@ -45,16 +47,16 @@ public class FacebookNetwork {
     	this.targetStack = new Stack<TreeNode<FacebookProfile>>();
     }
     
-    public void addVertice(String userID, FacebookProfile user){
-    	if(!this.graphCollection.containsKey(userID)) {
-    		this.graph.addNode(userID);
-        	this.graphCollection.put(userID, user);
+    public synchronized void addVertice(FacebookProfile user){
+    	if(!this.graphCollection.containsKey(user.getUserID())) {
+    		this.graph.addNode(user.getUserID());
+        	this.graphCollection.put(user.getUserID(), user);
     	}
     }
     
-    public void addEdge(String name, String sourceID, String targetID){
+    public synchronized void addEdge(FacebookProfile source, FacebookProfile destination){
     	try {
-    		this.graph.addEdge(name, sourceID, targetID);
+    		this.graph.addEdge(source.getUserID()+"-to-"+destination.getUserID(), source.getUserID(), destination.getUserID());
     	} catch(IdAlreadyInUseException | ElementNotFoundException | EdgeRejectedException err) {
     		err.printStackTrace();
     	}

@@ -29,39 +29,42 @@ public class GetFriendsOfThread implements Runnable {
 	private ConcurrentLinkedQueue<FacebookProfile> queue = null;
 	private FacebookProfile user;
 	private String ApiKey;
-	private Map<String,FacebookProfile> knownProfiles;
+	private FacebookNetwork fN;
 	
 	public GetFriendsOfThread(	PoolingHttpClientConnectionManager conmgr, 
 								HttpContext context, 
 								String apikey, 
 								ConcurrentLinkedQueue<FacebookProfile> returnqueue, 
 								FacebookProfile fbuser,
-								Map<String,FacebookProfile> kP) {
+								FacebookNetwork network) {
 		this.com = conmgr;
 		this.queue = returnqueue;
 		this.user = fbuser;
 		this.cont = context;
 		this.ApiKey = apikey;
-		this.knownProfiles = kP;
+		this.fN = network;
 		// bei call übergeben: Collections.unmodifiableMap(knownProfiles);
 	}
 
 	@Override
 	public void run() {
 		// Get all the friends of a user
+		Map<String,FacebookProfile> knownProfiles = fN.getKnownProfiles();
 		ConcurrentLinkedQueue<String> stringqueue = new ConcurrentLinkedQueue<String>();
-		ExecutorService preexecutor = Executors.newCachedThreadPool();
+		ExecutorService preexecutor = Executors.newFixedThreadPool(2);
 		preexecutor.execute(new GetListOfFriendsOfThread(com, cont, stringqueue, user));
 		preexecutor.shutdown();
 		try {
 			while (!preexecutor.awaitTermination(4L, TimeUnit.SECONDS)) {
-			    System.out.println("Still waiting for the executor to finish");
+				if (FacePath.DEBUG){
+					System.out.println("Still waiting for the preexecutor to finish");
+				}
 			}
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
 		List<Callable<Object>> apiRequests = new ArrayList<Callable<Object>>();
-		ExecutorService executor = Executors.newCachedThreadPool();
+		ExecutorService executor = Executors.newFixedThreadPool(4);
 		// create the fbps for each friend
 		for( String userstring : stringqueue) {
 			// if the profile has already been requested
@@ -87,5 +90,26 @@ public class GetFriendsOfThread implements Runnable {
 		} finally {
 			executor.shutdown();
 		}
+		
+		try {
+			while (!executor.awaitTermination(4L, TimeUnit.SECONDS)) {
+				if (FacePath.DEBUG){
+					System.out.println("Still waiting for the executor to finish");
+				}
+			}
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		boolean done = false;
+		
+		while(!done) {
+				fN.addVertice(user);
+				for(FacebookProfile f : queue) {
+					fN.addVertice(f);
+					fN.addEdge(user, f);
+				}
+				done = true;
+		}
+
 	}
 }
