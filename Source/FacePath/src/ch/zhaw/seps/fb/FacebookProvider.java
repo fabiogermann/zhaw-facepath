@@ -66,10 +66,11 @@ public class FacebookProvider<T> {
 	        + "&redirect_uri=" + REDIRECT_URL + "&client_secret=" + APP_SECRET + "&code=";
 	private String authToken;
 
-	public FacebookProvider(String email, String password) {
+	public FacebookProvider(String email, String password) throws FacebookLoginException {
 		try {
 			this.connectHTTP(email, password);
 		} catch (IOException e) {
+			//System.exit(1);
 			e.printStackTrace();
 		}
 		try {
@@ -84,7 +85,7 @@ public class FacebookProvider<T> {
 		apiConnection = new DefaultFacebookClient(token);
 	}
 
-	private void connectHTTP(String email, String password) throws ClientProtocolException, IOException {
+	private void connectHTTP(String email, String password) throws FacebookLoginException, ClientProtocolException, IOException {
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(this.cm).build();
 
 		// depr
@@ -108,7 +109,7 @@ public class FacebookProvider<T> {
 		}
 
 		if (FacePath.DEBUG) {
-			System.out.println("Login form get: " + response.getStatusLine());
+			System.out.println("Login pageload: " + response.getStatusLine().getStatusCode());
 		}
 
 		HttpPost httpost = new HttpPost("https://www.facebook.com/login.php");
@@ -121,9 +122,15 @@ public class FacebookProvider<T> {
 
 		response = httpClient.execute(httpost, this.ctx);
 		entity = response.getEntity();
-
+		
+		int logincode = response.getStatusLine().getStatusCode();
+		
 		if (FacePath.DEBUG) {
-			System.out.println("Login form get: " + response.getStatusLine());
+			System.out.println("Login performed: " + logincode);
+		}
+		
+		if(logincode != 302) {
+			throw new FacebookLoginException();
 		}
 	}
 

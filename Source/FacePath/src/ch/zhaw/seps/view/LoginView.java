@@ -19,6 +19,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import ch.zhaw.seps.FacePath;
+import ch.zhaw.seps.fb.FacebookLoginException;
 import ch.zhaw.seps.fb.FacebookProvider;
 import ch.zhaw.seps.fb.FacebookSearch;
 
@@ -48,14 +49,25 @@ public class LoginView extends JPanel implements ActionListener {
 		if (e.getSource() == loginButton || e.getSource() == emailTextField || e.getSource() == passwordField) {
 			FacebookProvider fbProvider = null;
 			if (guestCheckBox.isSelected()) {
-				fbProvider = new FacebookProvider(LoginView.GUEST_EMAIL, LoginView.GUEST_PASSWORD);
+				try {
+					fbProvider = new FacebookProvider(LoginView.GUEST_EMAIL, LoginView.GUEST_PASSWORD);
+					this.fp.showView("search");
+				} catch (FacebookLoginException e1) {
+					e1.printStackTrace();
+					// TODO show user notification
+				}
 			} else {
-				fbProvider = new FacebookProvider(emailTextField.getText(), new String(passwordField.getPassword()));
+				try {
+					fbProvider = new FacebookProvider(emailTextField.getText(), new String(passwordField.getPassword()));
+					this.fp.showView("search");
+				} catch (FacebookLoginException e1) {
+					e1.printStackTrace();
+					// TODO show user notification
+				}
 			}
 			fp.setFP(fbProvider);
 			// FacebookSearch fbSearch = new FacebookSearch(fbProvider);
 			// fp.setFS(fbSearch);
-			this.fp.showView("search");
 		}
 		if (e.getSource() == guestCheckBox) {
 			if (guestCheckBox.isSelected()) {
