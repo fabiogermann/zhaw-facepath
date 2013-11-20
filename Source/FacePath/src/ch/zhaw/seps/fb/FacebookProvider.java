@@ -70,7 +70,6 @@ public class FacebookProvider<T> {
 		try {
 			this.connectHTTP(email, password);
 		} catch (IOException e) {
-			//System.exit(1);
 			e.printStackTrace();
 		}
 		try {

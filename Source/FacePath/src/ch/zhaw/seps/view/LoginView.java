@@ -51,6 +51,7 @@ public class LoginView extends JPanel implements ActionListener {
 			if (guestCheckBox.isSelected()) {
 				try {
 					fbProvider = new FacebookProvider(LoginView.GUEST_EMAIL, LoginView.GUEST_PASSWORD);
+					this.fp.setFP(fbProvider);
 					this.fp.showView("search");
 				} catch (FacebookLoginException e1) {
 					e1.printStackTrace();
@@ -59,13 +60,13 @@ public class LoginView extends JPanel implements ActionListener {
 			} else {
 				try {
 					fbProvider = new FacebookProvider(emailTextField.getText(), new String(passwordField.getPassword()));
+					this.fp.setFP(fbProvider);
 					this.fp.showView("search");
 				} catch (FacebookLoginException e1) {
 					e1.printStackTrace();
 					// TODO show user notification
 				}
 			}
-			fp.setFP(fbProvider);
 			// FacebookSearch fbSearch = new FacebookSearch(fbProvider);
 			// fp.setFS(fbSearch);
 		}

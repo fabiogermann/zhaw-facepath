@@ -51,12 +51,17 @@ public class FacebookNetwork {
     	if(!this.graphCollection.containsKey(user.getUserID())) {
     		this.graph.addNode(user.getUserID());
         	this.graphCollection.put(user.getUserID(), user);
+        	
+        	if(this.graph.getNode(user.getUserID()) == null) {
+        		System.exit(1);
+        	}
+        	
     	}
     }
     
     public synchronized void addEdge(FacebookProfile source, FacebookProfile destination){
     	try {
-    		this.graph.addEdge(source.getUserID()+"-to-"+destination.getUserID(), source.getUserID(), destination.getUserID());
+    		this.graph.addEdge(source.getUserID()+"--"+destination.getUserID(), source.getUserID(), destination.getUserID());
     	} catch(IdAlreadyInUseException | ElementNotFoundException | EdgeRejectedException err) {
     		err.printStackTrace();
     	}
