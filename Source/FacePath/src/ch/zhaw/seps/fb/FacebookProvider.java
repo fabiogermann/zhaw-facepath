@@ -5,13 +5,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -84,7 +81,8 @@ public class FacebookProvider<T> {
 		apiConnection = new DefaultFacebookClient(token);
 	}
 
-	private void connectHTTP(String email, String password) throws FacebookLoginException, ClientProtocolException, IOException {
+	private void connectHTTP(String email, String password) throws FacebookLoginException, ClientProtocolException,
+	        IOException {
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(this.cm).build();
 
 		// depr
@@ -121,14 +119,14 @@ public class FacebookProvider<T> {
 
 		response = httpClient.execute(httpost, this.ctx);
 		entity = response.getEntity();
-		
+
 		int logincode = response.getStatusLine().getStatusCode();
-		
+
 		if (FacePath.DEBUG) {
 			System.out.println("Login performed: " + logincode);
 		}
-		
-		if(logincode != 302) {
+
+		if (logincode != 302) {
 			throw new FacebookLoginException();
 		}
 	}
@@ -222,9 +220,9 @@ public class FacebookProvider<T> {
 			returnqueue = new ConcurrentLinkedQueue<FacebookProfile>();
 			user.setFriends(returnqueue);
 			tasks.add(Executors.callable(new GetFriendsOfThread(cm, ctx, authToken, returnqueue, user, fN)));
-			if (FacePath.DEBUG){
-		    	System.out.println("FBP-searches-friends-of: "+user.getUserID());
-		    }
+			if (FacePath.DEBUG) {
+				System.out.println("FBP-searches-friends-of: " + user.getUserID());
+			}
 		}
 
 		try {
@@ -357,6 +355,7 @@ public class FacebookProvider<T> {
 			searchProfile = searchProfile.replace("href=\"https://www.facebook.com/", "").replace("\"", "");
 			User searchUser = apiConnection.fetchObject(searchProfile, User.class);
 			FacebookProfile fbp = new FacebookProfile(searchUser.getUsername(), searchUser.getId());
+			fbp.setName(searchUser.getFirstName(), searchUser.getLastName());
 			result.add(fbp);
 		}
 		return result;

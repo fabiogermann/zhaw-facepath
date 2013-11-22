@@ -1,12 +1,16 @@
 package ch.zhaw.seps.view;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -21,7 +25,6 @@ import javax.swing.JTextField;
 import ch.zhaw.seps.FacePath;
 import ch.zhaw.seps.fb.FacebookLoginException;
 import ch.zhaw.seps.fb.FacebookProvider;
-import ch.zhaw.seps.fb.FacebookSearch;
 
 public class LoginView extends JPanel implements ActionListener {
 
@@ -55,7 +58,8 @@ public class LoginView extends JPanel implements ActionListener {
 					this.fp.showView("search");
 				} catch (FacebookLoginException e1) {
 					e1.printStackTrace();
-					// TODO show user notification
+					// TODO set correct url
+					this.openBrowserWindow("http://localhost/");
 				}
 			} else {
 				try {
@@ -64,11 +68,10 @@ public class LoginView extends JPanel implements ActionListener {
 					this.fp.showView("search");
 				} catch (FacebookLoginException e1) {
 					e1.printStackTrace();
-					// TODO show user notification
+					// TODO set correct url
+					this.openBrowserWindow("http://localhost/");
 				}
 			}
-			// FacebookSearch fbSearch = new FacebookSearch(fbProvider);
-			// fp.setFS(fbSearch);
 		}
 		if (e.getSource() == guestCheckBox) {
 			if (guestCheckBox.isSelected()) {
@@ -77,6 +80,21 @@ public class LoginView extends JPanel implements ActionListener {
 			} else {
 				emailTextField.setEditable(true);
 				passwordField.setEditable(true);
+			}
+		}
+	}
+
+	private void openBrowserWindow(String url) {
+		if (Desktop.isDesktopSupported()) {
+			Desktop desktop = Desktop.getDesktop();
+			if (desktop.isSupported(Desktop.Action.BROWSE)) {
+				try {
+					desktop.browse(new URI(url));
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				} catch (URISyntaxException use) {
+					use.printStackTrace();
+				}
 			}
 		}
 	}

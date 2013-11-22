@@ -26,8 +26,8 @@ public class SearchView extends JPanel implements ActionListener {
 
 	private FacePath fp;
 
-	private JComboBox<String> sourceComboBox;
-	private JComboBox<String> destinationComboBox;
+	private JComboBox<FacebookProfile> sourceComboBox;
+	private JComboBox<FacebookProfile> destinationComboBox;
 	private JButton userSearchButton;
 	private JCheckBox eventsCheckBox;
 	private JCheckBox profilePicsCheckBox;
@@ -35,16 +35,16 @@ public class SearchView extends JPanel implements ActionListener {
 	private JButton helpButton;
 	private JButton searchButton;
 
-	private List<String> sourceUserList;
-	private List<String> destinationUserList;
+	private List<FacebookProfile> sourceUserList;
+	private List<FacebookProfile> destinationUserList;
 
 	/**
 	 * Create the View.
 	 */
 	public SearchView(FacePath fp) {
 		this.fp = fp;
-		this.sourceUserList = new ArrayList<String>();
-		this.destinationUserList = new ArrayList<String>();
+		this.sourceUserList = new ArrayList<FacebookProfile>();
+		this.destinationUserList = new ArrayList<FacebookProfile>();
 		this.initialize();
 	}
 
@@ -54,8 +54,8 @@ public class SearchView extends JPanel implements ActionListener {
 		// Graph soll kontinuierlich aufgebaut werden. ist die suche komplett
 		// soll erst die meldung erscheinen
 		if (e.getSource() == this.userSearchButton || e.getActionCommand().equals("comboBoxEdited")) {
-			this.searchUser(this.sourceComboBox, this.sourceUserList, true);
-			this.searchUser(this.destinationComboBox, this.destinationUserList, true);
+			this.searchUser(this.sourceComboBox, this.sourceUserList);
+			this.searchUser(this.destinationComboBox, this.destinationUserList);
 		}
 		if (e.getActionCommand().equals("comboBoxChanged") || e.getSource() == this.userSearchButton
 		        || e.getActionCommand().equals("comboBoxEdited")) {
@@ -68,19 +68,21 @@ public class SearchView extends JPanel implements ActionListener {
 		if (e.getSource() == this.searchButton) {
 			FacebookSearch fbSearch = new FacebookSearch(this.fp.getFP());
 			this.fp.setFS(fbSearch);
-
-			this.searchUser(this.sourceComboBox, this.sourceUserList, false);
-			this.searchUser(this.destinationComboBox, this.destinationUserList, false);
-
+			this.setPersonsOfInterest((FacebookProfile) sourceComboBox.getSelectedItem(),
+			        (FacebookProfile) destinationComboBox.getSelectedItem());
 			this.fp.showView("result");
 			this.fp.getFS().searchIterate();
-
 		}
 	}
 
-	private void searchUser(JComboBox<String> usernameComboBox, List<String> resultStringList, boolean search) {
-		resultStringList = new ArrayList<String>();
-		String searchString = (String) usernameComboBox.getSelectedItem();
+	private void searchUser(JComboBox<FacebookProfile> usernameComboBox, List<FacebookProfile> resultFacebookProfileList) {
+		resultFacebookProfileList = new ArrayList<FacebookProfile>();
+		String searchString = "";
+		if (usernameComboBox.getSelectedIndex() > -1) {
+			searchString = ((FacebookProfile) usernameComboBox.getSelectedItem()).getUserUIDString();
+		} else {
+			searchString = (String) usernameComboBox.getSelectedItem();
+		}
 		List<FacebookProfile> userSearchResult = null;
 		if (searchString == null || searchString.equals("")) {
 			userSearchResult = new ArrayList<FacebookProfile>();
@@ -88,22 +90,18 @@ public class SearchView extends JPanel implements ActionListener {
 			userSearchResult = this.fp.getFP().getUserFromSearch(searchString);
 		}
 		if (userSearchResult.size() > 0) {
-			FacebookProfile userProfile = userSearchResult.get(0);
-			if (search) {
-				for (FacebookProfile fbp : userSearchResult) {
-					resultStringList.add(fbp.getUserUIDString());
-				}
-				usernameComboBox.setModel(new JComboBox<String>(resultStringList.toArray(new String[0])).getModel());
-				usernameComboBox.setSelectedIndex(0);
-			} else {
-				// TODO verify that index 0 is the correct user
-				if (usernameComboBox == this.sourceComboBox) {
-					this.fp.getFS().setPersonOfInterestSource(userProfile);
-				} else {
-					this.fp.getFS().setPersonOfInterestDestination(userProfile);
-				}
+			for (FacebookProfile fbp : userSearchResult) {
+				resultFacebookProfileList.add(fbp);
 			}
+			usernameComboBox.setModel(new JComboBox<FacebookProfile>(resultFacebookProfileList
+			        .toArray(new FacebookProfile[0])).getModel());
+			usernameComboBox.setSelectedIndex(0);
 		}
+	}
+
+	private void setPersonsOfInterest(FacebookProfile sourceFacebookProfile, FacebookProfile destinationFacebookProfile) {
+		this.fp.getFS().setPersonOfInterestSource(sourceFacebookProfile);
+		this.fp.getFS().setPersonOfInterestDestination(destinationFacebookProfile);
 	}
 
 	/**

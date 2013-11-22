@@ -72,4 +72,9 @@ public class FacebookProfile {
 	public List<String> getCandidates() {
 		return this.candidate;
 	}
+
+	@Override
+	public String toString() {
+		return this.name + " " + this.familyName + " (" + this.userName + ")";
+	}
 }
