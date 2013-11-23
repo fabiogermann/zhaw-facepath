@@ -130,8 +130,8 @@ public class LoginView extends JPanel implements ActionListener {
 
 		JLabel logoLabel = new JLabel("");
 		logoLabel.setBackground(Color.WHITE);
-		logoLabel.setIcon(new ImageIcon(LoginView.class
-		        .getResource("/ch/zhaw/seps/view/resources/facepath-logo-medium.png")));
+		logoLabel
+		        .setIcon(new ImageIcon(getClass().getResource("/ch/zhaw/seps/view/resources/facepath-logo-medium.png")));
 		GridBagConstraints gbc_logoLabel = new GridBagConstraints();
 		gbc_logoLabel.gridx = 0;
 		gbc_logoLabel.gridy = 0;
@@ -143,7 +143,7 @@ public class LoginView extends JPanel implements ActionListener {
 		infoTextArea.setFont(new Font("Lucida Grande", Font.PLAIN, 18));
 		infoTextArea.setBackground(new Color(255, 255, 255));
 		infoTextArea
-		        .setText("FacePath bietet Ihnen die M\u00F6glichkeit,\ndie Beziehung zwischen beliebigen\nFacebook-Benutzern zu ermitteln.\n\nDie Wege, \u00FCber die die Benutzer verkn\u00FCpft\nsind, lassen sich mit facepath grafisch darstellen.");
+		        .setText("Facepath bietet Ihnen die M\u00F6glichkeit,\ndie Beziehung zwischen beliebigen\nFacebook-Benutzern zu ermitteln.\n\nDie Wege, \u00FCber welche die Benutzer verkn\u00FCpft\nsind, lassen sich mit facepath grafisch darstellen.");
 		GridBagConstraints gbc_infoTextArea = new GridBagConstraints();
 		gbc_infoTextArea.gridx = 1;
 		gbc_infoTextArea.gridy = 0;

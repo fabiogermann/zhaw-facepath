@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -16,11 +17,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-
 import ch.zhaw.seps.FacePath;
 import ch.zhaw.seps.fb.FacebookProfile;
 import ch.zhaw.seps.fb.FacebookSearch;
+import javax.swing.SwingConstants;
 
 public class SearchView extends JPanel implements ActionListener {
 
@@ -35,16 +35,17 @@ public class SearchView extends JPanel implements ActionListener {
 	private JButton helpButton;
 	private JButton searchButton;
 
-	private List<FacebookProfile> sourceUserList;
-	private List<FacebookProfile> destinationUserList;
+	private DefaultComboBoxModel<FacebookProfile> sourceModel;
+
+	private DefaultComboBoxModel<FacebookProfile> destinationModel;
 
 	/**
 	 * Create the View.
 	 */
 	public SearchView(FacePath fp) {
 		this.fp = fp;
-		this.sourceUserList = new ArrayList<FacebookProfile>();
-		this.destinationUserList = new ArrayList<FacebookProfile>();
+		this.sourceModel = new DefaultComboBoxModel<FacebookProfile>();
+		this.destinationModel = new DefaultComboBoxModel<FacebookProfile>();
 		this.initialize();
 	}
 
@@ -54,8 +55,8 @@ public class SearchView extends JPanel implements ActionListener {
 		// Graph soll kontinuierlich aufgebaut werden. ist die suche komplett
 		// soll erst die meldung erscheinen
 		if (e.getSource() == this.userSearchButton || e.getActionCommand().equals("comboBoxEdited")) {
-			this.searchUser(this.sourceComboBox, this.sourceUserList);
-			this.searchUser(this.destinationComboBox, this.destinationUserList);
+			this.searchUser(this.sourceComboBox, this.sourceModel);
+			this.searchUser(this.destinationComboBox, this.destinationModel);
 		}
 		if (e.getActionCommand().equals("comboBoxChanged") || e.getSource() == this.userSearchButton
 		        || e.getActionCommand().equals("comboBoxEdited")) {
@@ -75,13 +76,15 @@ public class SearchView extends JPanel implements ActionListener {
 		}
 	}
 
-	private void searchUser(JComboBox<FacebookProfile> usernameComboBox, List<FacebookProfile> resultFacebookProfileList) {
-		resultFacebookProfileList = new ArrayList<FacebookProfile>();
+	private void searchUser(JComboBox<FacebookProfile> usernameComboBox,
+	        DefaultComboBoxModel<FacebookProfile> resultFacebookProfileModel) {
+
+		resultFacebookProfileModel.removeAllElements();
 		String searchString = "";
 		if (usernameComboBox.getSelectedIndex() > -1) {
 			searchString = ((FacebookProfile) usernameComboBox.getSelectedItem()).getUserUIDString();
-		} else {
-			searchString = (String) usernameComboBox.getSelectedItem();
+		} else if (usernameComboBox.getEditor().getItem() != null) {
+			searchString = usernameComboBox.getEditor().getItem().toString();
 		}
 		List<FacebookProfile> userSearchResult = null;
 		if (searchString == null || searchString.equals("")) {
@@ -91,10 +94,8 @@ public class SearchView extends JPanel implements ActionListener {
 		}
 		if (userSearchResult.size() > 0) {
 			for (FacebookProfile fbp : userSearchResult) {
-				resultFacebookProfileList.add(fbp);
+				resultFacebookProfileModel.addElement(fbp);
 			}
-			usernameComboBox.setModel(new JComboBox<FacebookProfile>(resultFacebookProfileList
-			        .toArray(new FacebookProfile[0])).getModel());
 			usernameComboBox.setSelectedIndex(0);
 		}
 	}
@@ -152,16 +153,17 @@ public class SearchView extends JPanel implements ActionListener {
 		gbc_sourceUsernameLabel.gridy = 1;
 		searchFormPanel.add(sourceUsernameLabel, gbc_sourceUsernameLabel);
 
-		sourceComboBox = new JComboBox();
+		sourceComboBox = new JComboBox<FacebookProfile>(sourceModel);
+		sourceComboBox.setEditor(new ProfileItemEditor());
 		sourceComboBox.setEditable(true);
+		sourceComboBox.setRenderer(new ProfileCellRenderer());
 		GridBagConstraints gbc_sourceComboBox = new GridBagConstraints();
 		gbc_sourceComboBox.insets = new Insets(0, 0, 5, 30);
-		gbc_sourceComboBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_sourceComboBox.fill = GridBagConstraints.BOTH;
 		gbc_sourceComboBox.gridx = 1;
 		gbc_sourceComboBox.gridy = 1;
 		searchFormPanel.add(sourceComboBox, gbc_sourceComboBox);
 		sourceComboBox.addActionListener(this);
-		AutoCompleteDecorator.decorate(sourceComboBox);
 
 		JLabel destinationUsernameLabel = new JLabel("Ziel-Benutzernamen:");
 		GridBagConstraints gbc_destinationUsernameLabel = new GridBagConstraints();
@@ -171,19 +173,21 @@ public class SearchView extends JPanel implements ActionListener {
 		gbc_destinationUsernameLabel.gridy = 2;
 		searchFormPanel.add(destinationUsernameLabel, gbc_destinationUsernameLabel);
 
-		destinationComboBox = new JComboBox();
+		destinationComboBox = new JComboBox<FacebookProfile>(destinationModel);
+		destinationComboBox.setEditor(new ProfileItemEditor());
 		destinationComboBox.setEditable(true);
+		destinationComboBox.setRenderer(new ProfileCellRenderer());
 		GridBagConstraints gbc_destinationComboBox = new GridBagConstraints();
 		gbc_destinationComboBox.insets = new Insets(0, 0, 5, 30);
-		gbc_destinationComboBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_destinationComboBox.fill = GridBagConstraints.BOTH;
 		gbc_destinationComboBox.gridx = 1;
 		gbc_destinationComboBox.gridy = 2;
 		searchFormPanel.add(destinationComboBox, gbc_destinationComboBox);
 		destinationComboBox.addActionListener(this);
-		AutoCompleteDecorator.decorate(destinationComboBox);
 
 		userSearchButton = new JButton("Benutzer suchen");
 		GridBagConstraints gbc_userSearchButton = new GridBagConstraints();
+		gbc_userSearchButton.fill = GridBagConstraints.VERTICAL;
 		gbc_userSearchButton.anchor = GridBagConstraints.EAST;
 		gbc_userSearchButton.insets = new Insets(0, 0, 5, 30);
 		gbc_userSearchButton.gridx = 1;
@@ -230,7 +234,7 @@ public class SearchView extends JPanel implements ActionListener {
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setBackground(Color.WHITE);
 		GridBagConstraints gbc_buttonsPanel = new GridBagConstraints();
-		gbc_buttonsPanel.insets = new Insets(0, 0, 5, 30);
+		gbc_buttonsPanel.insets = new Insets(0, 0, 0, 30);
 		gbc_buttonsPanel.anchor = GridBagConstraints.EAST;
 		gbc_buttonsPanel.gridx = 1;
 		gbc_buttonsPanel.gridy = 8;
@@ -245,6 +249,7 @@ public class SearchView extends JPanel implements ActionListener {
 		helpButton = new JButton("Hilfe");
 		helpButton.addActionListener(this);
 		GridBagConstraints gbc_helpButton = new GridBagConstraints();
+		gbc_helpButton.fill = GridBagConstraints.BOTH;
 		gbc_helpButton.insets = new Insets(0, 0, 0, 5);
 		gbc_helpButton.gridx = 0;
 		gbc_helpButton.gridy = 0;
@@ -252,11 +257,11 @@ public class SearchView extends JPanel implements ActionListener {
 
 		searchButton = new JButton("Suchen");
 		GridBagConstraints gbc_searchButton = new GridBagConstraints();
+		gbc_searchButton.fill = GridBagConstraints.BOTH;
 		gbc_searchButton.gridx = 1;
 		gbc_searchButton.gridy = 0;
 		buttonsPanel.add(searchButton, gbc_searchButton);
 		searchButton.setEnabled(false);
 		searchButton.addActionListener(this);
-
 	}
 }

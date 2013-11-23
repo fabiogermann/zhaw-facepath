@@ -84,7 +84,7 @@ public class FacePath extends JFrame implements ActionListener, WindowListener {
 	}
 
 	public FacePath() {
-		this.setTitle("FacePath");
+		this.setTitle("Facepath");
 		setSize(1024, 768);
 		this.addWindowListener(this);
 		this.setLayout(new BorderLayout());

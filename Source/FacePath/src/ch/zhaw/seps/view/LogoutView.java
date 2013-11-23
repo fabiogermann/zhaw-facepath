@@ -83,8 +83,8 @@ public class LogoutView extends JPanel implements ActionListener {
 		gbc_logoLabel.gridx = 0;
 		gbc_logoLabel.gridy = 0;
 		searchPanel.add(logoLabel, gbc_logoLabel);
-		logoLabel.setIcon(new ImageIcon(SearchView.class
-		        .getResource("/ch/zhaw/seps/view/resources/facepath-logo-small.png")));
+		logoLabel
+		        .setIcon(new ImageIcon(getClass().getResource("/ch/zhaw/seps/view/resources/facepath-logo-small.png")));
 
 		JLabel loginTypInfoLabel = new JLabel("Benutzer:");
 		loginTypInfoLabel.setHorizontalAlignment(SwingConstants.CENTER);
