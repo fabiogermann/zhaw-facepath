@@ -308,7 +308,6 @@ public class FacebookProvider<T> {
 	}
 
 	public List<FacebookProfile> getUserFromSearch(String searchQuery) {
-		List<FacebookProfile> result = new ArrayList<FacebookProfile>();
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(this.cm).build();
 
 		HttpGet httpget = null;
@@ -341,23 +340,25 @@ public class FacebookProvider<T> {
 
 		String regex = "(href=\"https://www.facebook.com/)([0-9a-zA-Z.]*)\"";
 
-		List<String> searchProfileList = new ArrayList<String>();
-		Set<String> searchProfileSet = new HashSet<String>();
+		Set<String> userURLSet = new HashSet<String>();
+		List<String> usernameList = new ArrayList<String>();
 
 		Matcher m = Pattern.compile(regex).matcher(str);
 		while (m.find()) {
-			if (!searchProfileSet.add(m.group())) {
-				searchProfileList.add(m.group());
+			if (!userURLSet.add(m.group())) {
+				usernameList.add(m.group().replace("href=\"https://www.facebook.com/", "").replace("\"", ""));
 			}
 		}
 
-		for (String searchProfile : searchProfileList) {
-			searchProfile = searchProfile.replace("href=\"https://www.facebook.com/", "").replace("\"", "");
-			User searchUser = apiConnection.fetchObject(searchProfile, User.class);
-			FacebookProfile fbp = new FacebookProfile(searchUser.getUsername(), searchUser.getId());
-			fbp.setName(searchUser.getFirstName(), searchUser.getLastName());
-			result.add(fbp);
+		Collection<FacebookProfile> profileCollection = this.getUserFromThreadedAPI(usernameList);
+		List<FacebookProfile> profileList = new ArrayList<FacebookProfile>(usernameList.size());
+		for (int i = 0; i < usernameList.size(); i++) {
+			profileList.add(null);
 		}
-		return result;
+		for (FacebookProfile profile : profileCollection) {
+			profileList.set(usernameList.indexOf(profile.getUserUIDString()), profile);
+		}
+
+		return profileList;
 	}
 }

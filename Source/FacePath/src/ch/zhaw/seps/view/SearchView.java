@@ -20,7 +20,6 @@ import javax.swing.border.TitledBorder;
 import ch.zhaw.seps.FacePath;
 import ch.zhaw.seps.fb.FacebookProfile;
 import ch.zhaw.seps.fb.FacebookSearch;
-import javax.swing.SwingConstants;
 
 public class SearchView extends JPanel implements ActionListener {
 
@@ -36,7 +35,6 @@ public class SearchView extends JPanel implements ActionListener {
 	private JButton searchButton;
 
 	private DefaultComboBoxModel<FacebookProfile> sourceModel;
-
 	private DefaultComboBoxModel<FacebookProfile> destinationModel;
 
 	/**
