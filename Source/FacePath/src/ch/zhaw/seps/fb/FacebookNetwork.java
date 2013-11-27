@@ -21,35 +21,15 @@ import org.graphstream.graph.implementations.SingleGraph;
 import ch.zhaw.seps.TreeNode;
 
 public class FacebookNetwork {
-	
-	// THE EASY WAY
 	private Graph graph;
 	private HashMap<String,FacebookProfile> graphCollection;
-
-	
-	// THE HARD WAY
-	// Datastructure for the simulation of the facebook network
-	
-    private Stack<TreeNode<FacebookProfile>> rootStack;
-    private List<TreeNode<FacebookProfile>> rootChildren;
-    private HashMap<String,FacebookProfile> rootDatacollection;
-    
-    private Stack<TreeNode<FacebookProfile>> targetStack;
-    private List<TreeNode<FacebookProfile>> targetChildren;
-    private HashMap<String,FacebookProfile> targetDatacollection;
-    
     private boolean pathFound = false;
     private ArrayList<List<Node>> dijkstraPaths = new ArrayList<>();
     private ArrayList<String> colors;
     
     public FacebookNetwork() {
-    	// the easy way
     	this.graph = new SingleGraph("FacebookNetwork");
     	this.graphCollection = new HashMap<String, FacebookProfile>();
-    	
-    	//the hard way
-    	this.rootStack = new Stack<TreeNode<FacebookProfile>>();
-    	this.targetStack = new Stack<TreeNode<FacebookProfile>>();
     	this.colors = getColorList();
     }
     
@@ -66,7 +46,6 @@ public class FacebookNetwork {
     	} catch(IdAlreadyInUseException | ElementNotFoundException | EdgeRejectedException err) {
     		err.printStackTrace();
     	}
-    	
     }
     
     public Graph getGraph() {
@@ -76,18 +55,6 @@ public class FacebookNetwork {
     public Map<String, FacebookProfile> getKnownProfiles() {
     	return Collections.unmodifiableMap(this.graphCollection);
     }
-    
-    public void addToRootStack(FacebookProfile fp) {
-    	this.rootStack.add(new TreeNode<FacebookProfile>(fp.getUserID(), fp));
-    }
-    
-	public FacebookProfile getRootStack() {
-		if(!this.rootStack.isEmpty()) {
-			return this.rootStack.pop().getData();
-		} else {
-			return null;
-		}
-	}
 
 	public ArrayList<List<Node>> getDijkstraPaths() {
 		return dijkstraPaths;
@@ -136,5 +103,14 @@ public class FacebookNetwork {
 			colors.add("fill-color: "+colornamesArray[i]+";");
 		}
 		return colors;
+	}
+	
+	public void cleanupGraph() {
+		for(Node n : this.graph) {
+			if(n.getDegree() < 2) {
+				this.graph.removeNode(n);
+			}
+		}
+		// TODO the magic
 	}
 }

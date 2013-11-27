@@ -99,6 +99,7 @@ public class FacebookSearch {
 			}
 		}
 		if (pathFound()) {
+			this.fbNetwork.cleanupGraph();
 			System.out.println("gefunden");
 			//stop
 		} else {
@@ -114,7 +115,8 @@ public class FacebookSearch {
 		while(!this.pathFound()) {
 			this.searchIterateNEW();
 		}
-		
+		// TODO graph cleanup
+		//this.fbNetwork.cleanupGraph();
 	}
 	
 	public void searchIterateNEW() {
