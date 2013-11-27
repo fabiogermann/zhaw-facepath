@@ -43,7 +43,6 @@ public class GetFriendsOfThread implements Runnable {
 		this.cont = context;
 		this.ApiKey = apikey;
 		this.fN = network;
-		// bei call übergeben: Collections.unmodifiableMap(knownProfiles);
 	}
 
 	@Override
@@ -100,16 +99,11 @@ public class GetFriendsOfThread implements Runnable {
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		boolean done = false;
-		
-		while(!done) {
-				fN.addVertice(user);
-				for(FacebookProfile f : queue) {
-					fN.addVertice(f);
-					fN.addEdge(user, f);
-				}
-				done = true;
-		}
 
+		fN.addVertice(user);
+		for(FacebookProfile f : queue) {
+			fN.addVertice(f);
+			fN.addEdge(user, f);
+		}
 	}
 }

@@ -94,7 +94,6 @@ public class GetListOfFriendsOfThread implements Runnable {
 
 			// dep
 			queue.add(item);
-			user.addCandidate(item);
 
 		}
 	}

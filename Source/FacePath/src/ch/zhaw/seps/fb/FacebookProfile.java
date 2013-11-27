@@ -11,8 +11,9 @@ public class FacebookProfile {
 	private String name;
 	private String familyName;
 	private Collection<FacebookProfile> friends = new ArrayList<FacebookProfile>();
-	private List<String> candidate = new ArrayList<String>();
 	private String profileLink;
+	private String location;
+	private String language;
 	
 	
 	public FacebookProfile(String userN, String uID) {
@@ -34,6 +35,13 @@ public class FacebookProfile {
 		this.familyName =fn;
 	}
 	
+	public void setLocales(String locales) {
+		if(locales != "null") {
+			String[] locale = locales.split("_");
+			this.language = locale[0];
+			this.location = locale[1];
+		}
+	}
 	
 	public String getFirstName() {
 		return this.name;
@@ -61,16 +69,6 @@ public class FacebookProfile {
 	
 	public void addFriends(FacebookProfile fp) {
 		this.friends.add(fp);
-	}
-	
-	public void addCandidate(String f) {
-		if(f != null) {
-			this.candidate.add(f);
-		}
-	}
-	
-	public List<String> getCandidates() {
-		return this.candidate;
 	}
 
 	@Override

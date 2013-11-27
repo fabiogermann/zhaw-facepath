@@ -23,6 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import ch.zhaw.seps.FacePath;
+import ch.zhaw.seps.fb.FacebookApplicationAuthorizationException;
 import ch.zhaw.seps.fb.FacebookLoginException;
 import ch.zhaw.seps.fb.FacebookProvider;
 
@@ -56,7 +57,7 @@ public class LoginView extends JPanel implements ActionListener {
 					fbProvider = new FacebookProvider(LoginView.GUEST_EMAIL, LoginView.GUEST_PASSWORD);
 					this.fp.setFP(fbProvider);
 					this.fp.showView("search");
-				} catch (FacebookLoginException e1) {
+				} catch (FacebookLoginException | FacebookApplicationAuthorizationException e1) {
 					e1.printStackTrace();
 					// TODO set correct url
 					this.openBrowserWindow("http://localhost/");
@@ -66,7 +67,7 @@ public class LoginView extends JPanel implements ActionListener {
 					fbProvider = new FacebookProvider(emailTextField.getText(), new String(passwordField.getPassword()));
 					this.fp.setFP(fbProvider);
 					this.fp.showView("search");
-				} catch (FacebookLoginException e1) {
+				} catch (FacebookLoginException | FacebookApplicationAuthorizationException e1) {
 					e1.printStackTrace();
 					// TODO set correct url
 					this.openBrowserWindow("http://localhost/");

@@ -37,7 +37,8 @@ public class GetUserFromAPIThread implements Runnable {
 		
 	    fbp.setName(auser.getFirstName(), auser.getLastName());
 	    fbp.setLink(auser.getLink());
-		
+	    fbp.setLocales(auser.getLocale());
+	    
 	    queue.add(fbp);
 	    if (FacePath.DEBUG){
 	    	System.out.println("GUFAPI-created: "+user);

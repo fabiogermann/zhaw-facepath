@@ -21,6 +21,7 @@ public class FacebookSearch {
 	
 	private FacebookProvider fbProvider;
 	private FacebookNetwork	fbNetwork;
+	// TODO only for testing
 	private FacebookProfile me;
 	
 	private FacebookProfile source = null;
@@ -30,7 +31,11 @@ public class FacebookSearch {
 	public FacebookSearch(FacebookProvider provider) {
 		this.fbProvider = provider;
 		this.fbNetwork = new FacebookNetwork();
+		// TODO only for testing purpses:
 		this.me = fbProvider.getMyProfile();
+		// this too
+		this.source = me;
+		// and this too
 		this.initializeNetwork(me, fbProvider.getMyFriends());
 	}
 	
@@ -43,7 +48,7 @@ public class FacebookSearch {
 		    FacebookProfile item = i.next();
 		    fbNetwork.addVertice(item);
 		    fbNetwork.addEdge(me, item);
-		    //DEBUG
+
 		    if (FacePath.DEBUG){
 		    	System.out.println(me.getUserID()+"--"+item.getUserID());
 		    }
@@ -51,10 +56,12 @@ public class FacebookSearch {
 		}
 	}
 	
+	@Deprecated
 	private void submitProfileToNetwork(FacebookProfile fp) {
 		this.fbNetwork.addVertice(fp);
 	}
 	
+	@Deprecated
 	private void submitConnectionToNetwork(FacebookProfile from, FacebookProfile to) {
 		this.fbNetwork.addVertice(to);
 	    this.fbNetwork.addEdge(from, to);
@@ -75,16 +82,15 @@ public class FacebookSearch {
 	public void searchIterate() {
 
 		List<FacebookProfile> tlist = new ArrayList<FacebookProfile>();
-		//Collection<String> buddylist = null;
 		Collection<FacebookProfile> friendlist = null;
 		
+		//TODO dies schöner
 		while(!workStack.empty()) {
 			tlist.add(workStack.pop());
 		}
+		
 		friendlist = fbProvider.getFriendsOfThreaded(tlist, this.fbNetwork);
-		//friendlist = fbProvider.getUserFromThreadedAPI(buddylist);
 		workStack.addAll(friendlist);
-		this.source = fbProvider.getMyProfile(); // for debug
 		for(FacebookProfile f2 : friendlist) {
 			System.out.println(">"+f2.getUserID());
 			this.target = f2; // for debug
@@ -100,8 +106,38 @@ public class FacebookSearch {
 		}
 	}
 	
-	public boolean pathFound() {
+	public void searchExecute() {
+		// prepare to start the search
+		this.searchInitiate();
+		// search until path is found
+		// TODO abbruchkriterium
+		while(!this.pathFound()) {
+			this.searchIterateNEW();
+		}
 		
+	}
+	
+	public void searchIterateNEW() {
+		Stack<FacebookProfile> todo = new Stack<FacebookProfile>();
+		// copy all friends to work on to temporary stack
+		todo.addAll(this.workStack);
+		// clear the global workstack to allow addition of future results without mixing with the current iteration
+		this.workStack.removeAllElements();
+		
+		Collection<FacebookProfile> friendlist = null;
+		// get all the friends of the friends in the temporary stack
+		// the friends and connections are added directly to the FacebookNetwork and to the graph
+		friendlist = fbProvider.getFriendsOfThreaded(todo, this.fbNetwork);
+		// add the found profiles to the workstack
+		this.workStack.addAll(friendlist);
+	}
+	
+	public void searchInitiate() {
+		this.workStack.add(this.source);
+		this.workStack.add(this.target);
+	}
+	
+	public boolean pathFound() {
 		this.fbNetwork.findShortestPath(source, target);
 		return this.fbNetwork.pathFound();
 	}
