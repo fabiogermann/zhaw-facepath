@@ -84,12 +84,7 @@ public class Graphtest {
 		System.out.println("--------- node ausgabe");
 		System.out.println("search path from "+source.getId()+" to "+dest.getId());
 		
-		ArrayList<String> colors = new ArrayList<>();
-		colors.add("fill-color: goldenrod;");
-		colors.add("fill-color: red;");
-		colors.add("fill-color: green;");
-		colors.add("fill-color: blue;");
-		colors.add("fill-color: fuchsia;");
+		ArrayList<String> colors = getColorList();
 		int pathnr = 0;
 		for (List<Node> l : nodes) {
 			Node previousNode=null;
@@ -105,5 +100,15 @@ public class Graphtest {
 		if (nodes.size()==0) {
 			System.out.println("no connection found");
 		}
+	}
+	
+	private static ArrayList<String> getColorList() {
+		ArrayList<String> colors = new ArrayList<>();
+		String colornames = "gold,blue,brown,cyan,darkblue,darkcyan,darkgrey,darkgreen,darkkhaki,darkmagenta,darkolivegreen,darkorange,darkorchid,darkred,darksalmon,darkviolet,fuchsia,green,indigo,khaki,lightblue,lightgreen,lightgrey,lightpink,lime,magenta";
+		String[] colornamesArray = colornames.split(",");
+		for (int i = 0; i < colornamesArray.length; i++) {
+			colors.add("fill-color: "+colornamesArray[i]+";");
+		}
+		return colors;
 	}
 }
