@@ -44,6 +44,7 @@ public class FacebookNetwork {
     
     private boolean pathFound = false;
     private ArrayList<List<Node>> dijkstraPaths = new ArrayList<>();
+    private ArrayList<String> colors;
     
     public FacebookNetwork() {
     	// the easy way
@@ -53,6 +54,7 @@ public class FacebookNetwork {
     	//the hard way
     	this.rootStack = new Stack<TreeNode<FacebookProfile>>();
     	this.targetStack = new Stack<TreeNode<FacebookProfile>>();
+    	this.colors = getColorList();
     }
     
     public synchronized void addVertice(FacebookProfile user){
@@ -137,9 +139,6 @@ public class FacebookNetwork {
 			Path path = (Path) paths.next();
 			dijkstraPaths.add((List<Node>) path.getNodePath());
 		}
-		System.out.println("search path from "+sourceNode.getId()+" to "+targetNode.getId());
-		
-		ArrayList<String> colors = getColorList();
 		int pathnr = 0;
 		for (List<Node> l : dijkstraPaths) {
 			Node previousNode=null;
@@ -159,11 +158,11 @@ public class FacebookNetwork {
 	
 	private ArrayList<String> getColorList() {
 		ArrayList<String> colors = new ArrayList<>();
-		colors.add("fill-color: goldenrod;");
-		colors.add("fill-color: red;");
-		colors.add("fill-color: green;");
-		colors.add("fill-color: blue;");
-		colors.add("fill-color: fuchsia;");
+		String colornames = "gold,blue,brown,cyan,darkblue,darkcyan,darkgrey,darkgreen,darkkhaki,darkmagenta,darkolivegreen,darkorange,darkorchid,darkred,darksalmon,darkviolet,fuchsia,green,indigo,khaki,lightblue,lightgreen,lightgrey,lightpink,lime,magenta";
+		String[] colornamesArray = colornames.split(",");
+		for (int i = 0; i < colornamesArray.length; i++) {
+			colors.add("fill-color: "+colornamesArray[i]+";");
+		}
 		return colors;
 	}
 }
