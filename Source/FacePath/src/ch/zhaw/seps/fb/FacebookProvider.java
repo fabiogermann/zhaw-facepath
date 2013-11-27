@@ -358,6 +358,8 @@ public class FacebookProvider<T> {
 		for (FacebookProfile profile : profileCollection) {
 			profileList.set(usernameList.indexOf(profile.getUserUIDString()), profile);
 		}
+		while (profileList.remove(null)) {
+		}
 
 		return profileList;
 	}
