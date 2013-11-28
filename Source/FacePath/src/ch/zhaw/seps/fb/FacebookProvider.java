@@ -81,6 +81,10 @@ public class FacebookProvider<T> {
 		apiConnection = new DefaultFacebookClient(token);
 	}
 
+	public String getLoginRequest() {
+		return loginRequest;
+	}
+
 	private void connectHTTP(String email, String password) throws FacebookLoginException, ClientProtocolException,
 	        IOException {
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(this.cm).build();
