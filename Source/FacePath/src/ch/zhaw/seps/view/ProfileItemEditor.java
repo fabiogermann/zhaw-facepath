@@ -19,6 +19,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import ch.zhaw.seps.fb.FacebookProfile;
+import ch.zhaw.seps.fb.FacebookProvider;
 
 public class ProfileItemEditor implements ComboBoxEditor, DocumentListener {
 	private JPanel editor;
@@ -65,13 +66,9 @@ public class ProfileItemEditor implements ComboBoxEditor, DocumentListener {
 		if (anObject != null && anObject instanceof FacebookProfile) {
 			this.profileStringTextField.setText(anObject.toString());
 			this.currentSelectedProfile = (FacebookProfile) anObject;
-			try {
-				this.profilePictureLabel.setIcon(new ImageIcon(new URL("https://graph.facebook.com/"
-				        + currentSelectedProfile.getUserUIDString() + "/picture")));
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			this.profilePictureLabel.setIcon(FacebookProvider.getImageIconFromUsername(this.currentSelectedProfile
+			        .getUserUIDString()));
+
 		} else if (anObject != null && anObject instanceof String) {
 			this.currentSelectedProfile = null;
 			this.profilePictureLabel.setIcon(new ImageIcon());

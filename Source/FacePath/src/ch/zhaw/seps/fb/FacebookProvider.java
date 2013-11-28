@@ -2,6 +2,8 @@ package ch.zhaw.seps.fb;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +18,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.ImageIcon;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -366,5 +370,15 @@ public class FacebookProvider<T> {
 		}
 
 		return profileList;
+	}
+
+	public static ImageIcon getImageIconFromUsername(String username) {
+		ImageIcon image = null;
+		try {
+			image = new ImageIcon(new URL("https://graph.facebook.com/" + username + "/picture"));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return image;
 	}
 }

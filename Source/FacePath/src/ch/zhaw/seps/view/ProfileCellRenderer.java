@@ -11,6 +11,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 import ch.zhaw.seps.fb.FacebookProfile;
+import ch.zhaw.seps.fb.FacebookProvider;
 
 public class ProfileCellRenderer extends JLabel implements ListCellRenderer<FacebookProfile> {
 
@@ -22,13 +23,7 @@ public class ProfileCellRenderer extends JLabel implements ListCellRenderer<Face
 	public Component getListCellRendererComponent(JList<? extends FacebookProfile> profileList,
 	        FacebookProfile profile, int index, boolean isSelected, boolean cellHasFocus) {
 
-		try {
-			this.setIcon(new ImageIcon(new URL("https://graph.facebook.com/" + profile.getUserUIDString() + "/picture")));
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		this.setIcon(FacebookProvider.getImageIconFromUsername(profile.getUserUIDString()));
 		this.setText(profile.toString());
 
 		Color background;
