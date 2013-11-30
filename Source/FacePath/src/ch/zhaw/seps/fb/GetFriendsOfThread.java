@@ -54,7 +54,7 @@ public class GetFriendsOfThread implements Runnable {
 		preexecutor.execute(new GetListOfFriendsOfThread(com, cont, stringqueue, user));
 		preexecutor.shutdown();
 		try {
-			while (!preexecutor.awaitTermination(4L, TimeUnit.SECONDS)) {
+			while (!preexecutor.awaitTermination(10L, TimeUnit.SECONDS)) {
 				if (FacePath.DEBUG){
 					System.out.println("Still waiting for the preexecutor to finish");
 				}
@@ -91,7 +91,7 @@ public class GetFriendsOfThread implements Runnable {
 		}
 		
 		try {
-			while (!executor.awaitTermination(4L, TimeUnit.SECONDS)) {
+			while (!executor.awaitTermination(10L, TimeUnit.SECONDS)) {
 				if (FacePath.DEBUG){
 					System.out.println("Still waiting for the executor to finish");
 				}

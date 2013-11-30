@@ -214,7 +214,7 @@ public class FacebookProvider {
 		}
 		
 		try {
-			while (!executor.awaitTermination(4L, TimeUnit.SECONDS)) {
+			while (!executor.awaitTermination(10L, TimeUnit.SECONDS)) {
 				if (FacePath.DEBUG){
 					System.out.println("Still waiting for the executor to finish");
 				}

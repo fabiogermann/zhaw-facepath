@@ -108,9 +108,9 @@ public class FacebookNetwork {
 	public void cleanupGraph() {
 		for(Node n : this.graph) {
 			if(n.getDegree() < 2) {
+				System.out.println(n.getDegree());
 				this.graph.removeNode(n);
 			}
 		}
-		// TODO the magic
 	}
 }

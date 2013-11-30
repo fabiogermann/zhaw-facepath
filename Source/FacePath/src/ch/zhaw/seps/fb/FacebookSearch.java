@@ -92,14 +92,21 @@ public class FacebookSearch {
 		friendlist = fbProvider.getFriendsOfThreaded(tlist, this.fbNetwork);
 		workStack.addAll(friendlist);
 		for(FacebookProfile f2 : friendlist) {
-			System.out.println(">"+f2.getUserID());
+			//System.out.println(">"+f2.getUserID());
 			this.target = f2; // for debug
 			for(FacebookProfile fp : f2.getFriends()) {
-						System.out.println("-----"+fp.getUserID());
+						//System.out.println("-----"+fp.getUserID());
 			}
 		}
+		this.fbNetwork.cleanupGraph();
+		this.fbNetwork.cleanupGraph();
+		this.fbNetwork.cleanupGraph();
+		this.fbNetwork.cleanupGraph();
+		this.fbNetwork.cleanupGraph();
+		this.fbNetwork.cleanupGraph();
+		this.fbNetwork.cleanupGraph();
+		
 		if (pathFound()) {
-			this.fbNetwork.cleanupGraph();
 			System.out.println("gefunden");
 			//stop
 		} else {
@@ -115,8 +122,8 @@ public class FacebookSearch {
 		while(!this.pathFound()) {
 			this.searchIterateNEW();
 		}
-		// TODO graph cleanup
-		//this.fbNetwork.cleanupGraph();
+		// graph cleanup
+		this.fbNetwork.cleanupGraph();
 	}
 	
 	public void searchIterateNEW() {
