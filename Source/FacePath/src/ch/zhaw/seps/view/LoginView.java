@@ -59,8 +59,7 @@ public class LoginView extends JPanel implements ActionListener {
 					this.fp.showView("search");
 				} catch (FacebookLoginException | FacebookApplicationAuthorizationException e1) {
 					e1.printStackTrace();
-					// TODO set correct url
-					this.openBrowserWindow("http://localhost/");
+					this.openBrowserWindow(this.fp.getFP().getLoginRequest());
 				}
 			} else {
 				try {
@@ -69,8 +68,7 @@ public class LoginView extends JPanel implements ActionListener {
 					this.fp.showView("search");
 				} catch (FacebookLoginException | FacebookApplicationAuthorizationException e1) {
 					e1.printStackTrace();
-					// TODO set correct url
-					this.openBrowserWindow("http://localhost/");
+					this.openBrowserWindow(this.fp.getFP().getLoginRequest());
 				}
 			}
 		}

@@ -40,6 +40,8 @@ public class LogoutView extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == logoutButton) {
+			this.fp.setFP(null);
+			this.fp.setFS(null);
 			this.fp.showView("login");
 		}
 	}
