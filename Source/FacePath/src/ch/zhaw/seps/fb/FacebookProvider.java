@@ -145,10 +145,12 @@ public class FacebookProvider {
 		
 		CloseableHttpResponse response = null;
 		HttpEntity entity = null;
+		String content = null;
 		try {
 			response = httpClient.execute(httpget, this.ctx);
 			try {
 				entity = response.getEntity();
+				content = EntityUtils.toString(entity);
 			} finally {
 				response.close();
 			}
@@ -159,24 +161,17 @@ public class FacebookProvider {
 		}
 		
 		Integer appcode = response.getStatusLine().getStatusCode();
-		
-		if (appcode != 200) {
+				
+		if (content.contains("<")) {
 			throw new FacebookApplicationAuthorizationException();
 		}
 		
 		if (response.getStatusLine().getStatusCode() == 200) {
-			this.loginCode = EntityUtils.toString(entity);
+			this.loginCode = content;
 			if (FacePath.DEBUG) {
 				System.out.println("AuthenticationCode: "+appcode);
 			}
 
-			boolean redirectView = false;
-			// TODO implement the check
-			if (redirectView) {
-				// TODO open view and do the magic
-			}
-
-			// TODO: check if redirected to login or step1-code was returned
 			HttpGet httpget2 = new HttpGet(this.loginAuthentication + this.loginCode);
 			HttpResponse response2 = httpClient.execute(httpget2, this.ctx);
 			HttpEntity entity2 = response2.getEntity();

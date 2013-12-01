@@ -57,7 +57,9 @@ public class LoginView extends JPanel implements ActionListener {
 					fbProvider = new FacebookProvider(LoginView.GUEST_EMAIL, LoginView.GUEST_PASSWORD);
 					this.fp.setFP(fbProvider);
 					this.fp.showView("search");
-				} catch (FacebookLoginException | FacebookApplicationAuthorizationException e1) {
+				} catch (FacebookLoginException e1) {
+					e1.printStackTrace();
+				} catch (FacebookApplicationAuthorizationException e1) {
 					e1.printStackTrace();
 					this.openBrowserWindow(this.fp.getFP().getLoginRequest());
 				}
@@ -66,7 +68,9 @@ public class LoginView extends JPanel implements ActionListener {
 					fbProvider = new FacebookProvider(emailTextField.getText(), new String(passwordField.getPassword()));
 					this.fp.setFP(fbProvider);
 					this.fp.showView("search");
-				} catch (FacebookLoginException | FacebookApplicationAuthorizationException e1) {
+				} catch (FacebookLoginException e1) {
+					e1.printStackTrace();
+				} catch (FacebookApplicationAuthorizationException e1) {
 					e1.printStackTrace();
 					this.openBrowserWindow(this.fp.getFP().getLoginRequest());
 				}
@@ -94,6 +98,8 @@ public class LoginView extends JPanel implements ActionListener {
 				} catch (URISyntaxException use) {
 					use.printStackTrace();
 				}
+			} else {
+				System.out.println("Browser not supported");
 			}
 		}
 	}
