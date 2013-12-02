@@ -61,14 +61,15 @@ public class FacebookProvider {
 	private static String APP_ID = "676728905679775";
 	private static String APP_SECRET = "72defc37e47548c7ee82f9f18c82ca56";
 	private static String REDIRECT_URL = "http://klamath.ch/~fabio/seps/logonR.php";
-	private String loginRequest = "https://www.facebook.com/dialog/oauth?client_id=" + APP_ID + "&redirect_uri="
-	        + REDIRECT_URL + "&scope=" + SCOPE;
+	private static String LOGIN_REQUEST = "https://www.facebook.com/dialog/oauth?client_id=" + APP_ID
+	        + "&redirect_uri=" + REDIRECT_URL + "&scope=" + SCOPE;
 	private String loginCode;
 	private String loginAuthentication = "https://graph.facebook.com/oauth/access_token?client_id=" + APP_ID
 	        + "&redirect_uri=" + REDIRECT_URL + "&client_secret=" + APP_SECRET + "&code=";
 	private String authToken;
 
-	public FacebookProvider(String email, String password) throws FacebookLoginException, FacebookApplicationAuthorizationException {
+	public FacebookProvider(String email, String password) throws FacebookLoginException,
+	        FacebookApplicationAuthorizationException {
 		try {
 			this.connectHTTP(email, password);
 		} catch (IOException e) {
@@ -86,14 +87,13 @@ public class FacebookProvider {
 		apiConnection = new DefaultFacebookClient(token);
 	}
 
-	public String getLoginRequest() {
-		return loginRequest;
+	public static String getLoginRequest() {
+		return FacebookProvider.LOGIN_REQUEST;
 	}
 
 	private void connectHTTP(String email, String password) throws FacebookLoginException, ClientProtocolException,
 	        IOException {
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(this.cm).build();
-		
 
 		HttpGet httpget = new HttpGet("http://www.facebook.com/login.php");
 
@@ -141,10 +141,10 @@ public class FacebookProvider {
 	private void getAuthToken() throws FacebookApplicationAuthorizationException, ClientProtocolException, IOException {
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(this.cm).build();
 
-		HttpGet httpget = new HttpGet(this.loginRequest);
-		
+		HttpGet httpget = new HttpGet(FacebookProvider.LOGIN_REQUEST);
+
 		httpget.setHeader("User-Agent", "FacepathAuthenticator");
-		
+
 		CloseableHttpResponse response = null;
 		HttpEntity entity = null;
 		String content = null;
@@ -161,24 +161,24 @@ public class FacebookProvider {
 		} catch (IOException ex) {
 			// Handle I/O errors
 		}
-		
+
 		Integer appcode = response.getStatusLine().getStatusCode();
-				
+
 		if (content.contains("<") && content.contains("klamath.ch")) {
 			throw new FacebookApplicationAuthorizationException();
 		}
-		
+
 		if (response.getStatusLine().getStatusCode() == 200) {
 			this.loginCode = content;
 			if (FacePath.DEBUG) {
-				System.out.println("AuthenticationCode: "+appcode);
+				System.out.println("AuthenticationCode: " + appcode);
 			}
 
 			HttpGet httpget2 = new HttpGet(this.loginAuthentication + this.loginCode);
 			HttpResponse response2 = httpClient.execute(httpget2, this.ctx);
 			HttpEntity entity2 = response2.getEntity();
 			this.authToken = EntityUtils.toString(entity2).substring(13).split("&")[0];
-			
+
 			if (FacePath.DEBUG) {
 				System.out.println("Authentication: OK");
 			}
@@ -217,10 +217,10 @@ public class FacebookProvider {
 		} finally {
 			executor.shutdown();
 		}
-		
+
 		try {
 			while (!executor.awaitTermination(10L, TimeUnit.SECONDS)) {
-				if (FacePath.DEBUG){
+				if (FacePath.DEBUG) {
 					System.out.println("Still waiting for the executor to finish");
 				}
 			}

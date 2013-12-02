@@ -17,6 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
@@ -60,8 +61,8 @@ public class LoginView extends JPanel implements ActionListener {
 				} catch (FacebookLoginException e1) {
 					e1.printStackTrace();
 				} catch (FacebookApplicationAuthorizationException e1) {
+					this.openBrowserWindow(FacebookProvider.getLoginRequest());
 					e1.printStackTrace();
-					this.openBrowserWindow(this.fp.getFP().getLoginRequest());
 				}
 			} else {
 				try {
@@ -71,8 +72,8 @@ public class LoginView extends JPanel implements ActionListener {
 				} catch (FacebookLoginException e1) {
 					e1.printStackTrace();
 				} catch (FacebookApplicationAuthorizationException e1) {
+					this.openBrowserWindow(FacebookProvider.getLoginRequest());
 					e1.printStackTrace();
-					this.openBrowserWindow(this.fp.getFP().getLoginRequest());
 				}
 			}
 		}
@@ -88,18 +89,22 @@ public class LoginView extends JPanel implements ActionListener {
 	}
 
 	private void openBrowserWindow(String url) {
-		if (Desktop.isDesktopSupported()) {
-			Desktop desktop = Desktop.getDesktop();
-			if (desktop.isSupported(Desktop.Action.BROWSE)) {
-				try {
-					desktop.browse(new URI(url));
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				} catch (URISyntaxException use) {
-					use.printStackTrace();
+		// TODO set message & title
+		if (JOptionPane.showOptionDialog(this, "message", "title", JOptionPane.OK_CANCEL_OPTION,
+		        JOptionPane.INFORMATION_MESSAGE, null, null, null) == JOptionPane.OK_OPTION) {
+			if (Desktop.isDesktopSupported()) {
+				Desktop desktop = Desktop.getDesktop();
+				if (desktop.isSupported(Desktop.Action.BROWSE)) {
+					try {
+						desktop.browse(new URI(url));
+					} catch (IOException ioe) {
+						ioe.printStackTrace();
+					} catch (URISyntaxException use) {
+						use.printStackTrace();
+					}
+				} else {
+					System.out.println("Browser not supported");
 				}
-			} else {
-				System.out.println("Browser not supported");
 			}
 		}
 	}
