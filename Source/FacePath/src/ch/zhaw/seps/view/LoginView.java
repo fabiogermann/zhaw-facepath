@@ -89,9 +89,13 @@ public class LoginView extends JPanel implements ActionListener {
 	}
 
 	private void openBrowserWindow(String url) {
-		// TODO set message & title
-		if (JOptionPane.showOptionDialog(this, "message", "title", JOptionPane.OK_CANCEL_OPTION,
-		        JOptionPane.INFORMATION_MESSAGE, null, null, null) == JOptionPane.OK_OPTION) {
+		String message = "Um diesen Facebook-Login mit Facepath benutzen zu k\u00F6nnen, "
+		        + "m\u00FCssen Sie zuerst Facepath die Berechtigung geben."
+		        + "\nDeshalb wird die entsprechende Facebook Seite ge\u00F6ffnet.";
+		if (JOptionPane.showOptionDialog(this, message, "Facepath Berechtigung auf Facebook-Login",
+		        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE,
+		        new ImageIcon(getClass().getResource("/ch/zhaw/seps/view/resources/facepath-logo-small.png")), null,
+		        null) == JOptionPane.OK_OPTION) {
 			if (Desktop.isDesktopSupported()) {
 				Desktop desktop = Desktop.getDesktop();
 				if (desktop.isSupported(Desktop.Action.BROWSE)) {
