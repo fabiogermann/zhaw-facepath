@@ -143,6 +143,8 @@ public class FacebookProvider {
 
 		HttpGet httpget = new HttpGet(this.loginRequest);
 		
+		httpget.setHeader("User-Agent", "FacepathAuthenticator");
+		
 		CloseableHttpResponse response = null;
 		HttpEntity entity = null;
 		String content = null;
@@ -162,7 +164,7 @@ public class FacebookProvider {
 		
 		Integer appcode = response.getStatusLine().getStatusCode();
 				
-		if (content.contains("<")) {
+		if (content.contains("<") && content.contains("klamath.ch")) {
 			throw new FacebookApplicationAuthorizationException();
 		}
 		

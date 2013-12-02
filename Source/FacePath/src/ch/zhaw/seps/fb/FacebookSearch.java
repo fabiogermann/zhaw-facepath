@@ -98,13 +98,7 @@ public class FacebookSearch {
 						//System.out.println("-----"+fp.getUserID());
 			}
 		}
-		this.fbNetwork.cleanupGraph();
-		this.fbNetwork.cleanupGraph();
-		this.fbNetwork.cleanupGraph();
-		this.fbNetwork.cleanupGraph();
-		this.fbNetwork.cleanupGraph();
-		this.fbNetwork.cleanupGraph();
-		this.fbNetwork.cleanupGraph();
+		
 		
 		if (pathFound()) {
 			System.out.println("gefunden");
@@ -123,6 +117,12 @@ public class FacebookSearch {
 			this.searchIterateNEW();
 		}
 		// graph cleanup
+		this.fbNetwork.cleanupGraph();
+		this.fbNetwork.cleanupGraph();
+		this.fbNetwork.cleanupGraph();
+		this.fbNetwork.cleanupGraph();
+		this.fbNetwork.cleanupGraph();
+		this.fbNetwork.cleanupGraph();
 		this.fbNetwork.cleanupGraph();
 	}
 	
