@@ -25,5 +25,5 @@ local.properties
 # Locally stored "Eclipse launch configurations"
 *.launch
 
-# Other
+# Other - Please check your local config
 Source/RemoteSystemsTempFiles/
