@@ -88,7 +88,7 @@ public class GetListOfFriendsOfThread implements Runnable {
 		    String item = i.next();
 		    item = item.replace("https://www.facebook.com/", "").replace("?fref=pb", "");
 			
-		    if (FacePath.DEBUG){
+		    if (FacePath.DEBUG >= 4){
 		    	System.out.println("GLOFOT-found: "+item);
 		    }
 

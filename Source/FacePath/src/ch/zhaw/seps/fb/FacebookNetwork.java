@@ -90,7 +90,7 @@ public class FacebookNetwork {
 			}
 			pathnr++;
 		}
-		if (dijkstraPaths.size()==0) {
+		if (dijkstraPaths.size()!=0) {
 			this.pathFound = true;
 		}
 	}
@@ -108,7 +108,6 @@ public class FacebookNetwork {
 	public void cleanupGraph() {
 		for(Node n : this.graph) {
 			if(n.getDegree() < 2) {
-				System.out.println(n.getDegree());
 				this.graph.removeNode(n);
 			}
 		}

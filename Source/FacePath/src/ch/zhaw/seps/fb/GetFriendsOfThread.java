@@ -55,7 +55,7 @@ public class GetFriendsOfThread implements Runnable {
 		preexecutor.shutdown();
 		try {
 			while (!preexecutor.awaitTermination(10L, TimeUnit.SECONDS)) {
-				if (FacePath.DEBUG){
+				if (FacePath.DEBUG >= 4){
 					System.out.println("Still waiting for the preexecutor to finish");
 				}
 			}
@@ -70,13 +70,13 @@ public class GetFriendsOfThread implements Runnable {
 			if(knownProfiles.containsKey(userstring)) {
 				// get it from the known profiles collection
 				queue.add(knownProfiles.get(userstring));
-				if (FacePath.DEBUG){
+				if (FacePath.DEBUG >= 4){
 			    	System.out.println("GFOT-added-from-collection: "+userstring);
 			    }
 			} else {
 				// create the new profile
 				apiRequests.add(Executors.callable(new GetUserFromAPIThread(ApiKey, queue, userstring)));
-				if (FacePath.DEBUG){
+				if (FacePath.DEBUG >= 4){
 			    	System.out.println("GFOT-created-API-request-for: "+userstring);
 			    }
 			}
@@ -92,7 +92,7 @@ public class GetFriendsOfThread implements Runnable {
 		
 		try {
 			while (!executor.awaitTermination(10L, TimeUnit.SECONDS)) {
-				if (FacePath.DEBUG){
+				if (FacePath.DEBUG >= 4){
 					System.out.println("Still waiting for the executor to finish");
 				}
 			}

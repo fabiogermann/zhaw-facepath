@@ -23,7 +23,14 @@ import ch.zhaw.seps.view.SearchView;
 
 public class FacePath extends JFrame implements ActionListener, WindowListener {
 
-	public static final boolean DEBUG = true;
+	// set the DEBUG mode and verbosity level: 
+	//		0 = OFF, 
+	//		1 = ProgrammStatus,
+	//		2 = DetailedProgrammStatus,
+	//		3 = DetailedProgrammStatusWithTreads,
+	//		4 = DetailedProgrammStatusWithDetailedTreads
+	
+	public static final int DEBUG = 3;
 
 	public static void main(String[] args) {
 		new FacePath();

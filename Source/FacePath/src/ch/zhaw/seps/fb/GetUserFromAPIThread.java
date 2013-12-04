@@ -40,7 +40,7 @@ public class GetUserFromAPIThread implements Runnable {
 	    fbp.setLocales(auser.getLocale());
 	    
 	    queue.add(fbp);
-	    if (FacePath.DEBUG){
+	    if (FacePath.DEBUG >= 4){
 	    	System.out.println("GUFAPI-created: "+user);
 	    }
 	}

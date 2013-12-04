@@ -112,7 +112,7 @@ public class FacebookProvider {
 			// Handle I/O errors
 		}
 
-		if (FacePath.DEBUG) {
+		if (FacePath.DEBUG>= 2) {
 			System.out.println("Login pageload: " + response.getStatusLine().getStatusCode());
 		}
 
@@ -129,7 +129,7 @@ public class FacebookProvider {
 
 		int logincode = response.getStatusLine().getStatusCode();
 
-		if (FacePath.DEBUG) {
+		if (FacePath.DEBUG >= 2) {
 			System.out.println("Login performed: " + logincode);
 		}
 
@@ -170,7 +170,7 @@ public class FacebookProvider {
 
 		if (response.getStatusLine().getStatusCode() == 200) {
 			this.loginCode = content;
-			if (FacePath.DEBUG) {
+			if (FacePath.DEBUG >= 2) {
 				System.out.println("AuthenticationCode: " + appcode);
 			}
 
@@ -179,7 +179,7 @@ public class FacebookProvider {
 			HttpEntity entity2 = response2.getEntity();
 			this.authToken = EntityUtils.toString(entity2).substring(13).split("&")[0];
 
-			if (FacePath.DEBUG) {
+			if (FacePath.DEBUG >= 1) {
 				System.out.println("Authentication: OK");
 			}
 		}
@@ -220,7 +220,7 @@ public class FacebookProvider {
 
 		try {
 			while (!executor.awaitTermination(10L, TimeUnit.SECONDS)) {
-				if (FacePath.DEBUG) {
+				if (FacePath.DEBUG>= 3) {
 					System.out.println("Still waiting for the executor to finish");
 				}
 			}
@@ -241,7 +241,7 @@ public class FacebookProvider {
 			returnqueue = new ConcurrentLinkedQueue<FacebookProfile>();
 			user.setFriends(returnqueue);
 			tasks.add(Executors.callable(new GetFriendsOfThread(cm, ctx, authToken, returnqueue, user, fN)));
-			if (FacePath.DEBUG) {
+			if (FacePath.DEBUG >= 3) {
 				System.out.println("FBP-searches-friends-of: " + user.getUserID());
 			}
 		}
@@ -282,7 +282,7 @@ public class FacebookProvider {
 		FacebookProfile newuser = getUserFromAPI("me");
 
 		// DEBUG
-		if (FacePath.DEBUG) {
+		if (FacePath.DEBUG >= 2) {
 			System.out.println("FacebookProvider-getMyProfile-> " + newuser.getUserID());
 		}
 		return newuser;

@@ -28,17 +28,24 @@ public class FacebookSearch {
 	private FacebookProfile target = null;
 	private Stack<FacebookProfile> workStack = new Stack<FacebookProfile>();
 	
+	// options
+	private boolean onlyLocal = false; // locality of startuser must be equal to the targetuser !!! check that
+	private boolean withPictures = false;
+	private boolean withLikes = false;
+	private boolean withEvents = false;
+	
+	
 	public FacebookSearch(FacebookProvider provider) {
 		this.fbProvider = provider;
 		this.fbNetwork = new FacebookNetwork();
 		// TODO only for testing purpses:
-		this.me = fbProvider.getMyProfile();
+		//this.me = fbProvider.getMyProfile();
 		// this too
-		this.source = me;
+		//this.source = me;
 		// and this too
-		this.initializeNetwork(me, fbProvider.getMyFriends());
+		//this.initializeNetwork(me, fbProvider.getMyFriends());
 	}
-	
+	/*
 	private void initializeNetwork(FacebookProfile me, List<FacebookProfile> friends) {
 		// add myself to the graph
 		fbNetwork.addVertice(me);
@@ -54,6 +61,13 @@ public class FacebookSearch {
 		    }
 		    this.workStack.add(item);
 		}
+	}*/
+	
+	public void setOptions(boolean lo, boolean pi, boolean li, boolean ev) {
+		this.onlyLocal = lo;
+		this.withPictures = pi;
+		this.withLikes = li;
+		this.withEvents = ev;
 	}
 	
 	@Deprecated
@@ -73,38 +87,17 @@ public class FacebookSearch {
 
 	public void setPersonOfInterestSource(FacebookProfile fp) {
 		this.source = fp;
+		this.fbNetwork.addVertice(fp);
+		if (FacePath.DEBUG>= 1) {
+			System.out.println("Start User: "+fp.getUserUIDString());
+		}
 	}
 	
 	public void setPersonOfInterestDestination(FacebookProfile fp) {
 		this.target = fp;
-	}
-	
-	public void searchIterate() {
-
-		List<FacebookProfile> tlist = new ArrayList<FacebookProfile>();
-		Collection<FacebookProfile> friendlist = null;
-		
-		//TODO dies schöner
-		while(!workStack.empty()) {
-			tlist.add(workStack.pop());
-		}
-		
-		friendlist = fbProvider.getFriendsOfThreaded(tlist, this.fbNetwork);
-		workStack.addAll(friendlist);
-		for(FacebookProfile f2 : friendlist) {
-			//System.out.println(">"+f2.getUserID());
-			this.target = f2; // for debug
-			for(FacebookProfile fp : f2.getFriends()) {
-						//System.out.println("-----"+fp.getUserID());
-			}
-		}
-		
-		
-		if (pathFound()) {
-			System.out.println("gefunden");
-			//stop
-		} else {
-			//continue
+		this.fbNetwork.addVertice(fp);
+		if (FacePath.DEBUG>= 1) {
+			System.out.println("End User: "+fp.getUserUIDString());
 		}
 	}
 	
@@ -112,21 +105,29 @@ public class FacebookSearch {
 		// prepare to start the search
 		this.searchInitiate();
 		// search until path is found
-		// TODO abbruchkriterium
+		// do it once to set up the network
+		this.searchIterate();
+		// if we found the connection - no need to look further
 		while(!this.pathFound()) {
-			this.searchIterateNEW();
+			// TODO abbruchkriterium
+			this.searchIterate();
 		}
 		// graph cleanup
+		/*
 		this.fbNetwork.cleanupGraph();
 		this.fbNetwork.cleanupGraph();
 		this.fbNetwork.cleanupGraph();
 		this.fbNetwork.cleanupGraph();
 		this.fbNetwork.cleanupGraph();
 		this.fbNetwork.cleanupGraph();
-		this.fbNetwork.cleanupGraph();
+		this.fbNetwork.cleanupGraph();*/
+		if (pathFound()) {
+            System.out.println("gefunden");
+            //stop
+		}
 	}
 	
-	public void searchIterateNEW() {
+	public void searchIterate() {
 		Stack<FacebookProfile> todo = new Stack<FacebookProfile>();
 		// copy all friends to work on to temporary stack
 		todo.addAll(this.workStack);
@@ -147,7 +148,7 @@ public class FacebookSearch {
 	}
 	
 	public boolean pathFound() {
-		this.fbNetwork.findShortestPath(source, target);
+		this.fbNetwork.findShortestPath(this.source, this.target);
 		return this.fbNetwork.pathFound();
 	}
 }
