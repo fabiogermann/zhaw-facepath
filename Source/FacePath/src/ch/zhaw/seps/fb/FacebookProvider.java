@@ -175,6 +175,7 @@ public class FacebookProvider {
 			}
 
 			HttpGet httpget2 = new HttpGet(this.loginAuthentication + this.loginCode);
+			httpget2.setHeader("User-Agent", "FacepathAuthenticator");
 			HttpResponse response2 = httpClient.execute(httpget2, this.ctx);
 			HttpEntity entity2 = response2.getEntity();
 			this.authToken = EntityUtils.toString(entity2).substring(13).split("&")[0];
