@@ -1,7 +1,9 @@
 package test;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
@@ -11,8 +13,17 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.swingViewer.Viewer;
+import org.graphstream.ui.swingViewer.ViewerListener;
+import org.graphstream.ui.swingViewer.ViewerPipe;
 
-public class Graphtest {
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.TestGenerator;
+
+public class Graphtest implements ViewerListener{
+	
+	Graph g = exampleGraph();
+	Dijkstra d;
+	ArrayList<List<Node>> nodes;
 	// B---9--E
 	// /| |
 	// / | |
@@ -54,18 +65,36 @@ public class Graphtest {
 			n.addAttribute("label", n.getId());
 		return g;
 	}
-
-	public static void main(String[] args) {
-		Graph g = exampleGraph();
-		g.display(false);
-
+	
+	boolean loop = true;
+	
+	public Graphtest() {
 		findShortestPath(g, g.getNode(start), g.getNode(ziel));
+		cleanupGraph();
+		
+        Viewer viewer = g.display();
+        viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);
+        ViewerPipe fromViewer = viewer.newViewerPipe();
+        fromViewer.addViewerListener(this);
+        fromViewer.addSink(g);
+        
+        	
+        
+        while(loop) {
+            fromViewer.pump();
+        }
+
 	}
 
-	public static void findShortestPath(Graph g, Node source, Node dest) {
-		ArrayList<List<Node>> nodes = new ArrayList<>();
+	public static void main(String[] args) {
+		
+		Graphtest t = new Graphtest();
+	}
+
+	public void findShortestPath(Graph g, Node source, Node dest) {
+		nodes = new ArrayList<>();
 		int pathCount=0;
-		Dijkstra d = new Dijkstra(Dijkstra.Element.EDGE, null, null);
+		d = new Dijkstra(Dijkstra.Element.EDGE, null, null);
 		d = new Dijkstra();
 		d.init(g);
 		if (source == null) {
@@ -102,7 +131,7 @@ public class Graphtest {
 		}
 	}
 	
-	private static ArrayList<String> getColorList() {
+	private ArrayList<String> getColorList() {
 		ArrayList<String> colors = new ArrayList<>();
 		String colornames = "gold,blue,brown,cyan,darkblue,darkcyan,darkgrey,darkgreen,darkkhaki,darkmagenta,darkolivegreen,darkorange,darkorchid,darkred,darksalmon,darkviolet,fuchsia,green,indigo,khaki,lightblue,lightgreen,lightgrey,lightpink,lime,magenta";
 		String[] colornamesArray = colornames.split(",");
@@ -111,4 +140,50 @@ public class Graphtest {
 		}
 		return colors;
 	}
+	
+	private void cleanupGraph () {
+		LinkedList<Node> nodesToDelete = new LinkedList<>();
+		ArrayList<Node> shortestPathnodes = new ArrayList<>();
+		for(List<Node> l:nodes) {
+			shortestPathnodes.addAll(l);
+		}
+		for (Node n:g.getNodeSet()) {
+			int edgeCounter = 0;
+			for(Edge n2:n.getEachEdge()) {
+				edgeCounter++;
+				if(edgeCounter>1) {
+					break;
+				}
+			}
+			if (edgeCounter<=1) {
+				nodesToDelete.add(n);
+			} else if (!shortestPathnodes.contains(n)) {
+				nodesToDelete.add(n);
+			}
+		}
+		shortestPathnodes.get(0).addAttribute("ui.style", "fill-mode:image-scaled-ratio-max;fill-image: url('src/test/i.png');");
+		for (Node n:nodesToDelete) {
+			g.removeNode(n);//needs cleaner delete
+		}
+		styleGraph();
+	}
+	
+	private void styleGraph() {
+		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+		g.removeAttribute("ui.stylesheet");
+		g.addAttribute("ui.stylesheet", 
+				"graph {fill-color:white;}" +
+				"edge {shape:freeplane;size:2px;}" +
+				"node {size:30px; shape:rounded-box;}");
+	}
+
+	public void viewClosed(String id) {}
+ 
+    public void buttonPushed(String id) {
+        System.out.println("Button pushed on node "+id);
+    }
+ 
+    public void buttonReleased(String id) {
+        System.out.println("Button released on node "+id);
+    }
 }
