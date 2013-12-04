@@ -112,7 +112,7 @@ public class FacebookProvider {
 			// Handle I/O errors
 		}
 
-		if (FacePath.DEBUG>= 2) {
+		if (FacePath.DEBUG >= 2) {
 			System.out.println("Login pageload: " + response.getStatusLine().getStatusCode());
 		}
 
@@ -221,7 +221,7 @@ public class FacebookProvider {
 
 		try {
 			while (!executor.awaitTermination(10L, TimeUnit.SECONDS)) {
-				if (FacePath.DEBUG>= 3) {
+				if (FacePath.DEBUG >= 3) {
 					System.out.println("Still waiting for the executor to finish");
 				}
 			}
@@ -334,7 +334,7 @@ public class FacebookProvider {
 
 		HttpGet httpget = null;
 		try {
-			httpget = new HttpGet("https://www.facebook.com/search/results.php?q="
+			httpget = new HttpGet("https://www.facebook.com/search/results.php?type=users&q="
 			        + URLEncoder.encode(searchQuery, "UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
