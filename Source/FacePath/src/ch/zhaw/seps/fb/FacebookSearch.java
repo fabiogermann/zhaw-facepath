@@ -107,10 +107,13 @@ public class FacebookSearch {
 		// search until path is found
 		// do it once to set up the network
 		this.searchIterate();
+		int num = 1;
 		// if we found the connection - no need to look further
 		while(!this.pathFound()) {
 			// TODO abbruchkriterium
+			System.out.println("we are at iteration: " + num);
 			this.searchIterate();
+			num++;
 		}
 		// graph cleanup
 		/*
@@ -139,7 +142,9 @@ public class FacebookSearch {
 		// the friends and connections are added directly to the FacebookNetwork and to the graph
 		friendlist = fbProvider.getFriendsOfThreaded(todo, this.fbNetwork);
 		// add the found profiles to the workstack
-		this.workStack.addAll(friendlist);
+		for(FacebookProfile fp : friendlist) {
+			this.workStack.addAll(fp.getFriends());
+		}
 	}
 	
 	public void searchInitiate() {

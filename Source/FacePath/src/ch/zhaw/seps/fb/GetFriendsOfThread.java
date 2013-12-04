@@ -100,6 +100,8 @@ public class GetFriendsOfThread implements Runnable {
 			e1.printStackTrace();
 		}
 
+		this.user.setFriends(queue);
+		
 		fN.addVertice(user);
 		for(FacebookProfile f : queue) {
 			fN.addVertice(f);

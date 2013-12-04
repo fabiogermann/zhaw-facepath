@@ -18,6 +18,7 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
 import org.graphstream.graph.implementations.SingleGraph;
 
+import ch.zhaw.seps.FacePath;
 import ch.zhaw.seps.TreeNode;
 
 public class FacebookNetwork {
@@ -44,7 +45,9 @@ public class FacebookNetwork {
     	try {
     		this.graph.addEdge(source.getUserID()+"--"+destination.getUserID(), source.getUserID(), destination.getUserID());
     	} catch(IdAlreadyInUseException | ElementNotFoundException | EdgeRejectedException err) {
-    		err.printStackTrace();
+    		if (FacePath.DEBUG >= 4) {
+    			err.printStackTrace();
+    		}
     	}
     }
     
