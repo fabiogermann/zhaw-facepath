@@ -70,7 +70,8 @@ public class SearchView extends JPanel implements ActionListener {
 			this.setPersonsOfInterest((FacebookProfile) sourceComboBox.getSelectedItem(),
 			        (FacebookProfile) destinationComboBox.getSelectedItem());
 			this.fp.showView("result");
-			this.fp.getFS().searchExecute();
+			Thread t = new Thread(this.fp.getFS());
+			t.start();
 		}
 	}
 
