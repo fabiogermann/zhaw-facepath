@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.locks.Lock;
 
 import org.graphstream.algorithm.Dijkstra;
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.EdgeRejectedException;
 import org.graphstream.graph.ElementNotFoundException;
 import org.graphstream.graph.Graph;
@@ -28,6 +30,7 @@ import ch.zhaw.seps.TreeNode;
 
 public class FacebookNetwork {
 	private Graph graph;
+<<<<<<< HEAD
 	private HashMap<String,FacebookProfile> graphCollection;
     private boolean pathFound = false;
     private ArrayList<List<Node>> dijkstraPaths = new ArrayList<>();
@@ -76,6 +79,55 @@ public class FacebookNetwork {
     public Map<String, FacebookProfile> getKnownProfiles() {
     	return Collections.unmodifiableMap(this.graphCollection);
     }
+=======
+	private HashMap<String, FacebookProfile> graphCollection;
+	private boolean pathFound = false;
+	private ArrayList<List<Node>> dijkstraPaths = new ArrayList<>();
+	private ArrayList<String> colors;
+	private ArrayList<List<Node>> nodes = new ArrayList<>();
+
+	public FacebookNetwork() {
+		this.graph = new SingleGraph("FacebookNetwork");
+		this.graphCollection = new HashMap<String, FacebookProfile>();
+		this.colors = getColorList();
+	}
+
+	public synchronized void addVertice(FacebookProfile user) {
+		if (!this.graphCollection.containsKey(user.getUserID())) {
+			this.graph.addNode(user.getUserID());
+			this.graphCollection.put(user.getUserID(), user);
+		}
+	}
+
+	public synchronized void removeVertice(Node n) {
+		this.graph.removeNode(n);
+		if (!this.graphCollection.containsKey(n.getId())) {
+			this.graphCollection.remove(n.getId());
+		}
+	}
+
+	public synchronized void addEdge(FacebookProfile source,
+			FacebookProfile destination) {
+		try {
+			this.graph.addEdge(
+					source.getUserID() + "--" + destination.getUserID(),
+					source.getUserID(), destination.getUserID());
+		} catch (IdAlreadyInUseException | ElementNotFoundException
+				| EdgeRejectedException err) {
+			if (FacePath.DEBUG >= 4) {
+				err.printStackTrace();
+			}
+		}
+	}
+
+	public Graph getGraph() {
+		return this.graph;
+	}
+
+	public Map<String, FacebookProfile> getKnownProfiles() {
+		return Collections.unmodifiableMap(this.graphCollection);
+	}
+>>>>>>> refs/remotes/origin/master
 
 	public ArrayList<List<Node>> getDijkstraPaths() {
 		return dijkstraPaths;
@@ -104,16 +156,18 @@ public class FacebookNetwork {
 		while (paths.hasNext()) {
 			Path path = (Path) paths.next();
 			dijkstraPaths.add((List<Node>) path.getNodePath());
+			nodes.add((List<Node>) path.getNodePath());
 		}
 		
 		int pathnr = 0;
 		
 		for (List<Node> l : dijkstraPaths) {
-			Node previousNode=null;
+			Node previousNode = null;
 			for (Node n : l) {
-				n.addAttribute("ui.style", colors.get(pathnr%colors.size()));
-				if (previousNode!=null) {
-					n.getEdgeBetween(previousNode).addAttribute("ui.style", colors.get(pathnr%colors.size()));
+				n.addAttribute("ui.style", colors.get(pathnr % colors.size()));
+				if (previousNode != null) {
+					n.getEdgeBetween(previousNode).addAttribute("ui.style",
+							colors.get(pathnr % colors.size()));
 				}
 				previousNode = n;
 			}
@@ -121,16 +175,19 @@ public class FacebookNetwork {
 		}
 		
 		if (dijkstraPaths.size()!=0) {
+=======
+		if (dijkstraPaths.size() != 0) {
+>>>>>>> refs/remotes/origin/master
 			this.pathFound = true;
 		}
 	}
-	
+
 	private ArrayList<String> getColorList() {
 		ArrayList<String> colors = new ArrayList<>();
 		String colornames = "gold,blue,brown,cyan,darkblue,darkcyan,darkgrey,darkgreen,darkkhaki,darkmagenta,darkolivegreen,darkorange,darkorchid,darkred,darksalmon,darkviolet,fuchsia,green,indigo,khaki,lightblue,lightgreen,lightgrey,lightpink,lime,magenta";
 		String[] colornamesArray = colornames.split(",");
 		for (int i = 0; i < colornamesArray.length; i++) {
-			colors.add("fill-color: "+colornamesArray[i]+";");
+			colors.add("fill-color: " + colornamesArray[i] + ";");
 		}
 		return colors;
 	}
@@ -139,10 +196,43 @@ public class FacebookNetwork {
 	 * Räumt den Graphen auf, indem er überflüssige Knoten entfernt
 	 */
 	public void cleanupGraph() {
-		for(Node n : this.graph) {
-			if(n.getDegree() < 2) {
-				this.graph.removeNode(n);
+		LinkedList<Node> nodesToDelete = new LinkedList<>();
+		ArrayList<Node> shortestPathnodes = new ArrayList<>();
+		for (List<Node> l : nodes) {
+			shortestPathnodes.addAll(l);
+		}
+		for (Node n : graph.getNodeSet()) {
+			int edgeCounter = 0;
+			for (Edge n2 : n.getEachEdge()) {
+				edgeCounter++;
+				if (edgeCounter > 1) {
+					break;
+				}
+			}
+			if (edgeCounter <= 1) {
+				nodesToDelete.add(n);
+			} else if (!shortestPathnodes.contains(n)) {
+				nodesToDelete.add(n);
 			}
 		}
+		shortestPathnodes
+				.get(0)
+				.addAttribute("ui.style",
+						"fill-mode:image-scaled-ratio-max;fill-image: url('src/test/i.png');");
+		for (Node n : nodesToDelete) {
+			this.removeVertice(n);
+		}
+		styleGraph();
+	}
+
+	public void styleGraph() {
+		/*
+		 * System.setProperty("org.graphstream.ui.renderer",
+		 * "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+		 * graph.removeAttribute("ui.stylesheet");
+		 * graph.addAttribute("ui.stylesheet", "graph {fill-color:white;}" +
+		 * "edge {shape:freeplane;size:2px;}" +
+		 * "node {size:30px; shape:rounded-box;}");
+		 */
 	}
 }
