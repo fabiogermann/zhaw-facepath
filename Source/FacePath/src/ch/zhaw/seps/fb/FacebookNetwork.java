@@ -30,12 +30,12 @@ import ch.zhaw.seps.TreeNode;
 
 public class FacebookNetwork {
 	private Graph graph;
-<<<<<<< HEAD
-	private HashMap<String,FacebookProfile> graphCollection;
-    private boolean pathFound = false;
-    private ArrayList<List<Node>> dijkstraPaths = new ArrayList<>();
-    private ArrayList<String> colors;
-    
+	private HashMap<String, FacebookProfile> graphCollection;
+	private boolean pathFound = false;
+	private ArrayList<List<Node>> dijkstraPaths = new ArrayList<>();
+	private ArrayList<String> colors;
+	private ArrayList<List<Node>> nodes = new ArrayList<>();
+	
     /**
      * Konstruktor
      * Initialisiert die Listen und den Graphen, um sie abfüllen zu können
@@ -50,48 +50,6 @@ public class FacebookNetwork {
      * Fügt einen Knoten dem Graphen hinzu
      * @param 	user			Knoten, der hinzugefügt wird
      */
-    public synchronized void addVertice(FacebookProfile user){
-    	if(!this.graphCollection.containsKey(user.getUserID())) {
-    		this.graph.addNode(user.getUserID());
-        	this.graphCollection.put(user.getUserID(), user);
-    	}
-    }
-    
-    /**
-     * Fügt eine Kante dem Graphen hinzu
-     * @param 	source			Quellknoten
-     * @param 	destination		Zielknoten
-     */
-    public synchronized void addEdge(FacebookProfile source, FacebookProfile destination){
-    	try {
-    		this.graph.addEdge(source.getUserID()+"--"+destination.getUserID(), source.getUserID(), destination.getUserID());
-    	} catch(IdAlreadyInUseException | ElementNotFoundException | EdgeRejectedException err) {
-    		if (FacePath.DEBUG >= 4) {
-    			err.printStackTrace();
-    		}
-    	}
-    }
-    
-    public Graph getGraph() {
-    	return this.graph;
-    }
-    
-    public Map<String, FacebookProfile> getKnownProfiles() {
-    	return Collections.unmodifiableMap(this.graphCollection);
-    }
-=======
-	private HashMap<String, FacebookProfile> graphCollection;
-	private boolean pathFound = false;
-	private ArrayList<List<Node>> dijkstraPaths = new ArrayList<>();
-	private ArrayList<String> colors;
-	private ArrayList<List<Node>> nodes = new ArrayList<>();
-
-	public FacebookNetwork() {
-		this.graph = new SingleGraph("FacebookNetwork");
-		this.graphCollection = new HashMap<String, FacebookProfile>();
-		this.colors = getColorList();
-	}
-
 	public synchronized void addVertice(FacebookProfile user) {
 		if (!this.graphCollection.containsKey(user.getUserID())) {
 			this.graph.addNode(user.getUserID());
@@ -106,7 +64,12 @@ public class FacebookNetwork {
 		}
 	}
 
-	public synchronized void addEdge(FacebookProfile source,
+    /**
+     * Fügt eine Kante dem Graphen hinzu
+     * @param 	source			Quellknoten
+     * @param 	destination		Zielknoten
+     */
+	public synchronized void addEdge(FacebookProfile source, 
 			FacebookProfile destination) {
 		try {
 			this.graph.addEdge(
@@ -127,7 +90,6 @@ public class FacebookNetwork {
 	public Map<String, FacebookProfile> getKnownProfiles() {
 		return Collections.unmodifiableMap(this.graphCollection);
 	}
->>>>>>> refs/remotes/origin/master
 
 	public ArrayList<List<Node>> getDijkstraPaths() {
 		return dijkstraPaths;
@@ -174,10 +136,7 @@ public class FacebookNetwork {
 			pathnr++;
 		}
 		
-		if (dijkstraPaths.size()!=0) {
-=======
 		if (dijkstraPaths.size() != 0) {
->>>>>>> refs/remotes/origin/master
 			this.pathFound = true;
 		}
 	}
@@ -225,6 +184,9 @@ public class FacebookNetwork {
 		styleGraph();
 	}
 
+	/**
+	 * Verpasst dem Graphen (Ergebnis) ein Design mittels CSS
+	 */
 	public void styleGraph() {
 		/*
 		 * System.setProperty("org.graphstream.ui.renderer",
