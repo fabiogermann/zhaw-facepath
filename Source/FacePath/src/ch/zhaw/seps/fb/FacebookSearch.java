@@ -110,7 +110,8 @@ public class FacebookSearch implements Runnable {
 		 */
 		if (pathFound()) {
 			System.out.println("gefunden");
-			// stop
+			fbNetwork.cleanupGraph();
+			fbNetwork.styleGraph();
 		}
 	}
 
