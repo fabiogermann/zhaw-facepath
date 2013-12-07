@@ -1,3 +1,7 @@
+/**
+ * Bezieht die Daten von Facebook durch ein API oder parst sie direkt von der Webseite
+ * @author		SEPS Gruppe 2
+ */
 package ch.zhaw.seps.fb;
 
 import java.io.IOException;
@@ -68,6 +72,14 @@ public class FacebookProvider {
 	        + "&redirect_uri=" + REDIRECT_URL + "&client_secret=" + APP_SECRET + "&code=";
 	private String authToken;
 
+	/**
+	 * Konstruktor
+	 * Fügt die Daten ein, die zur Verbindung mit Facebook benötigt werden
+	 * @param 		email										E-Mail Adresse des Facebook-Logins
+	 * @param 		password									Passwort des Facebook-Logins
+	 * @throws 		FacebookLoginException						Wird geworfen, wenn der Login nicht korrekt ist
+	 * @throws 		FacebookApplicationAuthorizationException	Wird geworfen, wenn keine Berechtigung für Facepath erteilt wurde
+	 */
 	public FacebookProvider(String email, String password) throws FacebookLoginException,
 	        FacebookApplicationAuthorizationException {
 		try {
@@ -83,6 +95,11 @@ public class FacebookProvider {
 		this.connectToApi(this.authToken);
 	}
 
+	/**
+	 * Baut die Verbindung zu Facebook via API auf
+	 * @param 	token		Generierter Zugangsschlüssel (Funktion getAuthToken())
+	 * @see		com.restfb.DefaultFacebookClient
+	 */
 	private void connectToApi(String token) {
 		apiConnection = new DefaultFacebookClient(token);
 	}
@@ -91,6 +108,16 @@ public class FacebookProvider {
 		return FacebookProvider.LOGIN_REQUEST;
 	}
 
+	/**
+	 * Baut die Verbindung zur Webseite auf, um die Daten von der Seite direkt parsen zu können
+	 * @param 		email					E-Mail Adresse des Facebook-Logins
+	 * @param 		password				Passwort des Facebook-Logins
+	 * @throws 		FacebookLoginException	Wird geworfen, wenn der Login nicht korrekt ist
+	 * @throws 		ClientProtocolException	Wird geworfen, wenn beim HTTP Protokoll Probleme auftreten
+	 * @throws 		IOException				Wird geworfen, wenn gar keine Verbindung hergestellt werden kann
+	 * @see			org.apache.http.client.ClientProtocolException
+	 * @see			java.io.IOException
+	 */
 	private void connectHTTP(String email, String password) throws FacebookLoginException, ClientProtocolException,
 	        IOException {
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(this.cm).build();
@@ -99,6 +126,7 @@ public class FacebookProvider {
 
 		CloseableHttpResponse response = null;
 		HttpEntity entity = null;
+		
 		try {
 			response = httpClient.execute(httpget, this.ctx);
 			try {
@@ -138,6 +166,14 @@ public class FacebookProvider {
 		}
 	}
 
+	/**
+	 * Generiert den Access-Token, der für den Zugang zu Facebook benötigt wird
+	 * @throws 		FacebookApplicationAuthorizationException	Wird geworfen, wenn keine Berechtigung für Facepath erteilt wurde
+	 * @throws 		ClientProtocolException						Wird geworfen, wenn beim HTTP Protokoll Probleme auftreten
+	 * @throws 		IOException									Wird geworfen, wenn gar keine Verbindung hergestellt werden kann
+	 * @see			org.apache.http.client.ClientProtocolException
+	 * @see			java.io.IOException
+	 */
 	private void getAuthToken() throws FacebookApplicationAuthorizationException, ClientProtocolException, IOException {
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(this.cm).build();
 
@@ -202,6 +238,11 @@ public class FacebookProvider {
 		return null;
 	}
 
+	/**
+	 * Bezieht Informationen zu gefundenen Benutzern
+	 * @param 		users		Sammlung mit gefundenen Benutzern
+	 * @return		Gibt eine Sammlung mit Benutzern zurück, zu denen die Informationen geladen wurden
+	 */
 	public Collection<FacebookProfile> getUserFromThreadedAPI(Collection<String> users) {
 		ConcurrentLinkedQueue<FacebookProfile> returnqueue = new ConcurrentLinkedQueue<FacebookProfile>();
 		ExecutorService executor = Executors.newCachedThreadPool();
@@ -232,6 +273,12 @@ public class FacebookProvider {
 		return returnqueue;
 	}
 
+	/**
+	 * Bezieht die Freunde der angegebenen Profile
+	 * @param 		users		Liste der Benutzer, dessen Freunde gesucht werden müssen
+	 * @param 		fN			Netzwerk, mit welchem die bestehenden Verbindungen analaysiert werden
+	 * @return		Gibt eine Sammlung mit Benutzern zurück, die die Freunde der angegebenen Profile sind
+	 */
 	public Collection<FacebookProfile> getFriendsOfThreaded(Collection<FacebookProfile> users, FacebookNetwork fN) {
 		ConcurrentLinkedQueue<FacebookProfile> returnqueue = null;
 
@@ -329,6 +376,12 @@ public class FacebookProvider {
 		return result;
 	}
 
+	/**
+	 * Parst einen Benutzer via Webseite
+	 * @param searchQuery	Suchparameter zum Benutzer, der gesucht wird 
+	 * 						(Besteht aus Name und evtl. weiteren Merkmalen wie z.B., dass es eine Firmenseite ist)
+	 * @return				Gibt eine Liste der gefundenen Benutzern zurück
+	 */
 	public List<FacebookProfile> getUserFromSearch(String searchQuery) {
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(this.cm).build();
 
@@ -386,6 +439,11 @@ public class FacebookProvider {
 		return profileList;
 	}
 
+	/**
+	 * Bezieht das Profilbild des entsprechenden Benutzers von der Webseite
+	 * @param 		username		Benutzername des Profils, zu dem das Bild geladen wird
+	 * @return		Gibt das gefundene Profilbild zurück
+	 */
 	public static ImageIcon getImageIconFromUsername(String username) {
 		ImageIcon image = null;
 		try {

@@ -1,3 +1,8 @@
+/**
+ * Bezieht eine Liste der Freunde eines Profils, ohne diese genauer zu untersuchen
+ * Ist ein Thread, sodass Freunde verschiedener Profile "gleichzeitig" gesucht werden können
+ * @author		SEPS Gruppe 2
+ */
 package ch.zhaw.seps.fb;
 
 import java.io.IOException;
@@ -27,10 +32,6 @@ import ch.zhaw.seps.FacePath;
 
 
 public class GetListOfFriendsOfThread implements Runnable {
-
-	/**
-	 * @param args
-	 */
 	
 	private PoolingHttpClientConnectionManager com;
 	private HttpContext cont;
@@ -38,6 +39,10 @@ public class GetListOfFriendsOfThread implements Runnable {
 	private FacebookProfile user;
 	private CloseableHttpClient httpClient;
 	
+	/**
+	 * Konstruktor
+	 * Übergibt die notwendigen Informationen
+	 */
 	public GetListOfFriendsOfThread(PoolingHttpClientConnectionManager conmgr, HttpContext context, ConcurrentLinkedQueue<String> returnqueue, FacebookProfile fbuser) {
 		this.com = conmgr;
 		this.queue = returnqueue;
@@ -45,10 +50,16 @@ public class GetListOfFriendsOfThread implements Runnable {
 		this.cont = context;
 	}
 	
+	/**
+	 * Baut eine Verbindung zur Facebook Webseite auf
+	 */
 	private void connect() {
 		httpClient = HttpClients.custom().setConnectionManager(this.com).build();
 	}
 	
+	/**
+	 * Bezieht die Liste der Freunde des beim Instanzieren angegebenen Profils
+	 */
 	private void requestFriends() {
 		HttpGet httpget = new HttpGet(user.getLink()+"/friends");
 		CloseableHttpResponse response = null;

@@ -1,3 +1,7 @@
+/**
+ * Stellt ein einzelnes Profil dar und bietet die Struktur, um alle benötigten Daten eines Profils abzufüllen
+ * @author		SEPS Gruppe 2
+ */
 package ch.zhaw.seps.fb;
 
 import java.util.ArrayList;
@@ -15,7 +19,10 @@ public class FacebookProfile {
 	private String location;
 	private String language;
 	
-	
+	/**
+	 * Konstruktor
+	 * Setzt das Minimum an Informationen, das für die Suche benötigt wird
+	 */
 	public FacebookProfile(String userN, String uID) {
 		this.userName = userN;
 		this.userID = uID;
@@ -71,7 +78,6 @@ public class FacebookProfile {
 		this.friends.add(fp);
 	}
 
-	@Override
 	public String toString() {
 		return this.name + " " + this.familyName + " (" + this.userName + ")";
 	}

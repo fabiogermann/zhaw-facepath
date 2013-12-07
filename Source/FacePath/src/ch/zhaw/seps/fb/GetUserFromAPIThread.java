@@ -1,3 +1,8 @@
+/**
+ * Bezieht die Informationen eines Profils von Facebook
+ * Ist ein Thread, sodass Informationen zu anderen Profilen "gleichzeitig" geladen werden können
+ * @author		SEPS Gruppe 2
+ */
 package ch.zhaw.seps.fb;
 
 import java.util.List;
@@ -11,10 +16,6 @@ import com.restfb.types.User;
 
 
 public class GetUserFromAPIThread implements Runnable {
-
-	/**
-	 * @param args
-	 */
 	
 	private FacebookClient apiConnection;
 	private String token;
@@ -22,12 +23,19 @@ public class GetUserFromAPIThread implements Runnable {
 	private String user;
 	private User auser;
 	
+	/**
+	 * Konstruktor
+	 * Übergibt die notwendigen Informationen
+	 */
 	public GetUserFromAPIThread(String apikey, ConcurrentLinkedQueue<FacebookProfile> returnqueue, String username) {
 		this.token = apikey;
 		this.queue = returnqueue;
 		this.user = username;
 	}
 
+	/**
+	 * Bezieht die Informationen eines Profils von Facebook
+	 */
 	@Override
 	public void run() {
 		apiConnection = new DefaultFacebookClient(this.token);

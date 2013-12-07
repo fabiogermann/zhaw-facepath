@@ -1,3 +1,8 @@
+/**
+ * Stellt das Netzwerk dar, das mit der Suche aufgebaut wird
+ * 
+ * @author		SEPS Gruppe 2
+ */
 package ch.zhaw.seps.fb;
 
 import java.util.ArrayList;
@@ -28,12 +33,20 @@ public class FacebookNetwork {
     private ArrayList<List<Node>> dijkstraPaths = new ArrayList<>();
     private ArrayList<String> colors;
     
+    /**
+     * Konstruktor
+     * Initialisiert die Listen und den Graphen, um sie abfüllen zu können
+     */
     public FacebookNetwork() {
     	this.graph = new SingleGraph("FacebookNetwork");
     	this.graphCollection = new HashMap<String, FacebookProfile>();
     	this.colors = getColorList();
     }
-    
+
+    /**
+     * Fügt einen Knoten dem Graphen hinzu
+     * @param 	user			Knoten, der hinzugefügt wird
+     */
     public synchronized void addVertice(FacebookProfile user){
     	if(!this.graphCollection.containsKey(user.getUserID())) {
     		this.graph.addNode(user.getUserID());
@@ -41,6 +54,11 @@ public class FacebookNetwork {
     	}
     }
     
+    /**
+     * Fügt eine Kante dem Graphen hinzu
+     * @param 	source			Quellknoten
+     * @param 	destination		Zielknoten
+     */
     public synchronized void addEdge(FacebookProfile source, FacebookProfile destination){
     	try {
     		this.graph.addEdge(source.getUserID()+"--"+destination.getUserID(), source.getUserID(), destination.getUserID());
@@ -67,6 +85,11 @@ public class FacebookNetwork {
 		return pathFound;
 	}
 	
+	/**
+	 * Ermittelt im aufgebauten Graphen den kürzesten Weg vom Start zum Ziel über die eingefügten Knoten
+	 * @param 		source		Start
+	 * @param 		target		Ziel
+	 */
 	public void findShortestPath(FacebookProfile source, FacebookProfile target) {
 		dijkstraPaths.clear();
 		Node sourceNode = this.graph.getNode(source.getUserID());
@@ -77,11 +100,14 @@ public class FacebookNetwork {
 		d.setSource(sourceNode);
 		d.compute();
 		Iterator<Path> paths = d.getAllPaths(targetNode).iterator();
+		
 		while (paths.hasNext()) {
 			Path path = (Path) paths.next();
 			dijkstraPaths.add((List<Node>) path.getNodePath());
 		}
+		
 		int pathnr = 0;
+		
 		for (List<Node> l : dijkstraPaths) {
 			Node previousNode=null;
 			for (Node n : l) {
@@ -93,6 +119,7 @@ public class FacebookNetwork {
 			}
 			pathnr++;
 		}
+		
 		if (dijkstraPaths.size()!=0) {
 			this.pathFound = true;
 		}
@@ -108,6 +135,9 @@ public class FacebookNetwork {
 		return colors;
 	}
 	
+	/**
+	 * Räumt den Graphen auf, indem er überflüssige Knoten entfernt
+	 */
 	public void cleanupGraph() {
 		for(Node n : this.graph) {
 			if(n.getDegree() < 2) {

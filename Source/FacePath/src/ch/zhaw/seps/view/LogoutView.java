@@ -1,3 +1,8 @@
+/**
+ * Bereich des GUIs, der es ermöglicht, dass sich der Benutzer ausloggen kann
+ * 
+ * @author		SEPS Gruppe 2
+ */
 package ch.zhaw.seps.view;
 
 import java.awt.Color;
@@ -23,7 +28,8 @@ public class LogoutView extends JPanel implements ActionListener {
 	private JLabel loginTypLabel;
 
 	/**
-	 * Create the View.
+	 * Konstruktor
+	 * Erstellt die Anzeige
 	 */
 	public LogoutView(FacePath fp) {
 		setBackground(Color.WHITE);
@@ -37,7 +43,10 @@ public class LogoutView extends JPanel implements ActionListener {
 		}
 	}
 
-	@Override
+	/**
+	 * Zeigt beim Klick auf den Button "Logout" den Login Bereich (Startpunkt der Anwendung) an.
+	 * @see		java.awt.event.ActionListener
+	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == logoutButton) {
 			this.fp.setFP(null);
@@ -47,7 +56,7 @@ public class LogoutView extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * Initialize the contents of the panel.
+	 * Initialisiert den Inhalt der Anzeige
 	 */
 	private void initialize() {
 		this.setSize(150, 768);

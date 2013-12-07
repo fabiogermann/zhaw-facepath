@@ -1,3 +1,7 @@
+/**
+ * Verwaltet die Suche
+ * @author		SEPS Gruppe 2
+ */
 package ch.zhaw.seps.fb;
 
 import java.util.Collection;
@@ -25,6 +29,11 @@ public class FacebookSearch implements Runnable {
 	private boolean withLikes = false;
 	private boolean withEvents = false;
 
+	/**
+	 * Konstruktor
+	 * Legt den Provider fest und instanziert das Netzwerk
+	 * @param 	provider		Facebook Provider
+	 */
 	public FacebookSearch(FacebookProvider provider) {
 		this.fbProvider = provider;
 		this.fbNetwork = new FacebookNetwork();
@@ -49,6 +58,13 @@ public class FacebookSearch implements Runnable {
 	 * this.workStack.add(item); } }
 	 */
 
+	/**
+	 * Legt die von der Searchview übergebenen Suchoptionen fest
+	 * @param 		lo		Nur nationale Suche
+	 * @param 		pi		Profilbilder anzeigen
+	 * @param 		li		Like-Pages miteinbeziehen
+	 * @param 		ev		Event-Pages miteinbeziehen
+	 */
 	public void setOptions(boolean lo, boolean pi, boolean li, boolean ev) {
 		this.onlyLocal = lo;
 		this.withPictures = pi;
@@ -71,6 +87,10 @@ public class FacebookSearch implements Runnable {
 		return this.fbNetwork.getGraph();
 	}
 
+	/**
+	 * Legt Startprofil für die Suche fest
+	 * @param 		fp		Startprofil
+	 */
 	public void setPersonOfInterestSource(FacebookProfile fp) {
 		this.source = fp;
 		this.fbNetwork.addVertice(fp);
@@ -79,6 +99,10 @@ public class FacebookSearch implements Runnable {
 		}
 	}
 
+	/**
+	 * Legt Zielprofil für die Suche fest
+	 * @param 		fp		Zielprofil
+	 */
 	public void setPersonOfInterestDestination(FacebookProfile fp) {
 		this.target = fp;
 		this.fbNetwork.addVertice(fp);
@@ -87,6 +111,9 @@ public class FacebookSearch implements Runnable {
 		}
 	}
 
+	/**
+	 * Führt die Suche aus
+	 */
 	public void searchExecute() {
 		// prepare to start the search
 		this.searchInitiate();
@@ -114,6 +141,10 @@ public class FacebookSearch implements Runnable {
 		}
 	}
 
+	/**
+	 * Teil der Suche, die eine Iteration durcharbeitet.
+	 * Eine Iteration sucht die Freunde eines gefundenen/angegebenen Profils
+	 */
 	public void searchIterate() {
 		Stack<FacebookProfile> todo = new Stack<FacebookProfile>();
 		// copy all friends to work on to temporary stack
@@ -133,11 +164,18 @@ public class FacebookSearch implements Runnable {
 		}
 	}
 
+	/**
+	 * Teil der Suche, setzt die Suchparameter
+	 */
 	public void searchInitiate() {
 		this.workStack.add(this.source);
 		this.workStack.add(this.target);
 	}
 
+	/**
+	 * Lässt im Graphen den Weg ermitteln und meldet, ob ein Ergebnis (Verbindung) gefunden wurde
+	 * @return	Meldet, ob ein Ergebnis gefunden wurde
+	 */
 	public boolean pathFound() {
 		this.fbNetwork.findShortestPath(this.source, this.target);
 		return this.fbNetwork.pathFound();
