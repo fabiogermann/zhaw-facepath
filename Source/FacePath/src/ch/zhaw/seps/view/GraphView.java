@@ -1,3 +1,8 @@
+/**
+ * GUI Bereich, der zuständig für die Anzeige des Ergebnis ist
+ * 
+ * @author		SEPS Gruppe 2
+ */
 package ch.zhaw.seps.view;
 
 import java.awt.Color;
@@ -28,7 +33,8 @@ public class GraphView extends JPanel implements ActionListener {
 	private JButton newSearchButton;
 
 	/**
-	 * Create the View.
+	 * Konstruktor
+	 * Erstellt die Anzeige
 	 */
 	public GraphView(FacePath fp) {
 		this.fp = fp;
@@ -45,7 +51,10 @@ public class GraphView extends JPanel implements ActionListener {
 		resultPanel.add(view, gbc_view);
 	}
 
-	@Override
+	/**
+	 * Ruft bei Drücken des Buttons "Suche" den Such-Bereich auf
+	 * @see		java.awt.event.ActionListener
+	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == newSearchButton) {
 			this.fp.showView("search");
@@ -53,7 +62,7 @@ public class GraphView extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * Initialize the contents of the panel.
+	 * Initialisiert den Inhalt der Anezige
 	 */
 	private void initialize() {
 		this.setBackground(Color.WHITE);

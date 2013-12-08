@@ -1,3 +1,8 @@
+/**
+ * Bearbeitet einen Knoten und füllt ihn mit Inhalt
+ * 
+ * @author		SEPS Gruppe 2
+ */
 package ch.zhaw.seps.view;
 
 import java.awt.Color;
@@ -28,6 +33,10 @@ public class ProfileItemEditor implements ComboBoxEditor, DocumentListener {
 
 	private FacebookProfile currentSelectedProfile;
 
+	/**
+	 * Konstruktor
+	 * Instanziert die Objekte, die dem Knoten angefügt werden
+	 */
 	public ProfileItemEditor() {
 		this.currentSelectedProfile = null;
 
@@ -56,12 +65,15 @@ public class ProfileItemEditor implements ComboBoxEditor, DocumentListener {
 		this.profileStringTextField.getDocument().addDocumentListener(this);
 	}
 
-	@Override
 	public Component getEditorComponent() {
 		return this.editor;
 	}
 
-	@Override
+	/**
+	 * Setzt das Profilbild des Benutzers in den Knoten ein
+	 * 
+	 * @param		anObject		Knoten, der mit Inhalt gefüllt wird
+	 */
 	public void setItem(Object anObject) {
 		if (anObject != null && anObject instanceof FacebookProfile) {
 			this.profileStringTextField.setText(anObject.toString());
@@ -76,7 +88,6 @@ public class ProfileItemEditor implements ComboBoxEditor, DocumentListener {
 		}
 	}
 
-	@Override
 	public Object getItem() {
 		if (this.currentSelectedProfile != null) {
 			return this.currentSelectedProfile;
@@ -84,21 +95,15 @@ public class ProfileItemEditor implements ComboBoxEditor, DocumentListener {
 		return this.profileStringTextField.getText();
 	}
 
-	@Override
-	public void selectAll() {
-	}
 
-	@Override
-	public void addActionListener(ActionListener l) {
-		this.profileStringTextField.addActionListener(l);
-	}
+	public void selectAll() {}
+	public void addActionListener(ActionListener l) { this.profileStringTextField.addActionListener(l); }
+	public void removeActionListener(ActionListener l) { this.profileStringTextField.removeActionListener(l); }
 
-	@Override
-	public void removeActionListener(ActionListener l) {
-		this.profileStringTextField.removeActionListener(l);
-	}
-
-	@Override
+	/**
+	 * Fügt ein Objekt ein
+	 * @see 	javax.swing.event.DocumentListener
+	 */
 	public void insertUpdate(DocumentEvent e) {
 		if (this.currentSelectedProfile != null
 		        && !this.currentSelectedProfile.toString().equals(this.profileStringTextField.getText())) {
@@ -107,7 +112,10 @@ public class ProfileItemEditor implements ComboBoxEditor, DocumentListener {
 		}
 	}
 
-	@Override
+	/**
+	 * Entfernt ein Objekt
+	 * @see 	javax.swing.event.DocumentListener
+	 */
 	public void removeUpdate(DocumentEvent e) {
 		if (this.currentSelectedProfile != null
 		        && !this.currentSelectedProfile.toString().equals(this.profileStringTextField.getText())) {
@@ -116,7 +124,10 @@ public class ProfileItemEditor implements ComboBoxEditor, DocumentListener {
 		}
 	}
 
-	@Override
+	/**
+	 * Ändert ein Objekt
+	 * @see 	javax.swing.event.DocumentListener
+	 */
 	public void changedUpdate(DocumentEvent e) {
 		if (this.currentSelectedProfile != null
 		        && !this.currentSelectedProfile.toString().equals(this.profileStringTextField.getText())) {

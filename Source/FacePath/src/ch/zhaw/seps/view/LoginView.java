@@ -1,3 +1,8 @@
+/**
+ * GUI Bereich, der die Loginmaske anzeigt und den Login ermöglicht
+ * 
+ * @author		SEPS Gruppe 2
+ */
 package ch.zhaw.seps.view;
 
 import java.awt.Color;
@@ -42,14 +47,19 @@ public class LoginView extends JPanel implements ActionListener {
 	private JButton loginButton;
 
 	/**
-	 * Create the View.
+	 * Konstruktor
+	 * Erstellt die Anzeige
 	 */
 	public LoginView(FacePath fp) {
 		this.fp = fp;
 		this.initialize();
 	}
 
-	@Override
+	/**
+	 * Verwaltet die Eingaben der Login Maske
+	 * Ruft bei erfolgreichem Einloggen den Suchbereich auf
+	 * @see		java.awt.event.ActionListener
+	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == loginButton || e.getSource() == emailTextField || e.getSource() == passwordField) {
 			FacebookProvider fbProvider = null;
@@ -88,6 +98,13 @@ public class LoginView extends JPanel implements ActionListener {
 		}
 	}
 
+	/**
+	 * Ruft den Standard-Webbrowser des Computers auf und öffnet die Facebook Webseite.
+	 * Dort wird dann der Benutzer gebeten, FacePath die Berechtigungen für das Lesen der Informationen zu geben.
+	 * Diese Funktion wird benötigt, wenn sich der Benutzer mit seinem eigenen Login einloggen möchte.
+	 * 
+	 * @param		url		URL der Webseite, die vom Standardbrowser aufgerufen werden soll
+	 */
 	private void openBrowserWindow(String url) {
 		String message = "Um diesen Facebook-Login mit Facepath benutzen zu k\u00F6nnen, "
 		        + "m\u00FCssen Sie zuerst Facepath die Berechtigung geben."
@@ -114,7 +131,7 @@ public class LoginView extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * Initialize the contents of the panel.
+	 * Initialisiert den Inhalt der Anzeige
 	 */
 	private void initialize() {
 		this.setBackground(Color.WHITE);

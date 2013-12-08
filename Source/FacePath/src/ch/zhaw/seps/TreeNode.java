@@ -1,3 +1,9 @@
+/**
+ * Generische Klasse mit der Struktur eines Baumes
+ * Dient zum Aufbau eines Graphen
+ * 
+ * @author		SEPS Gruppe 2
+ */
 package ch.zhaw.seps;
 
 import java.util.List;

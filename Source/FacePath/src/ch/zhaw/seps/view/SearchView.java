@@ -38,7 +38,8 @@ public class SearchView extends JPanel implements ActionListener {
 	private DefaultComboBoxModel<FacebookProfile> destinationModel;
 
 	/**
-	 * Create the View.
+	 * Konstruktor
+	 * Erstellt die Anzeige
 	 */
 	public SearchView(FacePath fp) {
 		this.fp = fp;
@@ -47,7 +48,12 @@ public class SearchView extends JPanel implements ActionListener {
 		this.initialize();
 	}
 
-	@Override
+	/**
+	 * Beim Drücken auf "Benutzer suchen" soll der korrekte Benutzer für die Suche ermittelt werden
+	 * Beim Drücken auf "Suche" soll die Suche mit den beiden ausgewählten Profilen gestartet werden
+	 * Übergibt die gewählte Suchkonfiguration
+	 * @see		java.awt.event.ActionListener
+	 */
 	public void actionPerformed(ActionEvent e) {
 		// TODO: es sollte gesucht werden nach dem klick auf suchen und der
 		// Graph soll kontinuierlich aufgebaut werden. ist die suche komplett
@@ -70,26 +76,36 @@ public class SearchView extends JPanel implements ActionListener {
 			this.setPersonsOfInterest((FacebookProfile) sourceComboBox.getSelectedItem(),
 			        (FacebookProfile) destinationComboBox.getSelectedItem());
 			this.fp.showView("result");
-			this.fp.getFS().searchExecute();
+			Thread t = new Thread(this.fp.getFS());
+			t.start();
 		}
 	}
 
+	/**
+	 * Bearbeitet die Eingabe des Profils (Parameter), sodass damit gesucht werden kann
+	 * @param 		usernameComboBox			Inhalt der Textbox, in der das Profil angegeben wird
+	 * @param 		resultFacebookProfileModel	Übergibt die Stuktur, an die der Suchparameter angepasst wird
+	 */
 	private void searchUser(JComboBox<FacebookProfile> usernameComboBox,
 	        DefaultComboBoxModel<FacebookProfile> resultFacebookProfileModel) {
 
 		resultFacebookProfileModel.removeAllElements();
 		String searchString = "";
+		
 		if (usernameComboBox.getSelectedIndex() > -1) {
 			searchString = ((FacebookProfile) usernameComboBox.getSelectedItem()).getUserUIDString();
 		} else if (usernameComboBox.getEditor().getItem() != null) {
 			searchString = usernameComboBox.getEditor().getItem().toString();
 		}
+		
 		List<FacebookProfile> userSearchResult = null;
+		
 		if (searchString == null || searchString.equals("")) {
 			userSearchResult = new ArrayList<FacebookProfile>();
 		} else {
 			userSearchResult = this.fp.getFP().getUserFromSearch(searchString);
 		}
+		
 		if (userSearchResult.size() > 0) {
 			for (FacebookProfile fbp : userSearchResult) {
 				resultFacebookProfileModel.addElement(fbp);
@@ -98,13 +114,18 @@ public class SearchView extends JPanel implements ActionListener {
 		}
 	}
 
+	/**
+	 * Setzt den Suchparameter in der Suche, um mit die Suche beginnen zu können
+	 * @param 		sourceFacebookProfile		Startprofil
+	 * @param 		destinationFacebookProfile	Zielprofil
+	 */
 	private void setPersonsOfInterest(FacebookProfile sourceFacebookProfile, FacebookProfile destinationFacebookProfile) {
 		this.fp.getFS().setPersonOfInterestSource(sourceFacebookProfile);
 		this.fp.getFS().setPersonOfInterestDestination(destinationFacebookProfile);
 	}
 
 	/**
-	 * Initialize the contents of the panel.
+	 * Initialisiert die Anzeige der Suchmaske
 	 */
 	private void initialize() {
 		this.setBackground(Color.WHITE);

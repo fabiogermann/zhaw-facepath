@@ -1,5 +1,8 @@
 /**
+ * Startpunkt der Anwendung
+ * Initiiert und ruft das GUI auf
  * 
+ * @author		SEPS Gruppe 2
  */
 package ch.zhaw.seps;
 
@@ -56,6 +59,11 @@ public class FacePath extends JFrame implements ActionListener, WindowListener {
 		return myFS;
 	}
 
+	
+	/**
+	 * Zeigt einen Bereich des GUIs an
+	 * @param		view	Name des Bereichs, der angezeigt werden soll
+	 */
 	public void showView(String view) {
 		for (String viewString : this.viewMap.keySet()) {
 			this.remove(this.viewMap.get(viewString));
@@ -90,6 +98,9 @@ public class FacePath extends JFrame implements ActionListener, WindowListener {
 		this.validate();
 	}
 
+	/**
+	 * Konstruktor, setzt Fenstergrösse und den ersten Bereich des GUIs, der beim Starten der Applikation angezeigt wird.
+	 */
 	public FacePath() {
 		this.setTitle("Facepath");
 		setSize(1024, 768);
@@ -100,50 +111,14 @@ public class FacePath extends JFrame implements ActionListener, WindowListener {
 		this.setVisible(true);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		this.dispose();
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-
-	}
+	public void windowClosing(WindowEvent e) { this.dispose(); }
+	
+	public void actionPerformed(ActionEvent e) {}
+	public void windowActivated(WindowEvent e) {}
+	public void windowClosed(WindowEvent e) {}
+	public void windowDeactivated(WindowEvent e) {}
+	public void windowDeiconified(WindowEvent e) {}
+	public void windowIconified(WindowEvent e) {}
+	public void windowOpened(WindowEvent e) {}
 
 }

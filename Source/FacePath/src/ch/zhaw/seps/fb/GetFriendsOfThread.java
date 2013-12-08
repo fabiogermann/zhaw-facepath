@@ -1,3 +1,8 @@
+/**
+ * Bezieht die Informationen der gefundenen Freunde eines Profils
+ * Ist ein Thread, sodass Freunde verschiedener Profile "gleichzeitig" gesucht werden können
+ * @author		SEPS Gruppe 2
+ */
 package ch.zhaw.seps.fb;
 
 import java.util.ArrayList;
@@ -19,10 +24,6 @@ import ch.zhaw.seps.FacePath;
 
 
 public class GetFriendsOfThread implements Runnable {
-
-	/**
-	 * @param args
-	 */
 	
 	private PoolingHttpClientConnectionManager com;
 	private HttpContext cont;
@@ -31,6 +32,10 @@ public class GetFriendsOfThread implements Runnable {
 	private String ApiKey;
 	private FacebookNetwork fN;
 	
+	/**
+	 * Konstruktor
+	 * Übergibt die notwendigen Informationen
+	 */
 	public GetFriendsOfThread(	PoolingHttpClientConnectionManager conmgr, 
 								HttpContext context, 
 								String apikey, 
@@ -45,7 +50,9 @@ public class GetFriendsOfThread implements Runnable {
 		this.fN = network;
 	}
 
-	@Override
+	/**
+	 * Ermittelt die Informationen der gefundenen Freunde des beim Instanzieren angegebenen Profils
+	 */
 	public void run() {
 		// Get all the friends of a user
 		Map<String,FacebookProfile> knownProfiles = fN.getKnownProfiles();

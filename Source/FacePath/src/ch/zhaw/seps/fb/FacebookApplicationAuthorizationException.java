@@ -1,3 +1,9 @@
+/**
+ * Exception, die geworfen wird, wenn FacePath keine Berechtigung erhalten hat, um mit dem angegebenen
+ * Login arbeiten zu dürfen
+ * 
+ * @author		SEPS Gruppe 2
+ */
 package ch.zhaw.seps.fb;
 
 public class FacebookApplicationAuthorizationException extends java.lang.Exception {

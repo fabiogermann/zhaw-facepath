@@ -1,3 +1,8 @@
+/**
+ * Bearbeitet die Profile (Knoten) vor, damit diese im Ergebnis korrekt eingefügt werden können
+ * 
+ * @author		SEPS Gruppe 2
+ */
 package ch.zhaw.seps.view;
 
 import java.awt.Color;
@@ -19,7 +24,16 @@ public class ProfileCellRenderer extends JLabel implements ListCellRenderer<Face
 		this.setOpaque(true);
 	}
 
-	@Override
+	/**
+	 * Bearbeitet einen Knoten und gibt diesen bearbeitet zurück
+	 * 
+	 * @param		profileList		Liste mit Profilen
+	 * @param		profile			Ein bestimmtes Profil, dessen Knoten bearbeitet werden muss
+	 * @param		index			Stelle des angegebenen Profils in der Liste
+	 * @param		isSelected		Markiert, ob der Knoten ausgewählt wurde (Ist Teil der Verbindung)
+	 * @param		cellHasFocus	Bestimmt, ob dieser Knoten fokussiert wird (Parameter der Suche)
+	 * @return		Bearbeitete Komponente
+	 */
 	public Component getListCellRendererComponent(JList<? extends FacebookProfile> profileList,
 	        FacebookProfile profile, int index, boolean isSelected, boolean cellHasFocus) {
 
