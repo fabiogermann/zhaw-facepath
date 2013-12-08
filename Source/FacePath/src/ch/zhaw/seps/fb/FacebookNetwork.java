@@ -138,7 +138,8 @@ public class FacebookNetwork {
 			}
 			pathnr++;
 		}
-		
+		sourceNode.addAttribute("ui.style", "fill-color: black;");
+		targetNode.addAttribute("ui.style", "fill-color: black;");
 		if (dijkstraPaths.size() != 0) {
 			this.pathFound = true;
 		}
@@ -190,9 +191,7 @@ public class FacebookNetwork {
 	 * Verpasst dem Graphen (Ergebnis) ein Design mittels CSS
 	 */
 	public void styleGraph() {
-		graph.addAttribute("ui.stylesheet", "graph {fill-color:white;}" +
-		"edge {shape:freeplane;size:2px;}" +
-		"node {size:15px; shape:rounded-box;}");
+		graph.addAttribute("ui.stylesheet", "edge {size:2px;} node {size:15px;}");
 		graphViewer.disableAutoLayout();
 		graphViewer.enableAutoLayout();
 	}
