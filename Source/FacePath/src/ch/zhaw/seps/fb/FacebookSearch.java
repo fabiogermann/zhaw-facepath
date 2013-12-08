@@ -107,13 +107,13 @@ public class FacebookSearch {
 		// search until path is found
 		// do it once to set up the network
 		this.searchIterate();
-		int num = 1;
+		int iteration = 1;
 		// if we found the connection - no need to look further
 		while(!this.pathFound()) {
 			// TODO abbruchkriterium
-			System.out.println("we are at iteration: " + num);
+			System.out.println("we are at iteration: " + iteration);
 			this.searchIterate();
-			num++;
+			iteration++;
 		}
 		// graph cleanup
 		/*

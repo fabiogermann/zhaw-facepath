@@ -233,6 +233,8 @@ public class FacebookProvider {
 	}
 
 	public Collection<FacebookProfile> getFriendsOfThreaded(Collection<FacebookProfile> users, FacebookNetwork fN) {
+		
+		// TODO only add if FN is given
 		ConcurrentLinkedQueue<FacebookProfile> returnqueue = null;
 
 		ExecutorService executor = Executors.newFixedThreadPool(2);
@@ -278,7 +280,6 @@ public class FacebookProvider {
 		return result;
 	}
 
-	@Deprecated
 	public FacebookProfile getMyProfile() {
 		FacebookProfile newuser = getUserFromAPI("me");
 
