@@ -128,6 +128,10 @@ public class FacebookSearch implements Runnable {
 			throw new FacebookPrivateProfileException();
 		}
 		int iteration = 1;
+		
+		if (iteration >= 10) {
+			return;
+		}
 		// if we found the connection - no need to look further
 		while (!this.pathFound()) {
 			// TODO abbruchkriterium
@@ -188,7 +192,7 @@ public class FacebookSearch implements Runnable {
 		try {
 			this.searchExecute();
 		} catch (FacebookPrivateProfileException e) {
-			JOptionPane.showOptionDialog(null, "testtest", "foobar", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+			JOptionPane.showOptionDialog(null, "Eines oder beide der ausgewählten Profile sind Privat - die Suche kann aus diesem Grund nicht fortgeführt werden. Bitte wählen Sie andere Start/Ziel-Benutzer aus.", "Privates Profil", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 			e.printStackTrace();
 		}
 	}
