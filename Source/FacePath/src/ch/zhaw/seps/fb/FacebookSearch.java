@@ -76,17 +76,17 @@ public class FacebookSearch implements Runnable {
 
 	@Deprecated
 	private void submitProfileToNetwork(FacebookProfile fp) {
-		this.fbNetwork.addVertice(fp);
+		this.getFbNetwork().addVertice(fp);
 	}
 
 	@Deprecated
 	private void submitConnectionToNetwork(FacebookProfile from, FacebookProfile to) {
-		this.fbNetwork.addVertice(to);
-		this.fbNetwork.addEdge(from, to);
+		this.getFbNetwork().addVertice(to);
+		this.getFbNetwork().addEdge(from, to);
 	}
 
 	public Graph getGraph() {
-		return this.fbNetwork.getGraph();
+		return this.getFbNetwork().getGraph();
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class FacebookSearch implements Runnable {
 	 */
 	public void setPersonOfInterestSource(FacebookProfile fp) {
 		this.source = fp;
-		this.fbNetwork.addVertice(fp);
+		this.getFbNetwork().addVertice(fp);
 		if (FacePath.DEBUG >= 1) {
 			System.out.println("Start User: " + fp.getUserUIDString());
 		}
@@ -107,7 +107,7 @@ public class FacebookSearch implements Runnable {
 	 */
 	public void setPersonOfInterestDestination(FacebookProfile fp) {
 		this.target = fp;
-		this.fbNetwork.addVertice(fp);
+		this.getFbNetwork().addVertice(fp);
 		if (FacePath.DEBUG >= 1) {
 			System.out.println("End User: " + fp.getUserUIDString());
 		}
@@ -138,8 +138,8 @@ public class FacebookSearch implements Runnable {
 
 		if (pathFound()) {
 			System.out.println("gefunden");
-			fbNetwork.cleanupGraph();
-			fbNetwork.styleGraph();
+			getFbNetwork().cleanupGraph();
+			getFbNetwork().styleGraph();
 		}
 	}
 
@@ -159,7 +159,7 @@ public class FacebookSearch implements Runnable {
 		// get all the friends of the friends in the temporary stack
 		// the friends and connections are added directly to the FacebookNetwork
 		// and to the graph
-		friendlist = fbProvider.getFriendsOfThreaded(todo, this.fbNetwork);
+		friendlist = fbProvider.getFriendsOfThreaded(todo, this.getFbNetwork());
 		// add the found profiles to the workstack
 		for (FacebookProfile fp : friendlist) {
 			this.workStack.addAll(fp.getFriends());
@@ -179,8 +179,8 @@ public class FacebookSearch implements Runnable {
 	 * @return	Meldet, ob ein Ergebnis gefunden wurde
 	 */
 	public boolean pathFound() {
-		this.fbNetwork.findShortestPath(this.source, this.target);
-		return this.fbNetwork.pathFound();
+		this.getFbNetwork().findShortestPath(this.source, this.target);
+		return this.getFbNetwork().pathFound();
 	}
 
 	@Override
@@ -191,5 +191,9 @@ public class FacebookSearch implements Runnable {
 			JOptionPane.showOptionDialog(null, "testtest", "foobar", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 			e.printStackTrace();
 		}
+	}
+
+	public FacebookNetwork getFbNetwork() {
+		return fbNetwork;
 	}
 }

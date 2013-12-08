@@ -24,6 +24,7 @@ import org.graphstream.graph.IdAlreadyInUseException;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.swingViewer.Viewer;
 
 import ch.zhaw.seps.FacePath;
 import ch.zhaw.seps.TreeNode;
@@ -35,6 +36,8 @@ public class FacebookNetwork {
 	private ArrayList<List<Node>> dijkstraPaths = new ArrayList<>();
 	private ArrayList<String> colors;
 	private ArrayList<List<Node>> nodes = new ArrayList<>();
+	
+	private Viewer graphViewer;
 	
     /**
      * Konstruktor
@@ -135,7 +138,8 @@ public class FacebookNetwork {
 			}
 			pathnr++;
 		}
-		
+		sourceNode.addAttribute("ui.style", "fill-color: black;");
+		targetNode.addAttribute("ui.style", "fill-color: black;");
 		if (dijkstraPaths.size() != 0) {
 			this.pathFound = true;
 		}
@@ -174,12 +178,11 @@ public class FacebookNetwork {
 				nodesToDelete.add(n);
 			}
 		}
-		shortestPathnodes
-				.get(0)
-				.addAttribute("ui.style",
-						"fill-mode:image-scaled-ratio-max;fill-image: url('src/test/i.png');");
 		for (Node n : nodesToDelete) {
 			this.removeVertice(n);
+		}
+		for (Node n : graph) {
+			n.addAttribute("label", graphCollection.get(n.getId()));
 		}
 		styleGraph();
 	}
@@ -188,13 +191,16 @@ public class FacebookNetwork {
 	 * Verpasst dem Graphen (Ergebnis) ein Design mittels CSS
 	 */
 	public void styleGraph() {
-		/*
-		 * System.setProperty("org.graphstream.ui.renderer",
-		 * "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-		 * graph.removeAttribute("ui.stylesheet");
-		 * graph.addAttribute("ui.stylesheet", "graph {fill-color:white;}" +
-		 * "edge {shape:freeplane;size:2px;}" +
-		 * "node {size:30px; shape:rounded-box;}");
-		 */
+		graph.addAttribute("ui.stylesheet", "edge {size:2px;} node {size:15px;}");
+		graphViewer.disableAutoLayout();
+		graphViewer.enableAutoLayout();
+	}
+
+	public Viewer getGraphViewer() {
+		return graphViewer;
+	}
+
+	public void setGraphViewer(Viewer graphViewer) {
+		this.graphViewer = graphViewer;
 	}
 }

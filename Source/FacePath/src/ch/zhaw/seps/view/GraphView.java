@@ -18,6 +18,7 @@ import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
 import org.graphstream.ui.swingViewer.View;
+import org.graphstream.ui.swingViewer.Viewer;
 
 import ch.zhaw.seps.FacePath;
 import ch.zhaw.seps.fb.FacebookSearch;
@@ -42,7 +43,9 @@ public class GraphView extends JPanel implements ActionListener {
 		if (fs == null) {
 			this.fs = fp.getFS();
 		}
-		View view = fs.getGraph().display().addDefaultView(false);
+		Viewer viewer = fs.getGraph().display();
+		fs.getFbNetwork().setGraphViewer(viewer);
+		View view = viewer.addDefaultView(false);
 		GridBagConstraints gbc_view = new GridBagConstraints();
 		gbc_view.fill = GridBagConstraints.BOTH;
 		gbc_view.insets = new Insets(10, 30, 5, 30);
