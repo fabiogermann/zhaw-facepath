@@ -7,6 +7,8 @@ package ch.zhaw.seps.fb;
 import java.util.Collection;
 import java.util.Stack;
 
+import javax.swing.JOptionPane;
+
 import org.graphstream.graph.Graph;
 
 import ch.zhaw.seps.FacePath;
@@ -113,13 +115,18 @@ public class FacebookSearch implements Runnable {
 
 	/**
 	 * Führt die Suche aus
+	 * @throws FacebookPrivateProfileException 
 	 */
-	public void searchExecute() {
+	public void searchExecute() throws FacebookPrivateProfileException {
 		// prepare to start the search
 		this.searchInitiate();
 		// search until path is found
 		// do it once to set up the network
 		this.searchIterate();
+		
+		if (this.source.getFriends().isEmpty() | this.target.getFriends().isEmpty()) {
+			throw new FacebookPrivateProfileException();
+		}
 		int iteration = 1;
 		// if we found the connection - no need to look further
 		while (!this.pathFound()) {
@@ -128,13 +135,7 @@ public class FacebookSearch implements Runnable {
 			this.searchIterate();
 			iteration++;
 		}
-		// graph cleanup
-		/*
-		 * this.fbNetwork.cleanupGraph(); this.fbNetwork.cleanupGraph();
-		 * this.fbNetwork.cleanupGraph(); this.fbNetwork.cleanupGraph();
-		 * this.fbNetwork.cleanupGraph(); this.fbNetwork.cleanupGraph();
-		 * this.fbNetwork.cleanupGraph();
-		 */
+
 		if (pathFound()) {
 			System.out.println("gefunden");
 			fbNetwork.cleanupGraph();
@@ -184,6 +185,11 @@ public class FacebookSearch implements Runnable {
 
 	@Override
 	public void run() {
-		this.searchExecute();
+		try {
+			this.searchExecute();
+		} catch (FacebookPrivateProfileException e) {
+			JOptionPane.showOptionDialog(null, "testtest", "foobar", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+			e.printStackTrace();
+		}
 	}
 }

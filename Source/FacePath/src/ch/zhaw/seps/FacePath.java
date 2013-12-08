@@ -33,7 +33,7 @@ public class FacePath extends JFrame implements ActionListener, WindowListener {
 	//		3 = Detailed Programm Status With Treads,
 	//		4 = Detailed Programm Status With Detailed Treads
 	
-	public static final int DEBUG = 3;
+	public static final int DEBUG = 4;
 
 	public static void main(String[] args) {
 		new FacePath();
