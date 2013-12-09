@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
@@ -282,5 +283,19 @@ public class SearchView extends JPanel implements ActionListener {
 		buttonsPanel.add(searchButton, gbc_searchButton);
 		searchButton.setEnabled(false);
 		searchButton.addActionListener(this);
+	}
+	
+	/**
+	 * Benachrichtigung bei privaten Profilen
+	 */
+	public static void notifyPrivateProfile() {
+		JOptionPane.showOptionDialog(null, "Eines oder beide der ausgewählten Profile sind Privat - die Suche kann aus diesem Grund nicht fortgeführt werden. Bitte wählen Sie andere Start/Ziel-Benutzer aus.", "Privates Profil", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+	}
+	
+	/**
+	 * Benachrichtigung wenn keine Verbindung gefunden
+	 */
+	public static void notifyNoConnectionFound() {
+		JOptionPane.showOptionDialog(null, "Es wurde keine Verbindung zwischen den zwei angegebenen Profilen gefunden. Versuchen Sie eine neue Suche.", "Keine Verbindung gefunden", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 	}
 }

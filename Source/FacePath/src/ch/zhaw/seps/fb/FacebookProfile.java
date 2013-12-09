@@ -50,6 +50,10 @@ public class FacebookProfile {
 		}
 	}
 	
+	public String getLocation() {
+		return this.location;
+	}
+	
 	public String getFirstName() {
 		return this.name;
 	}
