@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import org.graphstream.graph.Graph;
 
 import ch.zhaw.seps.FacePath;
+import ch.zhaw.seps.view.SearchView;
 
 public class FacebookSearch implements Runnable {
 
@@ -124,12 +125,13 @@ public class FacebookSearch implements Runnable {
 		// do it once to set up the network
 		this.searchIterate();
 		
-		if (this.source.getFriends().isEmpty() | this.target.getFriends().isEmpty()) {
+		if (this.source.getFriends().isEmpty() & this.target.getFriends().isEmpty()) {
 			throw new FacebookPrivateProfileException();
 		}
 		int iteration = 1;
 		
-		if (iteration >= 10) {
+		if (iteration >= 5) {
+			SearchView.notifyNoConnectionFound();
 			return;
 		}
 		// if we found the connection - no need to look further
@@ -168,6 +170,18 @@ public class FacebookSearch implements Runnable {
 		for (FacebookProfile fp : friendlist) {
 			this.workStack.addAll(fp.getFriends());
 		}
+		this.filterWorkstack();
+	}
+	
+	private void filterWorkstack() {
+		if ( this.onlyLocal ) {
+			for( FacebookProfile f : this.workStack) {
+				if ( (f.getLocation() != this.source.getLocation()) | (f.getLocation() != this.target.getLocation()) ) {
+					this.workStack.removeElement(f);
+				}
+			}
+		}
+		
 	}
 
 	/**
@@ -192,7 +206,7 @@ public class FacebookSearch implements Runnable {
 		try {
 			this.searchExecute();
 		} catch (FacebookPrivateProfileException e) {
-			JOptionPane.showOptionDialog(null, "Eines oder beide der ausgewählten Profile sind Privat - die Suche kann aus diesem Grund nicht fortgeführt werden. Bitte wählen Sie andere Start/Ziel-Benutzer aus.", "Privates Profil", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+			SearchView.notifyPrivateProfile();
 			e.printStackTrace();
 		}
 	}
