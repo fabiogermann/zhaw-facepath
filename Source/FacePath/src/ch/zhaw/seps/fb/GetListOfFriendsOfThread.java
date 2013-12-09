@@ -34,7 +34,7 @@ public class GetListOfFriendsOfThread implements Runnable {
 	private CloseableHttpClient httpClient;
 
 	/**
-	 * Konstruktor ��bergibt die notwendigen Informationen
+	 * Konstruktor üsbergibt die notwendigen Informationen
 	 */
 	public GetListOfFriendsOfThread(PoolingHttpClientConnectionManager conmgr, HttpContext context,
 	        ConcurrentLinkedQueue<String> returnqueue, FacebookProfile fbuser) {

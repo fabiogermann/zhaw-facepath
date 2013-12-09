@@ -79,6 +79,9 @@ public class SearchView extends JPanel implements ActionListener {
 			Thread t = new Thread(this.fp.getFS());
 			t.start();
 		}
+		if (e.getSource() == this.helpButton) {
+			HelpView.getHelpView(this.getClass()).toFront();;
+		}
 	}
 
 	/**

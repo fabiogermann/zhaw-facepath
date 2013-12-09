@@ -62,6 +62,9 @@ public class GraphView extends JPanel implements ActionListener {
 		if (e.getSource() == newSearchButton) {
 			this.fp.showView("search");
 		}
+		if (e.getSource() == this.helpButton) {
+			HelpView.getHelpView(this.getClass()).toFront();;
+		}
 	}
 
 	/**

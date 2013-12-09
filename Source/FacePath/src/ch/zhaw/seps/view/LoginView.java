@@ -96,6 +96,9 @@ public class LoginView extends JPanel implements ActionListener {
 				passwordField.setEditable(true);
 			}
 		}
+		if (e.getSource() == this.helpButton) {
+			HelpView.getHelpView(this.getClass()).toFront();;
+		}
 	}
 
 	/**
