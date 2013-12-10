@@ -12,11 +12,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
-import java.util.concurrent.locks.Lock;
 
 import org.graphstream.algorithm.Dijkstra;
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.EdgeRejectedException;
 import org.graphstream.graph.ElementNotFoundException;
 import org.graphstream.graph.Graph;
@@ -27,7 +24,6 @@ import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.swingViewer.Viewer;
 
 import ch.zhaw.seps.FacePath;
-import ch.zhaw.seps.TreeNode;
 
 public class FacebookNetwork {
 	private Graph graph;

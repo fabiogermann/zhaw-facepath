@@ -31,7 +31,6 @@ public class GraphView extends JPanel implements ActionListener {
 	private FacebookSearch fs;
 
 	private JPanel resultPanel;
-	private JTextArea reportTextArea;
 	private JButton helpButton;
 	private JButton newSearchButton;
 

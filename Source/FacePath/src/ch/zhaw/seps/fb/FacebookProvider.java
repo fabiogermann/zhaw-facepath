@@ -234,7 +234,7 @@ public class FacebookProvider {
 			fbp.setLocales(auser.getLocale());
 			return fbp;
 		} catch (FacebookException e) {
-			// nope
+			// do nothing
 		}
 		return null;
 	}
@@ -282,7 +282,6 @@ public class FacebookProvider {
 	 */
 	public Collection<FacebookProfile> getFriendsOfThreaded(Collection<FacebookProfile> users, FacebookNetwork fN, boolean allFriends) {
 		
-		// TODO only add if FN is given
 		ConcurrentLinkedQueue<FacebookProfile> returnqueue = null;
 
 		ExecutorService executor = Executors.newFixedThreadPool(2);
@@ -331,7 +330,6 @@ public class FacebookProvider {
 	public FacebookProfile getMyProfile() {
 		FacebookProfile newuser = getUserFromAPI("me");
 
-		// DEBUG
 		if (FacePath.DEBUG >= 2) {
 			System.out.println("FacebookProvider-getMyProfile-> " + newuser.getUserID());
 		}
@@ -368,7 +366,7 @@ public class FacebookProvider {
 			try {
 				newuser = this.getUserFromAPI(item);
 			} finally {
-				// nix
+				// do nothing
 			}
 
 			if (newuser != null) {
@@ -392,7 +390,6 @@ public class FacebookProvider {
 			httpget = new HttpGet("https://www.facebook.com/search/results.php?type=users&q="
 			        + URLEncoder.encode(searchQuery, "UTF-8"));
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -497,14 +494,13 @@ public class FacebookProvider {
 		} catch (IOException ex) {
 			// Handle I/O errors
 		}
-			// REGEX:(not JAVA escaped regex)
-		//              (href="/([0-9a-zA-Z.]*)\?fref=none&amp;refid=17)|(href="/profile.php\?id=([0-9a-zA-Z.]*)&amp;fref=none&amp;refid=17")
+
 		String regex = "(href=\"/([0-9a-zA-Z.]*)\\?fref=none&amp;refid=17)|(href=\"/profile.php\\?id=([0-9a-zA-Z.]*)&amp;fref=none&amp;refid=17\")";
 
 		Set<String> likesURLSet = new HashSet<String>();
 		List<String> likeslist = new ArrayList<String>();
 
-		Matcher m = Pattern.compile(regex).matcher(str); //https://m.facebook.com/TheBeatofMontreal?fref=none&refid=17
+		Matcher m = Pattern.compile(regex).matcher(str);
 		while (m.find()) {
 			System.out.println(m.group());
 			if (!likesURLSet.add(m.group())) {

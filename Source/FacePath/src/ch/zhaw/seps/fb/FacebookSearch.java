@@ -7,8 +7,6 @@ package ch.zhaw.seps.fb;
 import java.util.Collection;
 import java.util.Stack;
 
-import javax.swing.JOptionPane;
-
 import org.graphstream.graph.Graph;
 
 import ch.zhaw.seps.FacePath;
@@ -18,16 +16,12 @@ public class FacebookSearch implements Runnable {
 
 	private FacebookProvider fbProvider;
 	private FacebookNetwork fbNetwork;
-	// TODO only for testing
-	private FacebookProfile me;
 
 	private FacebookProfile source = null;
 	private FacebookProfile target = null;
 	private Stack<FacebookProfile> workStack = new Stack<FacebookProfile>();
 
-	// options
-	private boolean onlyLocal = false; // locality of startuser must be equal to
-	                                   // the targetuser !!! check that
+	private boolean onlyLocal = false;
 	private boolean withPictures = true;
 	private boolean withLikes = false;
 	private boolean withEvents = false;
@@ -41,26 +35,7 @@ public class FacebookSearch implements Runnable {
 	public FacebookSearch(FacebookProvider provider) {
 		this.fbProvider = provider;
 		this.fbNetwork = new FacebookNetwork();
-		// TODO only for testing purpses:
-		// this.me = fbProvider.getMyProfile();
-		// this too
-		// this.source = me;
-		// and this too
-		// this.initializeNetwork(me, fbProvider.getMyFriends());
 	}
-
-	/*
-	 * private void initializeNetwork(FacebookProfile me, List<FacebookProfile>
-	 * friends) { // add myself to the graph fbNetwork.addVertice(me);
-	 * 
-	 * //add my friends to the graph for(Iterator<FacebookProfile> i =
-	 * friends.iterator(); i.hasNext(); ) { FacebookProfile item = i.next();
-	 * fbNetwork.addVertice(item); fbNetwork.addEdge(me, item);
-	 * 
-	 * if (FacePath.DEBUG){
-	 * System.out.println(me.getUserID()+"--"+item.getUserID()); }
-	 * this.workStack.add(item); } }
-	 */
 
 	/**
 	 * Legt die von der Searchview übergebenen Suchoptionen fest
@@ -75,17 +50,6 @@ public class FacebookSearch implements Runnable {
 		this.withLikes = li;
 		this.withEvents = ev;
 		this.withAllFriends = af;
-	}
-
-	@Deprecated
-	private void submitProfileToNetwork(FacebookProfile fp) {
-		this.getFbNetwork().addVertice(fp);
-	}
-
-	@Deprecated
-	private void submitConnectionToNetwork(FacebookProfile from, FacebookProfile to) {
-		this.getFbNetwork().addVertice(to);
-		this.getFbNetwork().addEdge(from, to);
 	}
 
 	public Graph getGraph() {
@@ -188,7 +152,6 @@ public class FacebookSearch implements Runnable {
 				}
 			}
 		}
-		
 	}
 
 	/**
