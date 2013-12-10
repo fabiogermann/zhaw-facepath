@@ -26,14 +26,12 @@ import ch.zhaw.seps.view.SearchView;
 
 public class FacePath extends JFrame implements ActionListener, WindowListener {
 
-	// set the DEBUG mode and verbosity level: 
-	//		0 = OFF, 
-	//		1 = ProgrammStatus,
-	//		2 = DetailedProgrammStatus,
-	//		3 = DetailedProgrammStatusWithTreads,
-	//		4 = DetailedProgrammStatusWithDetailedTreads
+	//		1 = Programm Status,
+	//		2 = Detailed Programm Status,
+	//		3 = Detailed Programm Status With Treads,
+	//		4 = Detailed Programm Status With Detailed Treads
 	
-	public static final int DEBUG = 3;
+	public static final int DEBUG = 4;
 
 	public static void main(String[] args) {
 		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
