@@ -22,7 +22,7 @@ public class FacebookSearch implements Runnable {
 	private Stack<FacebookProfile> workStack = new Stack<FacebookProfile>();
 
 	private boolean onlyLocal = false;
-	private boolean withPictures = false;
+	private boolean withPictures = true;
 	private boolean withLikes = false;
 	private boolean withEvents = false;
 	private boolean withAllFriends = false;
@@ -116,8 +116,7 @@ public class FacebookSearch implements Runnable {
 			if (FacePath.DEBUG >= 1) {
 				System.out.println("Path found");
 			}
-			getFbNetwork().cleanupGraph();
-			getFbNetwork().styleGraph();
+			getFbNetwork().cleanupGraph(withPictures);
 		}
 	}
 
