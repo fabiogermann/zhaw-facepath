@@ -112,14 +112,6 @@ public class GraphView extends JPanel implements ActionListener {
 		gbl_resultPanel.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
 		resultPanel.setLayout(gbl_resultPanel);
 
-//		reportTextArea = new JTextArea("Gemeinsamkeiten:\n...\n...");
-//		GridBagConstraints gbc_reportTextArea = new GridBagConstraints();
-//		gbc_reportTextArea.fill = GridBagConstraints.HORIZONTAL;
-//		gbc_reportTextArea.insets = new Insets(0, 30, 5, 30);
-//		gbc_reportTextArea.gridx = 0;
-//		gbc_reportTextArea.gridy = 1;
-//		resultPanel.add(reportTextArea, gbc_reportTextArea);
-
 		JPanel buttonsPanel = new JPanel();
 		GridBagConstraints gbc_buttonsPanel = new GridBagConstraints();
 		gbc_buttonsPanel.insets = new Insets(0, 30, 10, 30);
