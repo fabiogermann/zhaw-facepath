@@ -49,6 +49,7 @@ import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.exception.FacebookException;
+import com.restfb.types.Page;
 import com.restfb.types.User;
 
 public class FacebookProvider {
@@ -453,5 +454,57 @@ public class FacebookProvider {
 			e.printStackTrace();
 		}
 		return image;
+	}
+	
+	private void getLikeFromApi(String pageID) {
+		Connection<Page> thepage = apiConnection.fetchConnection(pageID, Page.class);
+		Page page = thepage.getData().get(0);
+	}
+	
+	public void getLikesForUser(FacebookProfile user) {
+		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(this.cm).build();
+
+		HttpGet httpget = null;
+		try {
+			httpget = new HttpGet("https://m.facebook.com/"
+			        + URLEncoder.encode(user.getUserID(), "UTF-8")
+			        +"?v=likes");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		CloseableHttpResponse response = null;
+		HttpEntity entity = null;
+		String str = null;
+
+		try {
+			response = httpClient.execute(httpget, this.ctx);
+			try {
+				entity = response.getEntity();
+				str = EntityUtils.toString(entity);
+			} finally {
+				EntityUtils.consume(response.getEntity());
+				response.close();
+			}
+		} catch (ClientProtocolException ex) {
+			// Handle protocol errors
+		} catch (IOException ex) {
+			// Handle I/O errors
+		}
+		
+		String regex = "(href=\"(https://m.facebook.com/)([0-9a-zA-Z.]*)(\\?fref=none&refid=17)\"";
+
+		Set<String> likesURLSet = new HashSet<String>();
+		List<String> likeslist = new ArrayList<String>();
+
+		Matcher m = Pattern.compile(regex).matcher(str); //https://m.facebook.com/TheBeatofMontreal?fref=none&refid=17
+		while (m.find()) {
+			if (!likesURLSet.add(m.group())) {
+				likeslist.add(m.group().replace("href=\"https://m.facebook.com/", "").replace("?fref=none&refid=17\"", ""));
+			}
+		}
+		for (String s : likeslist) {
+			//user.addLike();
+		}
 	}
 }

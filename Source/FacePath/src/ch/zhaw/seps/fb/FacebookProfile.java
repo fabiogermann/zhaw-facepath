@@ -18,7 +18,9 @@ public class FacebookProfile {
 	private String profileLink;
 	private String location;
 	private String language;
+	private Collection<FacebookLike> likes = new ArrayList<FacebookLike>();
 	
+
 	/**
 	 * Konstruktor
 	 * Setzt das Minimum an Informationen, das für die Suche benötigt wird
@@ -82,6 +84,14 @@ public class FacebookProfile {
 		this.friends.add(fp);
 	}
 
+	public Collection<FacebookLike> getLikes() {
+		return likes;
+	}
+
+	public void addLikes(FacebookLike like) {
+		this.likes.add(like);
+	}
+	
 	public String toString() {
 		return this.name + " " + this.familyName + " (" + this.userName + ")";
 	}
