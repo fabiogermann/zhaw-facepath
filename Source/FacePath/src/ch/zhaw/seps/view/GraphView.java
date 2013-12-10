@@ -34,9 +34,6 @@ public class GraphView extends JPanel implements ActionListener {
 	private JTextArea reportTextArea;
 	private JButton helpButton;
 	private JButton newSearchButton;
-	
-	private Thread pumpThread;
-	private GraphEventPump pump;
 
 	/**
 	 * Konstruktor
@@ -51,11 +48,6 @@ public class GraphView extends JPanel implements ActionListener {
 		Viewer viewer = new Viewer(fs.getGraph(), Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		fs.getFbNetwork().setGraphViewer(viewer);
 		View view = viewer.addDefaultView(false);
-		
-		pump = new GraphEventPump(this, fs.getFbNetwork().getGraph(),viewer);
-		pumpThread = new Thread(pump);
-        pump.start();
-        pumpThread.start();
 		
 		GridBagConstraints gbc_view = new GridBagConstraints();
 		gbc_view.fill = GridBagConstraints.BOTH;
@@ -72,12 +64,7 @@ public class GraphView extends JPanel implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == newSearchButton) {
-			pump.stop();
-			pumpThread.stop();
 			this.fp.showView("search");
-		} else if (e.getSource() == pump && e.getID()==1) {
-			//do something with nodeevent
-			System.out.println(fs.getFbNetwork().getGraphCollection().get(e.getActionCommand()).getLastName()+" clicked");
 		} else if (e.getSource() == this.helpButton) {
 			HelpView.getHelpView(this.getClass()).toFront();;
 		}
