@@ -34,9 +34,9 @@ public class FacebookNetworkTest {
 		this.user1 = new FacebookProfile("max.path.31", "100006897191497");
 		this.user1.setName("Max", "Path");
 		this.user2 = new FacebookProfile("peter.birrer", "100001982837335");
-		this.user1.setName("Peter", "Birrer");
+		this.user2.setName("Peter", "Birrer");
 		this.user3 = new FacebookProfile("peter.meier.984", "1547788305");
-		this.user1.setName("Peter", "Meier");
+		this.user3.setName("Peter", "Meier");
 	}
 
 	/**
