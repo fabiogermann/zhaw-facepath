@@ -28,7 +28,7 @@ public class FacebookSearch implements Runnable {
 	// options
 	private boolean onlyLocal = false; // locality of startuser must be equal to
 	                                   // the targetuser !!! check that
-	private boolean withPictures = false;
+	private boolean withPictures = true;
 	private boolean withLikes = false;
 	private boolean withEvents = false;
 	private boolean withAllFriends = false;
@@ -152,8 +152,7 @@ public class FacebookSearch implements Runnable {
 			if (FacePath.DEBUG >= 1) {
 				System.out.println("Path found");
 			}
-			getFbNetwork().cleanupGraph();
-			getFbNetwork().styleGraph();
+			getFbNetwork().cleanupGraph(withPictures);
 		}
 	}
 
