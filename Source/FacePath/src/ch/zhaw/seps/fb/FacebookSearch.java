@@ -130,18 +130,19 @@ public class FacebookSearch implements Runnable {
 		if (this.source.getFriends().isEmpty() & this.target.getFriends().isEmpty()) {
 			throw new FacebookPrivateProfileException();
 		}
-		int iteration = 1;
 		
-		if (iteration >= 5) {
-			SearchView.notifyNoConnectionFound();
-			return;
-		}
+		int iteration = 1;
+		boolean searchValid = true;
 		// if we found the connection - no need to look further
-		while (!this.pathFound()) {
-			// TODO abbruchkriterium
+		while (!this.pathFound() && searchValid) {
 			System.out.println("we are at iteration: " + iteration);
 			this.searchIterate();
 			iteration++;
+			
+			if (iteration >= 5) {
+				SearchView.notifyNoConnectionFound();
+				searchValid = false;
+			}
 		}
 
 		if (pathFound()) {
