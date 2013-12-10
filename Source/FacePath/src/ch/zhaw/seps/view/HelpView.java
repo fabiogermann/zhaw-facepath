@@ -176,7 +176,6 @@ public class HelpView extends JFrame implements ActionListener, WindowListener {
 				this.helpTextEditorPane.setText("");
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		JScrollPane scrollPane = new JScrollPane(helpTextEditorPane);

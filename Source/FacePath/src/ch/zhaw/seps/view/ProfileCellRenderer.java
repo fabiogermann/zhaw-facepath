@@ -7,10 +7,7 @@ package ch.zhaw.seps.view;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.net.MalformedURLException;
-import java.net.URL;
 
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;

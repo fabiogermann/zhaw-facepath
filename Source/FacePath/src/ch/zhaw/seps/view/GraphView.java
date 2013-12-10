@@ -31,7 +31,6 @@ public class GraphView extends JPanel implements ActionListener {
 	private FacebookSearch fs;
 
 	private JPanel resultPanel;
-	private JTextArea reportTextArea;
 	private JButton helpButton;
 	private JButton newSearchButton;
 	
@@ -76,7 +75,6 @@ public class GraphView extends JPanel implements ActionListener {
 			pumpThread.stop();
 			this.fp.showView("search");
 		} else if (e.getSource() == pump && e.getID()==1) {
-			//do something with nodeevent
 			System.out.println(fs.getFbNetwork().getGraphCollection().get(e.getActionCommand()).getLastName()+" clicked");
 		} else if (e.getSource() == this.helpButton) {
 			HelpView.getHelpView(this.getClass()).toFront();;

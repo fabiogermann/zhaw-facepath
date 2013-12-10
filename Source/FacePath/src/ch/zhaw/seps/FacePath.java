@@ -31,7 +31,7 @@ public class FacePath extends JFrame implements ActionListener, WindowListener {
 	//		3 = Detailed Programm Status With Treads,
 	//		4 = Detailed Programm Status With Detailed Treads
 	
-	public static final int DEBUG = 4;
+	public static final int DEBUG = 1;
 
 	public static void main(String[] args) {
 		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
