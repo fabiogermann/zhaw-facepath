@@ -28,7 +28,7 @@ public class FacebookSearch implements Runnable {
 	// options
 	private boolean onlyLocal = false; // locality of startuser must be equal to
 	                                   // the targetuser !!! check that
-	private boolean withPictures = false;
+	private boolean withPictures = true;
 	private boolean withLikes = false;
 	private boolean withEvents = false;
 	private boolean withAllFriends = false;
@@ -133,9 +133,12 @@ public class FacebookSearch implements Runnable {
 		
 		int iteration = 1;
 		boolean searchValid = true;
+		
 		// if we found the connection - no need to look further
 		while (!this.pathFound() && searchValid) {
-			System.out.println("we are at iteration: " + iteration);
+			if (FacePath.DEBUG >= 1) {
+				System.out.println("We are at iteration: " + iteration);
+			}
 			this.searchIterate();
 			iteration++;
 			
@@ -146,11 +149,11 @@ public class FacebookSearch implements Runnable {
 		}
 
 		if (pathFound()) {
-			System.out.println("gefunden");
-			getFbNetwork().cleanupGraph();
-			getFbNetwork().styleGraph();
+			if (FacePath.DEBUG >= 1) {
+				System.out.println("Path found");
+			}
+			getFbNetwork().cleanupGraph(withPictures);
 		}
-		this.fbProvider.getLikesForUser(source);
 	}
 
 	/**

@@ -239,6 +239,7 @@ public class SearchView extends JPanel implements ActionListener {
 		searchFormPanel.add(searchoptionsLabel, gbc_searchoptionsLabel);
 
 		profilePicsCheckBox = new JCheckBox("Profilbilder anzeigen");
+		profilePicsCheckBox.setSelected(true);
 		GridBagConstraints gbc_profilePicsCheckBox = new GridBagConstraints();
 		gbc_profilePicsCheckBox.gridwidth = 2;
 		gbc_profilePicsCheckBox.anchor = GridBagConstraints.WEST;

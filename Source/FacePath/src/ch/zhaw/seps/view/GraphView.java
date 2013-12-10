@@ -34,9 +34,6 @@ public class GraphView extends JPanel implements ActionListener {
 	private JTextArea reportTextArea;
 	private JButton helpButton;
 	private JButton newSearchButton;
-	
-	private Thread pumpThread;
-	private GraphEventPump pump;
 
 	/**
 	 * Konstruktor
@@ -51,11 +48,6 @@ public class GraphView extends JPanel implements ActionListener {
 		Viewer viewer = new Viewer(fs.getGraph(), Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		fs.getFbNetwork().setGraphViewer(viewer);
 		View view = viewer.addDefaultView(false);
-		
-		pump = new GraphEventPump(this, fs.getFbNetwork().getGraph(),viewer);
-		pumpThread = new Thread(pump);
-        pump.start();
-        pumpThread.start();
 		
 		GridBagConstraints gbc_view = new GridBagConstraints();
 		gbc_view.fill = GridBagConstraints.BOTH;
@@ -72,12 +64,7 @@ public class GraphView extends JPanel implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == newSearchButton) {
-			pump.stop();
-			pumpThread.stop();
 			this.fp.showView("search");
-		} else if (e.getSource() == pump && e.getID()==1) {
-			//do something with nodeevent
-			System.out.println(fs.getFbNetwork().getGraphCollection().get(e.getActionCommand()).getLastName()+" clicked");
 		} else if (e.getSource() == this.helpButton) {
 			HelpView.getHelpView(this.getClass()).toFront();;
 		}
@@ -111,14 +98,6 @@ public class GraphView extends JPanel implements ActionListener {
 		gbl_resultPanel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gbl_resultPanel.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
 		resultPanel.setLayout(gbl_resultPanel);
-
-		reportTextArea = new JTextArea("Gemeinsamkeiten:\n...\n...");
-		GridBagConstraints gbc_reportTextArea = new GridBagConstraints();
-		gbc_reportTextArea.fill = GridBagConstraints.HORIZONTAL;
-		gbc_reportTextArea.insets = new Insets(0, 30, 5, 30);
-		gbc_reportTextArea.gridx = 0;
-		gbc_reportTextArea.gridy = 1;
-		resultPanel.add(reportTextArea, gbc_reportTextArea);
 
 		JPanel buttonsPanel = new JPanel();
 		GridBagConstraints gbc_buttonsPanel = new GridBagConstraints();

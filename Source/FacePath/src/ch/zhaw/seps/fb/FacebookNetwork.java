@@ -133,7 +133,6 @@ public class FacebookNetwork {
 		for (List<Node> l : dijkstraPaths) {
 			Node previousNode = null;
 			for (Node n : l) {
-				n.addAttribute("ui.style", colors.get(pathnr % colors.size()));
 				if (previousNode != null) {
 					n.getEdgeBetween(previousNode).addAttribute("ui.style",
 							colors.get(pathnr % colors.size()));
@@ -166,7 +165,7 @@ public class FacebookNetwork {
 	/**
 	 * Räumt den Graphen auf, indem er überflüssige Knoten entfernt
 	 */
-	public void cleanupGraph() {
+	public void cleanupGraph(boolean withPics) {
 		LinkedList<Node> nodesToDelete = new LinkedList<>();
 		ArrayList<Node> shortestPathnodes = new ArrayList<>();
 		for (List<Node> l : nodes) {
@@ -181,24 +180,33 @@ public class FacebookNetwork {
 			this.removeVertice(n);
 		}
 		for (Node n : graph) {
-			nodeWork(n);
+			nodeWork(n,withPics);
 		}
-		styleGraph();
+		styleGraph(withPics);
 	}
 	
-	private void nodeWork(Node n) {
+	private void nodeWork(Node n,boolean withPics) {
 		n.addAttribute("label", " "+graphCollection.get(n.getId()).getFirstName().charAt(0)+". "+graphCollection.get(n.getId()).getLastName());
+		if (withPics) {
 		n.addAttribute("ui.style", "fill-mode:image-scaled-ratio-max;fill-image: url('https://graph.facebook.com/" + n.getId() + "/picture');");
+		}
 	}
 
 	/**
 	 * Verpasst dem Graphen (Ergebnis) ein Design mittels CSS
 	 */
-	public void styleGraph() {
-		graph.addAttribute("ui.stylesheet", "graph {padding: 40px;}"
-				+ "edge {shape:freeplane;size:2px;}" +
-				"node {size:40px; shape:rounded-box;text-alignment:under;text-offset: 0px, 4px; "
-				+ "stroke-mode: plain; stroke-color: #999; shadow-mode: gradient-horizontal; shadow-width: 4px; shadow-color: #999, white; shadow-offset: 0px;}");
+	public void styleGraph(boolean withPics) {
+		if (withPics) {
+			graph.addAttribute("ui.stylesheet", "graph {padding: 40px;}"
+					+ "edge {shape:freeplane;size:2px;}" +
+					"node {size:40px; shape:rounded-box;text-alignment:under;text-offset: 0px, 4px; "
+					+ "stroke-mode: plain; stroke-color: #999; shadow-mode: gradient-horizontal; shadow-width: 4px; shadow-color: #999, white; shadow-offset: 0px;}");
+		} else {
+			graph.addAttribute("ui.stylesheet", "graph {padding: 40px;}"
+					+ "edge {shape:freeplane;size:2px;}" +
+					"node {size:20px;text-alignment:under;text-offset: 0px, 4px; "
+					+ "stroke-mode: plain; stroke-color: #999; shadow-mode: gradient-horizontal; shadow-width: 4px; shadow-color: #999, white; shadow-offset: 0px;}");
+		}
 		graphViewer.disableAutoLayout();
 		graphViewer.enableAutoLayout();
 	}
