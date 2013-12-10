@@ -62,7 +62,7 @@ public class FacebookNetwork {
 
 	public synchronized void removeVertice(Node n) {
 		this.graph.removeNode(n);
-		if (!this.graphCollection.containsKey(n.getId())) {
+		if (this.graphCollection.containsKey(n.getId())) {
 			this.graphCollection.remove(n.getId());
 		}
 	}

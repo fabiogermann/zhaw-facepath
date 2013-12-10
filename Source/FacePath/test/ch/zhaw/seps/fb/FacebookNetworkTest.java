@@ -3,6 +3,8 @@
  */
 package ch.zhaw.seps.fb;
 
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +32,11 @@ public class FacebookNetworkTest {
 	public void setUp() {
 		this.fbNetwork = new FacebookNetwork();
 		this.user1 = new FacebookProfile("max.path.31", "100006897191497");
+		this.user1.setName("Max", "Path");
 		this.user2 = new FacebookProfile("peter.birrer", "100001982837335");
+		this.user1.setName("Peter", "Birrer");
 		this.user3 = new FacebookProfile("peter.meier.984", "1547788305");
+		this.user1.setName("Peter", "Meier");
 	}
 
 	/**
@@ -57,7 +62,7 @@ public class FacebookNetworkTest {
 
 		Node n = this.fbNetwork.getGraph().getNode(this.user1.getUserID());
 		this.fbNetwork.removeVertice(n);
-		Assert.assertTrue(!this.fbNetwork.getKnownProfiles().containsValue(this.user1));
+		Assert.assertTrue(!this.fbNetwork.getKnownProfiles().containsKey(user1.getUserID()));
 	}
 
 	/**
@@ -82,6 +87,15 @@ public class FacebookNetworkTest {
 	@Test
 	public void testGetGraph() {
 		Assert.assertNotNull(this.fbNetwork.getGraph());
+	}
+
+	/**
+	 * Test method for
+	 * {@link ch.zhaw.seps.fb.FacebookNetwork#getGraphCollection()}.
+	 */
+	@Test
+	public void testGetGraphCollection() {
+		Assert.assertNotNull(this.fbNetwork.getGraphCollection());
 	}
 
 	/**
