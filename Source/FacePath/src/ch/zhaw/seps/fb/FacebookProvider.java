@@ -497,7 +497,8 @@ public class FacebookProvider {
 		} catch (IOException ex) {
 			// Handle I/O errors
 		}
-			//(href="/([0-9a-zA-Z.]*)\?fref=none&amp;refid=17)|(href="/profile.php\?id=([0-9a-zA-Z.]*)&amp;fref=none&amp;refid=17")
+			// REGEX:(not JAVA escaped regex)
+		//              (href="/([0-9a-zA-Z.]*)\?fref=none&amp;refid=17)|(href="/profile.php\?id=([0-9a-zA-Z.]*)&amp;fref=none&amp;refid=17")
 		String regex = "(href=\"/([0-9a-zA-Z.]*)\\?fref=none&amp;refid=17)|(href=\"/profile.php\\?id=([0-9a-zA-Z.]*)&amp;fref=none&amp;refid=17\")";
 
 		Set<String> likesURLSet = new HashSet<String>();

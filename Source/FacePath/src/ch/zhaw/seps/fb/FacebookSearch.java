@@ -133,9 +133,12 @@ public class FacebookSearch implements Runnable {
 		
 		int iteration = 1;
 		boolean searchValid = true;
+		
 		// if we found the connection - no need to look further
 		while (!this.pathFound() && searchValid) {
-			System.out.println("we are at iteration: " + iteration);
+			if (FacePath.DEBUG >= 1) {
+				System.out.println("We are at iteration: " + iteration);
+			}
 			this.searchIterate();
 			iteration++;
 			
@@ -146,11 +149,12 @@ public class FacebookSearch implements Runnable {
 		}
 
 		if (pathFound()) {
-			System.out.println("gefunden");
+			if (FacePath.DEBUG >= 1) {
+				System.out.println("Path found");
+			}
 			getFbNetwork().cleanupGraph();
 			getFbNetwork().styleGraph();
 		}
-		this.fbProvider.getLikesForUser(source);
 	}
 
 	/**
