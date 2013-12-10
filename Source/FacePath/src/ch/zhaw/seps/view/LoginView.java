@@ -31,7 +31,7 @@ import javax.swing.JTextField;
 import ch.zhaw.seps.FacePath;
 import ch.zhaw.seps.fb.FacebookApplicationAuthorizationException;
 import ch.zhaw.seps.fb.FacebookLoginException;
-import ch.zhaw.seps.fb.FacebookProvider;
+import ch.zhaw.seps.fb.FacebookFacade;
 
 public class LoginView extends JPanel implements ActionListener {
 
@@ -62,27 +62,27 @@ public class LoginView extends JPanel implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == loginButton || e.getSource() == emailTextField || e.getSource() == passwordField) {
-			FacebookProvider fbProvider = null;
+			FacebookFacade fbProvider = null;
 			if (guestCheckBox.isSelected()) {
 				try {
-					fbProvider = new FacebookProvider(LoginView.GUEST_EMAIL, LoginView.GUEST_PASSWORD);
+					fbProvider = new FacebookFacade(LoginView.GUEST_EMAIL, LoginView.GUEST_PASSWORD);
 					this.fp.setFP(fbProvider);
 					this.fp.showView("search");
 				} catch (FacebookLoginException e1) {
 					e1.printStackTrace();
 				} catch (FacebookApplicationAuthorizationException e1) {
-					this.openBrowserWindow(FacebookProvider.getLoginRequest());
+					this.openBrowserWindow(FacebookFacade.getLoginRequest());
 					e1.printStackTrace();
 				}
 			} else {
 				try {
-					fbProvider = new FacebookProvider(emailTextField.getText(), new String(passwordField.getPassword()));
+					fbProvider = new FacebookFacade(emailTextField.getText(), new String(passwordField.getPassword()));
 					this.fp.setFP(fbProvider);
 					this.fp.showView("search");
 				} catch (FacebookLoginException e1) {
 					e1.printStackTrace();
 				} catch (FacebookApplicationAuthorizationException e1) {
-					this.openBrowserWindow(FacebookProvider.getLoginRequest());
+					this.openBrowserWindow(FacebookFacade.getLoginRequest());
 					e1.printStackTrace();
 				}
 			}

@@ -52,7 +52,7 @@ import com.restfb.exception.FacebookException;
 import com.restfb.types.Page;
 import com.restfb.types.User;
 
-public class FacebookProvider {
+public class FacebookFacade {
 
 	private FacebookClient apiConnection;
 
@@ -81,7 +81,7 @@ public class FacebookProvider {
 	 * @throws 		FacebookLoginException						Wird geworfen, wenn der Login nicht korrekt ist
 	 * @throws 		FacebookApplicationAuthorizationException	Wird geworfen, wenn keine Berechtigung für Facepath erteilt wurde
 	 */
-	public FacebookProvider(String email, String password) throws FacebookLoginException,
+	public FacebookFacade(String email, String password) throws FacebookLoginException,
 	        FacebookApplicationAuthorizationException {
 		try {
 			this.connectHTTP(email, password);
@@ -106,7 +106,7 @@ public class FacebookProvider {
 	}
 
 	public static String getLoginRequest() {
-		return FacebookProvider.LOGIN_REQUEST;
+		return FacebookFacade.LOGIN_REQUEST;
 	}
 
 	/**
@@ -178,7 +178,7 @@ public class FacebookProvider {
 	private void getAuthToken() throws FacebookApplicationAuthorizationException, ClientProtocolException, IOException {
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(this.cm).build();
 
-		HttpGet httpget = new HttpGet(FacebookProvider.LOGIN_REQUEST);
+		HttpGet httpget = new HttpGet(FacebookFacade.LOGIN_REQUEST);
 
 		httpget.setHeader("User-Agent", "FacepathAuthenticator");
 

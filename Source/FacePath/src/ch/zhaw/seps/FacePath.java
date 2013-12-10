@@ -17,7 +17,7 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import ch.zhaw.seps.fb.FacebookProvider;
+import ch.zhaw.seps.fb.FacebookFacade;
 import ch.zhaw.seps.fb.FacebookSearch;
 import ch.zhaw.seps.view.GraphView;
 import ch.zhaw.seps.view.LoginView;
@@ -39,10 +39,10 @@ public class FacePath extends JFrame implements ActionListener, WindowListener {
 	}
 
 	private Map<String, JPanel> viewMap = new HashMap<String, JPanel>();
-	private FacebookProvider myFB = null;
+	private FacebookFacade myFB = null;
 	private FacebookSearch myFS = null;
 
-	public void setFP(FacebookProvider fp) {
+	public void setFP(FacebookFacade fp) {
 		this.myFB = fp;
 	}
 
@@ -50,7 +50,7 @@ public class FacePath extends JFrame implements ActionListener, WindowListener {
 		this.myFS = fs;
 	}
 
-	public FacebookProvider getFP() {
+	public FacebookFacade getFP() {
 		return myFB;
 	}
 

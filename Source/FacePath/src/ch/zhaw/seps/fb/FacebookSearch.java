@@ -14,7 +14,7 @@ import ch.zhaw.seps.view.SearchView;
 
 public class FacebookSearch implements Runnable {
 
-	private FacebookProvider fbProvider;
+	private FacebookFacade fbProvider;
 	private FacebookNetwork fbNetwork;
 
 	private FacebookProfile source = null;
@@ -32,7 +32,7 @@ public class FacebookSearch implements Runnable {
 	 * Legt den Provider fest und instanziert das Netzwerk
 	 * @param 	provider		Facebook Provider
 	 */
-	public FacebookSearch(FacebookProvider provider) {
+	public FacebookSearch(FacebookFacade provider) {
 		this.fbProvider = provider;
 		this.fbNetwork = new FacebookNetwork();
 	}

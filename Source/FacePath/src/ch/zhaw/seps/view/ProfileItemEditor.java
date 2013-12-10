@@ -21,7 +21,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import ch.zhaw.seps.fb.FacebookProfile;
-import ch.zhaw.seps.fb.FacebookProvider;
+import ch.zhaw.seps.fb.FacebookFacade;
 
 public class ProfileItemEditor implements ComboBoxEditor, DocumentListener {
 	private JPanel editor;
@@ -75,7 +75,7 @@ public class ProfileItemEditor implements ComboBoxEditor, DocumentListener {
 		if (anObject != null && anObject instanceof FacebookProfile) {
 			this.profileStringTextField.setText(anObject.toString());
 			this.currentSelectedProfile = (FacebookProfile) anObject;
-			this.profilePictureLabel.setIcon(FacebookProvider.getImageIconFromUsername(this.currentSelectedProfile
+			this.profilePictureLabel.setIcon(FacebookFacade.getImageIconFromUsername(this.currentSelectedProfile
 			        .getUserUIDString()));
 
 		} else if (anObject != null && anObject instanceof String) {

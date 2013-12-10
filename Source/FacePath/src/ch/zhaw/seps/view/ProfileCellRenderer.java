@@ -13,7 +13,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 import ch.zhaw.seps.fb.FacebookProfile;
-import ch.zhaw.seps.fb.FacebookProvider;
+import ch.zhaw.seps.fb.FacebookFacade;
 
 public class ProfileCellRenderer extends JLabel implements ListCellRenderer<FacebookProfile> {
 
@@ -34,7 +34,7 @@ public class ProfileCellRenderer extends JLabel implements ListCellRenderer<Face
 	public Component getListCellRendererComponent(JList<? extends FacebookProfile> profileList,
 	        FacebookProfile profile, int index, boolean isSelected, boolean cellHasFocus) {
 
-		this.setIcon(FacebookProvider.getImageIconFromUsername(profile.getUserUIDString()));
+		this.setIcon(FacebookFacade.getImageIconFromUsername(profile.getUserUIDString()));
 		this.setText(profile.toString());
 
 		Color background;
