@@ -168,7 +168,7 @@ public class FacebookNetworkTest {
 
 		this.fbNetwork.findShortestPath(this.user1, this.user2);
 		this.fbNetwork.setGraphViewer(this.fbNetwork.getGraph().display());
-		this.fbNetwork.cleanupGraph();
+		this.fbNetwork.cleanupGraph(false);
 
 		Node n1 = null;
 		Node n2 = null;
@@ -188,7 +188,7 @@ public class FacebookNetworkTest {
 	@Test
 	public void testStyleGraph() {
 		this.fbNetwork.setGraphViewer(this.fbNetwork.getGraph().display());
-		this.fbNetwork.styleGraph();
+		this.fbNetwork.styleGraph(false);
 	}
 
 	/**
