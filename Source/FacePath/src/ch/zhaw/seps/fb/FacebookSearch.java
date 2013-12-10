@@ -147,6 +147,7 @@ public class FacebookSearch implements Runnable {
 			getFbNetwork().cleanupGraph();
 			getFbNetwork().styleGraph();
 		}
+		this.fbProvider.getLikesForUser(source);
 	}
 
 	/**

@@ -456,11 +456,17 @@ public class FacebookProvider {
 		return image;
 	}
 	
-	private void getLikeFromApi(String pageID) {
+	private FacebookLike getLikeFromApi(String pageID) {
 		Connection<Page> thepage = apiConnection.fetchConnection(pageID, Page.class);
 		Page page = thepage.getData().get(0);
+		FacebookLike like = new FacebookLike(page.getId(), page.getUsername(), page.getDescription(), page.getLink(), page.getCategory());
+		return like;
 	}
 	
+	/**
+	 * Bezieht das Profilbild des entsprechenden Benutzers von der Webseite
+	 * @param 		username		Benutzername des Profils, zu dem die Likes geladen und darin gespeichert werden
+	 */
 	public void getLikesForUser(FacebookProfile user) {
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(this.cm).build();
 
@@ -491,20 +497,21 @@ public class FacebookProvider {
 		} catch (IOException ex) {
 			// Handle I/O errors
 		}
-		
-		String regex = "(href=\"(https://m.facebook.com/)([0-9a-zA-Z.]*)(\\?fref=none&refid=17)\"";
+			//(href="/([0-9a-zA-Z.]*)\?fref=none&amp;refid=17)|(href="/profile.php\?id=([0-9a-zA-Z.]*)&amp;fref=none&amp;refid=17")
+		String regex = "(href=\"/([0-9a-zA-Z.]*)\\?fref=none&amp;refid=17)|(href=\"/profile.php\\?id=([0-9a-zA-Z.]*)&amp;fref=none&amp;refid=17\")";
 
 		Set<String> likesURLSet = new HashSet<String>();
 		List<String> likeslist = new ArrayList<String>();
 
 		Matcher m = Pattern.compile(regex).matcher(str); //https://m.facebook.com/TheBeatofMontreal?fref=none&refid=17
 		while (m.find()) {
+			System.out.println(m.group());
 			if (!likesURLSet.add(m.group())) {
 				likeslist.add(m.group().replace("href=\"https://m.facebook.com/", "").replace("?fref=none&refid=17\"", ""));
 			}
 		}
 		for (String s : likeslist) {
-			//user.addLike();
+			user.addLikes(this.getLikeFromApi(s));
 		}
 	}
 }

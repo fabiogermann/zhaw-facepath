@@ -13,7 +13,7 @@ public class FacebookLike {
 		this.UUIDString = cUUIDString;
 		this.description = cdescription;
 		this.website = cwebsite;
-		this.description = cdescription;
+		this.category = ccategory;
 		
 	}
 
