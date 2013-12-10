@@ -32,16 +32,18 @@ public class GetListOfFriendsOfThread implements Runnable {
 	private ConcurrentLinkedQueue<String> queue = null;
 	private FacebookProfile user;
 	private CloseableHttpClient httpClient;
+	private boolean allFriends;
 
 	/**
 	 * Konstruktor üsbergibt die notwendigen Informationen
 	 */
 	public GetListOfFriendsOfThread(PoolingHttpClientConnectionManager conmgr, HttpContext context,
-	        ConcurrentLinkedQueue<String> returnqueue, FacebookProfile fbuser) {
+	        ConcurrentLinkedQueue<String> returnqueue, FacebookProfile fbuser, boolean allFriends) {
 		this.com = conmgr;
 		this.queue = returnqueue;
 		this.user = fbuser;
 		this.cont = context;
+		this.allFriends = allFriends;
 	}
 
 	/**
@@ -104,21 +106,20 @@ public class GetListOfFriendsOfThread implements Runnable {
 			queue.add(item);
 
 		}
-		// uncomment for all friends
-		// String nextPageRegex = "(<a href=\"/" + user.getUserUIDString()
-		// +
-		// "\\?v=friends&amp;mutual&amp;startindex=)([0-9]*)(&amp;refid=17\"><span>See More Friends</span></a>)";
-		// Matcher nextPageMatcher =
-		// Pattern.compile(nextPageRegex).matcher(str);
-		// String match = null;
-		// if (nextPageMatcher.find()) {
-		// match = nextPageMatcher.group();
-		// match = match
-		// .replace("<a href=\"/" + user.getUserUIDString() +
-		// "?v=friends&amp;mutual&amp;startindex=", "")
-		// .replace("&amp;refid=17\"><span>See More Friends</span></a>", "");
-		// requestFriends(Integer.parseInt(match));
-		// }
+		if (this.allFriends) {
+			String nextPageRegex = "(<a href=\"/"
+			        + user.getUserUIDString()
+			        + "\\?v=friends&amp;mutual&amp;startindex=)([0-9]*)(&amp;refid=17\"><span>See More Friends</span></a>)";
+			Matcher nextPageMatcher = Pattern.compile(nextPageRegex).matcher(str);
+			String match = null;
+			if (nextPageMatcher.find()) {
+				match = nextPageMatcher.group();
+				match = match.replace(
+				        "<a href=\"/" + user.getUserUIDString() + "?v=friends&amp;mutual&amp;startindex=", "").replace(
+				        "&amp;refid=17\"><span>See More Friends</span></a>", "");
+				requestFriends(Integer.parseInt(match));
+			}
+		}
 
 	}
 

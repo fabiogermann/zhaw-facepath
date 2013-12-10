@@ -30,17 +30,19 @@ public class SearchView extends JPanel implements ActionListener {
 	private JComboBox<FacebookProfile> destinationComboBox;
 	private JButton userSearchButton;
 	private JCheckBox eventsCheckBox;
+	private JCheckBox likesCheckBox;
 	private JCheckBox profilePicsCheckBox;
 	private JCheckBox nationalOnlyCheckBox;
+	private JCheckBox allFriendsCheckBox;
 	private JButton helpButton;
 	private JButton searchButton;
 
 	private DefaultComboBoxModel<FacebookProfile> sourceModel;
 	private DefaultComboBoxModel<FacebookProfile> destinationModel;
+	private JCheckBox chckbxNewCheckBox;
 
 	/**
-	 * Konstruktor
-	 * Erstellt die Anzeige
+	 * Konstruktor Erstellt die Anzeige
 	 */
 	public SearchView(FacePath fp) {
 		this.fp = fp;
@@ -50,10 +52,12 @@ public class SearchView extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * Beim Drücken auf "Benutzer suchen" soll der korrekte Benutzer für die Suche ermittelt werden
-	 * Beim Drücken auf "Suche" soll die Suche mit den beiden ausgewählten Profilen gestartet werden
-	 * Übergibt die gewählte Suchkonfiguration
-	 * @see		java.awt.event.ActionListener
+	 * Beim Drücken auf "Benutzer suchen" soll der korrekte Benutzer für die
+	 * Suche ermittelt werden Beim Drücken auf "Suche" soll die Suche mit den
+	 * beiden ausgewählten Profilen gestartet werden Übergibt die gewählte
+	 * Suchkonfiguration
+	 * 
+	 * @see java.awt.event.ActionListener
 	 */
 	public void actionPerformed(ActionEvent e) {
 		// TODO: es sollte gesucht werden nach dem klick auf suchen und der
@@ -76,40 +80,47 @@ public class SearchView extends JPanel implements ActionListener {
 			this.fp.setFS(fbSearch);
 			this.setPersonsOfInterest((FacebookProfile) sourceComboBox.getSelectedItem(),
 			        (FacebookProfile) destinationComboBox.getSelectedItem());
+			this.fp.getFS().setOptions(this.nationalOnlyCheckBox.isSelected(), this.profilePicsCheckBox.isSelected(),
+			        this.likesCheckBox.isSelected(), this.eventsCheckBox.isSelected(),
+			        this.allFriendsCheckBox.isSelected());
 			this.fp.showView("result");
 			Thread t = new Thread(this.fp.getFS());
 			t.start();
 		}
 		if (e.getSource() == this.helpButton) {
-			HelpView.getHelpView(this.getClass()).toFront();;
+			HelpView.getHelpView(this.getClass()).toFront();
 		}
 	}
 
 	/**
-	 * Bearbeitet die Eingabe des Profils (Parameter), sodass damit gesucht werden kann
-	 * @param 		usernameComboBox			Inhalt der Textbox, in der das Profil angegeben wird
-	 * @param 		resultFacebookProfileModel	Übergibt die Stuktur, an die der Suchparameter angepasst wird
+	 * Bearbeitet die Eingabe des Profils (Parameter), sodass damit gesucht
+	 * werden kann
+	 * 
+	 * @param usernameComboBox
+	 *            Inhalt der Textbox, in der das Profil angegeben wird
+	 * @param resultFacebookProfileModel
+	 *            Übergibt die Stuktur, an die der Suchparameter angepasst wird
 	 */
 	private void searchUser(JComboBox<FacebookProfile> usernameComboBox,
 	        DefaultComboBoxModel<FacebookProfile> resultFacebookProfileModel) {
 
 		resultFacebookProfileModel.removeAllElements();
 		String searchString = "";
-		
+
 		if (usernameComboBox.getSelectedIndex() > -1) {
 			searchString = ((FacebookProfile) usernameComboBox.getSelectedItem()).getUserUIDString();
 		} else if (usernameComboBox.getEditor().getItem() != null) {
 			searchString = usernameComboBox.getEditor().getItem().toString();
 		}
-		
+
 		List<FacebookProfile> userSearchResult = null;
-		
+
 		if (searchString == null || searchString.equals("")) {
 			userSearchResult = new ArrayList<FacebookProfile>();
 		} else {
 			userSearchResult = this.fp.getFP().getUserFromSearch(searchString);
 		}
-		
+
 		if (userSearchResult.size() > 0) {
 			for (FacebookProfile fbp : userSearchResult) {
 				resultFacebookProfileModel.addElement(fbp);
@@ -120,8 +131,11 @@ public class SearchView extends JPanel implements ActionListener {
 
 	/**
 	 * Setzt den Suchparameter in der Suche, um mit die Suche beginnen zu können
-	 * @param 		sourceFacebookProfile		Startprofil
-	 * @param 		destinationFacebookProfile	Zielprofil
+	 * 
+	 * @param sourceFacebookProfile
+	 *            Startprofil
+	 * @param destinationFacebookProfile
+	 *            Zielprofil
 	 */
 	private void setPersonsOfInterest(FacebookProfile sourceFacebookProfile, FacebookProfile destinationFacebookProfile) {
 		this.fp.getFS().setPersonOfInterestSource(sourceFacebookProfile);
@@ -154,9 +168,10 @@ public class SearchView extends JPanel implements ActionListener {
 		add(searchFormPanel, gbc_searchFormPanel);
 		GridBagLayout gbl_searchFormPanel = new GridBagLayout();
 		gbl_searchFormPanel.columnWidths = new int[] { 0, 0, 0 };
-		gbl_searchFormPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_searchFormPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		gbl_searchFormPanel.columnWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
-		gbl_searchFormPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_searchFormPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+		        Double.MIN_VALUE };
 		searchFormPanel.setLayout(gbl_searchFormPanel);
 
 		JLabel instructionsLabel = new JLabel("Geben Sie bitte die Benutzernamen der Start- und Ziel-Benutzer an\n");
@@ -236,13 +251,22 @@ public class SearchView extends JPanel implements ActionListener {
 		gbc_eventsCheckBox.gridy = 5;
 		searchFormPanel.add(eventsCheckBox, gbc_eventsCheckBox);
 
+		likesCheckBox = new JCheckBox("Likes mit einbeziehen");
+		GridBagConstraints gbc_likesCheckBox = new GridBagConstraints();
+		gbc_likesCheckBox.gridwidth = 2;
+		gbc_likesCheckBox.anchor = GridBagConstraints.WEST;
+		gbc_likesCheckBox.insets = new Insets(0, 30, 5, 30);
+		gbc_likesCheckBox.gridx = 0;
+		gbc_likesCheckBox.gridy = 6;
+		searchFormPanel.add(likesCheckBox, gbc_likesCheckBox);
+
 		profilePicsCheckBox = new JCheckBox("Profilbilder anzeigen");
 		GridBagConstraints gbc_profilePicsCheckBox = new GridBagConstraints();
 		gbc_profilePicsCheckBox.gridwidth = 2;
 		gbc_profilePicsCheckBox.anchor = GridBagConstraints.WEST;
 		gbc_profilePicsCheckBox.insets = new Insets(0, 30, 5, 30);
 		gbc_profilePicsCheckBox.gridx = 0;
-		gbc_profilePicsCheckBox.gridy = 6;
+		gbc_profilePicsCheckBox.gridy = 7;
 		searchFormPanel.add(profilePicsCheckBox, gbc_profilePicsCheckBox);
 
 		nationalOnlyCheckBox = new JCheckBox("Nur auf nationaler Ebene suchen");
@@ -251,8 +275,17 @@ public class SearchView extends JPanel implements ActionListener {
 		gbc_nationalOnlyCheckBox.anchor = GridBagConstraints.WEST;
 		gbc_nationalOnlyCheckBox.insets = new Insets(0, 30, 5, 30);
 		gbc_nationalOnlyCheckBox.gridx = 0;
-		gbc_nationalOnlyCheckBox.gridy = 7;
+		gbc_nationalOnlyCheckBox.gridy = 8;
 		searchFormPanel.add(nationalOnlyCheckBox, gbc_nationalOnlyCheckBox);
+
+		allFriendsCheckBox = new JCheckBox("Alle Freunde in die Suche einbeziehen (kann lange dauern)");
+		GridBagConstraints gbc_allFriendsCheckBox = new GridBagConstraints();
+		gbc_allFriendsCheckBox.gridwidth = 2;
+		gbc_allFriendsCheckBox.anchor = GridBagConstraints.WEST;
+		gbc_allFriendsCheckBox.insets = new Insets(0, 30, 5, 30);
+		gbc_allFriendsCheckBox.gridx = 0;
+		gbc_allFriendsCheckBox.gridy = 9;
+		searchFormPanel.add(allFriendsCheckBox, gbc_allFriendsCheckBox);
 
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setBackground(Color.WHITE);
@@ -260,7 +293,7 @@ public class SearchView extends JPanel implements ActionListener {
 		gbc_buttonsPanel.insets = new Insets(0, 0, 0, 30);
 		gbc_buttonsPanel.anchor = GridBagConstraints.EAST;
 		gbc_buttonsPanel.gridx = 1;
-		gbc_buttonsPanel.gridy = 8;
+		gbc_buttonsPanel.gridy = 10;
 		searchFormPanel.add(buttonsPanel, gbc_buttonsPanel);
 		GridBagLayout gbl_buttonsPanel = new GridBagLayout();
 		gbl_buttonsPanel.columnWidths = new int[] { 0, 0, 0 };
@@ -287,18 +320,28 @@ public class SearchView extends JPanel implements ActionListener {
 		searchButton.setEnabled(false);
 		searchButton.addActionListener(this);
 	}
-	
+
 	/**
 	 * Benachrichtigung bei privaten Profilen
 	 */
 	public static void notifyPrivateProfile() {
-		JOptionPane.showOptionDialog(null, "Eines oder beide der ausgewählten Profile sind Privat - die Suche kann aus diesem Grund nicht fortgeführt werden. Bitte wählen Sie andere Start/Ziel-Benutzer aus.", "Privates Profil", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+		JOptionPane
+		        .showOptionDialog(
+		                null,
+		                "Eines oder beide der ausgewählten Profile sind Privat - die Suche kann aus diesem Grund nicht fortgeführt werden. Bitte wählen Sie andere Start/Ziel-Benutzer aus.",
+		                "Privates Profil", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null,
+		                null);
 	}
-	
+
 	/**
 	 * Benachrichtigung wenn keine Verbindung gefunden
 	 */
 	public static void notifyNoConnectionFound() {
-		JOptionPane.showOptionDialog(null, "Es wurde keine Verbindung zwischen den zwei angegebenen Profilen gefunden. Versuchen Sie eine neue Suche.", "Keine Verbindung gefunden", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+		JOptionPane
+		        .showOptionDialog(
+		                null,
+		                "Es wurde keine Verbindung zwischen den zwei angegebenen Profilen gefunden. Versuchen Sie eine neue Suche.",
+		                "Keine Verbindung gefunden", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE,
+		                null, null, null);
 	}
 }
