@@ -19,6 +19,8 @@ import javax.swing.border.TitledBorder;
 
 import org.graphstream.ui.swingViewer.View;
 import org.graphstream.ui.swingViewer.Viewer;
+import org.graphstream.ui.swingViewer.ViewerListener;
+import org.graphstream.ui.swingViewer.ViewerPipe;
 
 import ch.zhaw.seps.FacePath;
 import ch.zhaw.seps.fb.FacebookSearch;
@@ -32,6 +34,9 @@ public class GraphView extends JPanel implements ActionListener {
 	private JTextArea reportTextArea;
 	private JButton helpButton;
 	private JButton newSearchButton;
+	
+	private Thread pumpThread;
+	private GraphEventPump pump;
 
 	/**
 	 * Konstruktor
@@ -43,9 +48,15 @@ public class GraphView extends JPanel implements ActionListener {
 		if (fs == null) {
 			this.fs = fp.getFS();
 		}
-		Viewer viewer = fs.getGraph().display();
+		Viewer viewer = new Viewer(fs.getGraph(), Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		fs.getFbNetwork().setGraphViewer(viewer);
 		View view = viewer.addDefaultView(false);
+		
+		pump = new GraphEventPump(this, fs.getFbNetwork().getGraph(),viewer);
+		pumpThread = new Thread(pump);
+        pump.start();
+        pumpThread.start();
+		
 		GridBagConstraints gbc_view = new GridBagConstraints();
 		gbc_view.fill = GridBagConstraints.BOTH;
 		gbc_view.insets = new Insets(10, 30, 5, 30);
@@ -56,13 +67,18 @@ public class GraphView extends JPanel implements ActionListener {
 
 	/**
 	 * Ruft bei Drücken des Buttons "Suche" den Such-Bereich auf
+	 * Reagiert auf Nodeklicks im Graph
 	 * @see		java.awt.event.ActionListener
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == newSearchButton) {
+			pump.stop();
+			pumpThread.stop();
 			this.fp.showView("search");
-		}
-		if (e.getSource() == this.helpButton) {
+		} else if (e.getSource() == pump && e.getID()==1) {
+			//do something with nodeevent
+			System.out.println(fs.getFbNetwork().getGraphCollection().get(e.getActionCommand()).getLastName()+" clicked");
+		} else if (e.getSource() == this.helpButton) {
 			HelpView.getHelpView(this.getClass()).toFront();;
 		}
 	}

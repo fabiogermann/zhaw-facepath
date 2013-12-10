@@ -89,6 +89,10 @@ public class FacebookNetwork {
 	public Graph getGraph() {
 		return this.graph;
 	}
+	
+	public HashMap<String, FacebookProfile> getGraphCollection() {
+		return this.graphCollection;
+	}
 
 	public Map<String, FacebookProfile> getKnownProfiles() {
 		return Collections.unmodifiableMap(this.graphCollection);
@@ -138,11 +142,15 @@ public class FacebookNetwork {
 			}
 			pathnr++;
 		}
-		sourceNode.addAttribute("ui.style", "fill-color: black;");
-		targetNode.addAttribute("ui.style", "fill-color: black;");
+		markNode(sourceNode);
+		markNode(targetNode);
 		if (dijkstraPaths.size() != 0) {
 			this.pathFound = true;
 		}
+	}
+	
+	private void markNode(Node node) {
+		node.addAttribute("ui.style", "stroke-mode: plain; stroke-color: #999; shadow-mode: gradient-horizontal; shadow-width: 4px; shadow-color: #F00, white; shadow-offset: 0px;");
 	}
 
 	private ArrayList<String> getColorList() {
@@ -182,19 +190,28 @@ public class FacebookNetwork {
 			this.removeVertice(n);
 		}
 		for (Node n : graph) {
-			n.addAttribute("label", graphCollection.get(n.getId()));
+			nodeWork(n);			
 		}
 		styleGraph();
+	}
+	
+	private void nodeWork(Node n) {
+		n.addAttribute("label", " "+graphCollection.get(n.getId()).getFirstName().charAt(0)+". "+graphCollection.get(n.getId()).getLastName());
+		n.addAttribute("ui.style", "fill-mode:image-scaled-ratio-max;fill-image: url('https://graph.facebook.com/" + n.getId() + "/picture');");
 	}
 
 	/**
 	 * Verpasst dem Graphen (Ergebnis) ein Design mittels CSS
 	 */
 	public void styleGraph() {
-		graph.addAttribute("ui.stylesheet", "edge {size:2px;} node {size:15px;}");
+		graph.addAttribute("ui.stylesheet", "graph {padding: 40px;}"
+				+ "edge {shape:freeplane;size:2px;}" +
+				"node {size:40px; shape:rounded-box;text-alignment:under;text-offset: 0px, 4px; "
+				+ "stroke-mode: plain; stroke-color: #999; shadow-mode: gradient-horizontal; shadow-width: 4px; shadow-color: #999, white; shadow-offset: 0px;}");
 		graphViewer.disableAutoLayout();
 		graphViewer.enableAutoLayout();
 	}
+
 
 	public Viewer getGraphViewer() {
 		return graphViewer;
@@ -202,5 +219,6 @@ public class FacebookNetwork {
 
 	public void setGraphViewer(Viewer graphViewer) {
 		this.graphViewer = graphViewer;
+		graphViewer.enableAutoLayout();
 	}
 }
