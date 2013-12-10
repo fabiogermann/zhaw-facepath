@@ -29,8 +29,6 @@ public class SearchView extends JPanel implements ActionListener {
 	private JComboBox<FacebookProfile> sourceComboBox;
 	private JComboBox<FacebookProfile> destinationComboBox;
 	private JButton userSearchButton;
-	private JCheckBox eventsCheckBox;
-	private JCheckBox likesCheckBox;
 	private JCheckBox profilePicsCheckBox;
 	private JCheckBox nationalOnlyCheckBox;
 	private JCheckBox allFriendsCheckBox;
@@ -81,8 +79,7 @@ public class SearchView extends JPanel implements ActionListener {
 			this.setPersonsOfInterest((FacebookProfile) sourceComboBox.getSelectedItem(),
 			        (FacebookProfile) destinationComboBox.getSelectedItem());
 			this.fp.getFS().setOptions(this.nationalOnlyCheckBox.isSelected(), this.profilePicsCheckBox.isSelected(),
-			        this.likesCheckBox.isSelected(), this.eventsCheckBox.isSelected(),
-			        this.allFriendsCheckBox.isSelected());
+			        false, false, this.allFriendsCheckBox.isSelected());
 			this.fp.showView("result");
 			Thread t = new Thread(this.fp.getFS());
 			t.start();
@@ -168,10 +165,9 @@ public class SearchView extends JPanel implements ActionListener {
 		add(searchFormPanel, gbc_searchFormPanel);
 		GridBagLayout gbl_searchFormPanel = new GridBagLayout();
 		gbl_searchFormPanel.columnWidths = new int[] { 0, 0, 0 };
-		gbl_searchFormPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_searchFormPanel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
 		gbl_searchFormPanel.columnWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
-		gbl_searchFormPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-		        Double.MIN_VALUE };
+		gbl_searchFormPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		searchFormPanel.setLayout(gbl_searchFormPanel);
 
 		JLabel instructionsLabel = new JLabel("Geben Sie bitte die Benutzernamen der Start- und Ziel-Benutzer an\n");
@@ -242,31 +238,13 @@ public class SearchView extends JPanel implements ActionListener {
 		gbc_searchoptionsLabel.gridy = 4;
 		searchFormPanel.add(searchoptionsLabel, gbc_searchoptionsLabel);
 
-		eventsCheckBox = new JCheckBox("Veranstaltungen miteinbeziehen");
-		GridBagConstraints gbc_eventsCheckBox = new GridBagConstraints();
-		gbc_eventsCheckBox.gridwidth = 2;
-		gbc_eventsCheckBox.anchor = GridBagConstraints.WEST;
-		gbc_eventsCheckBox.insets = new Insets(0, 30, 5, 30);
-		gbc_eventsCheckBox.gridx = 0;
-		gbc_eventsCheckBox.gridy = 5;
-		searchFormPanel.add(eventsCheckBox, gbc_eventsCheckBox);
-
-		likesCheckBox = new JCheckBox("Likes mit einbeziehen");
-		GridBagConstraints gbc_likesCheckBox = new GridBagConstraints();
-		gbc_likesCheckBox.gridwidth = 2;
-		gbc_likesCheckBox.anchor = GridBagConstraints.WEST;
-		gbc_likesCheckBox.insets = new Insets(0, 30, 5, 30);
-		gbc_likesCheckBox.gridx = 0;
-		gbc_likesCheckBox.gridy = 6;
-		searchFormPanel.add(likesCheckBox, gbc_likesCheckBox);
-
 		profilePicsCheckBox = new JCheckBox("Profilbilder anzeigen");
 		GridBagConstraints gbc_profilePicsCheckBox = new GridBagConstraints();
 		gbc_profilePicsCheckBox.gridwidth = 2;
 		gbc_profilePicsCheckBox.anchor = GridBagConstraints.WEST;
 		gbc_profilePicsCheckBox.insets = new Insets(0, 30, 5, 30);
 		gbc_profilePicsCheckBox.gridx = 0;
-		gbc_profilePicsCheckBox.gridy = 7;
+		gbc_profilePicsCheckBox.gridy = 5;
 		searchFormPanel.add(profilePicsCheckBox, gbc_profilePicsCheckBox);
 
 		nationalOnlyCheckBox = new JCheckBox("Nur auf nationaler Ebene suchen");
@@ -275,16 +253,16 @@ public class SearchView extends JPanel implements ActionListener {
 		gbc_nationalOnlyCheckBox.anchor = GridBagConstraints.WEST;
 		gbc_nationalOnlyCheckBox.insets = new Insets(0, 30, 5, 30);
 		gbc_nationalOnlyCheckBox.gridx = 0;
-		gbc_nationalOnlyCheckBox.gridy = 8;
+		gbc_nationalOnlyCheckBox.gridy = 6;
 		searchFormPanel.add(nationalOnlyCheckBox, gbc_nationalOnlyCheckBox);
 
-		allFriendsCheckBox = new JCheckBox("Alle Freunde in die Suche einbeziehen (kann lange dauern)");
+		allFriendsCheckBox = new JCheckBox("Alle Freunde in die Suche einbeziehen (beansprucht mehr Zeit)");
 		GridBagConstraints gbc_allFriendsCheckBox = new GridBagConstraints();
 		gbc_allFriendsCheckBox.gridwidth = 2;
 		gbc_allFriendsCheckBox.anchor = GridBagConstraints.WEST;
 		gbc_allFriendsCheckBox.insets = new Insets(0, 30, 5, 30);
 		gbc_allFriendsCheckBox.gridx = 0;
-		gbc_allFriendsCheckBox.gridy = 9;
+		gbc_allFriendsCheckBox.gridy = 7;
 		searchFormPanel.add(allFriendsCheckBox, gbc_allFriendsCheckBox);
 
 		JPanel buttonsPanel = new JPanel();
@@ -293,7 +271,7 @@ public class SearchView extends JPanel implements ActionListener {
 		gbc_buttonsPanel.insets = new Insets(0, 0, 0, 30);
 		gbc_buttonsPanel.anchor = GridBagConstraints.EAST;
 		gbc_buttonsPanel.gridx = 1;
-		gbc_buttonsPanel.gridy = 10;
+		gbc_buttonsPanel.gridy = 8;
 		searchFormPanel.add(buttonsPanel, gbc_buttonsPanel);
 		GridBagLayout gbl_buttonsPanel = new GridBagLayout();
 		gbl_buttonsPanel.columnWidths = new int[] { 0, 0, 0 };
