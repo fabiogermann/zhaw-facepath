@@ -280,7 +280,7 @@ public class FacebookProvider {
 	 * @param 		fN			Netzwerk, mit welchem die bestehenden Verbindungen analaysiert werden
 	 * @return		Gibt eine Sammlung mit Benutzern zurück, die die Freunde der angegebenen Profile sind
 	 */
-	public Collection<FacebookProfile> getFriendsOfThreaded(Collection<FacebookProfile> users, FacebookNetwork fN) {
+	public Collection<FacebookProfile> getFriendsOfThreaded(Collection<FacebookProfile> users, FacebookNetwork fN, boolean allFriends) {
 		
 		// TODO only add if FN is given
 		ConcurrentLinkedQueue<FacebookProfile> returnqueue = null;
@@ -291,7 +291,7 @@ public class FacebookProvider {
 		for (FacebookProfile user : users) {
 			returnqueue = new ConcurrentLinkedQueue<FacebookProfile>();
 			user.setFriends(returnqueue);
-			tasks.add(Executors.callable(new GetFriendsOfThread(cm, ctx, authToken, returnqueue, user, fN)));
+			tasks.add(Executors.callable(new GetFriendsOfThread(cm, ctx, authToken, returnqueue, user, fN, allFriends)));
 			if (FacePath.DEBUG >= 3) {
 				System.out.println("FBP-searches-friends-of: " + user.getUserID());
 			}

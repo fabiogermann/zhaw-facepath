@@ -31,6 +31,7 @@ public class FacebookSearch implements Runnable {
 	private boolean withPictures = false;
 	private boolean withLikes = false;
 	private boolean withEvents = false;
+	private boolean withAllFriends = false;
 
 	/**
 	 * Konstruktor
@@ -68,11 +69,12 @@ public class FacebookSearch implements Runnable {
 	 * @param 		li		Like-Pages miteinbeziehen
 	 * @param 		ev		Event-Pages miteinbeziehen
 	 */
-	public void setOptions(boolean lo, boolean pi, boolean li, boolean ev) {
+	public void setOptions(boolean lo, boolean pi, boolean li, boolean ev,boolean af) {
 		this.onlyLocal = lo;
 		this.withPictures = pi;
 		this.withLikes = li;
 		this.withEvents = ev;
+		this.withAllFriends = af;
 	}
 
 	@Deprecated
@@ -165,7 +167,7 @@ public class FacebookSearch implements Runnable {
 		// get all the friends of the friends in the temporary stack
 		// the friends and connections are added directly to the FacebookNetwork
 		// and to the graph
-		friendlist = fbProvider.getFriendsOfThreaded(todo, this.getFbNetwork());
+		friendlist = fbProvider.getFriendsOfThreaded(todo, this.getFbNetwork(), this.withAllFriends);
 		// add the found profiles to the workstack
 		for (FacebookProfile fp : friendlist) {
 			this.workStack.addAll(fp.getFriends());

@@ -31,6 +31,7 @@ public class GetFriendsOfThread implements Runnable {
 	private FacebookProfile user;
 	private String ApiKey;
 	private FacebookNetwork fN;
+	private boolean allFriends;
 	
 	/**
 	 * Konstruktor
@@ -41,13 +42,14 @@ public class GetFriendsOfThread implements Runnable {
 								String apikey, 
 								ConcurrentLinkedQueue<FacebookProfile> returnqueue, 
 								FacebookProfile fbuser,
-								FacebookNetwork network) {
+								FacebookNetwork network, boolean allFriends) {
 		this.com = conmgr;
 		this.queue = returnqueue;
 		this.user = fbuser;
 		this.cont = context;
 		this.ApiKey = apikey;
 		this.fN = network;
+		this.allFriends = allFriends;
 	}
 
 	/**
@@ -58,7 +60,7 @@ public class GetFriendsOfThread implements Runnable {
 		Map<String,FacebookProfile> knownProfiles = fN.getKnownProfiles();
 		ConcurrentLinkedQueue<String> stringqueue = new ConcurrentLinkedQueue<String>();
 		ExecutorService preexecutor = Executors.newFixedThreadPool(2);
-		preexecutor.execute(new GetListOfFriendsOfThread(com, cont, stringqueue, user));
+		preexecutor.execute(new GetListOfFriendsOfThread(com, cont, stringqueue, user, this.allFriends));
 		preexecutor.shutdown();
 		try {
 			while (!preexecutor.awaitTermination(10L, TimeUnit.SECONDS)) {

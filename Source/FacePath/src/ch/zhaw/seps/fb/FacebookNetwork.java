@@ -173,16 +173,7 @@ public class FacebookNetwork {
 			shortestPathnodes.addAll(l);
 		}
 		for (Node n : graph.getNodeSet()) {
-			int edgeCounter = 0;
-			for (Edge n2 : n.getEachEdge()) {
-				edgeCounter++;
-				if (edgeCounter > 1) {
-					break;
-				}
-			}
-			if (edgeCounter <= 1) {
-				nodesToDelete.add(n);
-			} else if (!shortestPathnodes.contains(n)) {
+			if (!shortestPathnodes.contains(n)) {
 				nodesToDelete.add(n);
 			}
 		}
@@ -190,7 +181,7 @@ public class FacebookNetwork {
 			this.removeVertice(n);
 		}
 		for (Node n : graph) {
-			nodeWork(n);			
+			nodeWork(n);
 		}
 		styleGraph();
 	}
